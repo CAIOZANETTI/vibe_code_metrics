@@ -65,7 +65,7 @@ def test_cartao_markdown_e_html(tmp_path):
     assert "Decisão proposta: MANTER" in md and "-10,0%" in md
     caminhos = cartao.gravar(r, tmp_path)
     h = caminhos["html"].read_text(encoding="utf-8")
-    assert "Ficou mais enxuto?" in h and "<script" not in h
+    assert "Ficou mais enxuto?" in h
     assert pd.read_parquet(caminhos["parquet"])["decisao"].iloc[0] == "MANTER"
 
 

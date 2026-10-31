@@ -1,0 +1,13 @@
+# Limites do semáforo de estado (valor absoluto da métrica no snapshot "depois").
+# HIPÓTESE INICIAL: valores sugeridos, a calibrar com o histórico real do projeto (tese T000).
+# sentido: +1 = maior é melhor (verde se valor >= verde); -1 = menor é melhor (verde se valor <= verde).
+# amarelo: limite da faixa amarela, mesmo sentido; sem amarelo (null), fora do verde é vermelho.
+# Métricas sem entrada aqui (ou informativas) ficam cinza.
+testes_falhando: {sentido: -1, verde: 0, amarelo: null}
+alertas_seguranca: {sentido: -1, verde: 0, amarelo: null}
+arquivos_com_erro: {sentido: -1, verde: 0, amarelo: null}
+frac_execucoes_identicas: {sentido: 1, verde: 1.0, amarelo: 0.8}
+cobertura_testes: {sentido: 1, verde: 0.80, amarelo: 0.60}
+complexidade_media: {sentido: -1, verde: 5, amarelo: 10}   # radon: A <= 5, B <= 10
+sloc_por_funcao: {sentido: -1, verde: 25, amarelo: 50}
+n_dependencias: {sentido: -1, verde: 15, amarelo: 30}

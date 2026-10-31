@@ -16,6 +16,12 @@ main { margin: 0 auto; }
 .DECISAO_HUMANA { background: #fff4e0; color: #8a5300; }
 td.melhorou { color: #1e6b34; font-weight: 600; }
 td.piorou { color: #b42318; font-weight: 600; }
+td.verde, td.amarelo, td.vermelho, td.cinza { font-weight: 600; }
+.bolinha { display: inline-block; width: 14px; height: 14px; border-radius: 50%; vertical-align: middle; margin-right: 6px; border: 1px solid rgba(0,0,0,.25); }
+.bolinha.verde { background: #2da44e; } .bolinha.amarelo { background: #e3b341; }
+.bolinha.vermelho { background: #d1242f; } .bolinha.cinza { background: #b6bdc6; }
+.dimensoes { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
+.dimensao { border: 1px solid #d0d7de; border-radius: 10px; padding: 10px 16px; min-width: 150px; }
 td.num { text-align: right; font-variant-numeric: tabular-nums; }
 </style>
 </head>
@@ -26,6 +32,16 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
   {% if mensagem %}<p><em>{{ mensagem }}</em></p>{% endif %}
   <div class="decisao {{ decisao }}">Decisão proposta: {{ decisao }}</div>
   <p>{{ explicacao }}</p>
+
+  <h2>Radar da iteração</h2>
+  <p><small>Índice por dimensão: antes = 1,0 (tracejado); acima de 1,0 é melhor. O rótulo traz a cor do semáforo de estado.</small></p>
+  {{ radar_html | safe }}
+
+  <h2>Semáforo por dimensão</h2>
+  <div class="dimensoes">
+    {% for d in semaforo.dimensoes %}<div class="dimensao"><span class="bolinha {{ d.cor }}"></span><strong>{{ d.dimensao }}</strong> ({{ d.cor }})<br><small>índice {{ d.indice }}</small></div>
+    {% endfor %}
+  </div>
 
   <h2>Perguntas da retrospectiva</h2>
   <table>
@@ -41,6 +57,15 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
       <td><code>{{ r.metrica }}</code></td><td>{{ r.pergunta }}</td><td>{{ r.eliminatoria }}</td>
       <td class="num">{{ r.antes }}</td><td class="num">{{ r.depois }}</td><td class="num">{{ r.variacao }}</td>
       <td class="{{ r.classe }}">{{ r.veredito }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <h2>Semáforo por métrica (estado depois)</h2>
+  <table>
+    <tr><th>Métrica</th><th>Dimensão</th><th>Valor</th><th>Cor</th><th>Regra</th></tr>
+    {% for m in semaforo.metricas %}<tr>
+      <td><code>{{ m.metrica }}</code></td><td>{{ m.dimensao }}</td><td class="num">{{ m.valor }}</td>
+      <td class="{{ m.cor }}"><span class="bolinha {{ m.cor }}"></span>{{ m.cor }}</td><td>{{ m.regra }}</td>
     </tr>
     {% endfor %}
   </table>
