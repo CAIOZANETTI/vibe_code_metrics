@@ -1,0 +1,27 @@
+name: vcm
+
+on:
+  pull_request:
+
+jobs:
+  balanco:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v5
+      - name: Instalar dependências
+        run: uv sync
+      - name: Testes
+        run: uv run pytest -q
+      - name: Balanço da iteração
+        run: |
+          set -o pipefail
+          uvx --from git+https://github.com/CAIOZANETTI/vibe_code_metrics vcm balanco ${{ github.event.pull_request.base.sha }} HEAD --falhar-se-reverter | tee -a $GITHUB_STEP_SUMMARY
+      - name: Publicar cartões da iteração
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: iteracoes
+          path: results/iteracoes/

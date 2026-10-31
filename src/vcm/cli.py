@@ -60,6 +60,31 @@ def _cmd_agentes(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_iniciar(args: argparse.Namespace) -> int:
+    from vcm import iniciar
+
+    destino = Path(args.destino)
+    try:
+        itens = iniciar.iniciar(destino, args.pacote, forcar=args.forcar)
+    except ValueError as erro:
+        print(f"erro: {erro}", file=sys.stderr)
+        return 1
+    for caminho, status in itens:
+        print(f"{caminho} -> {status}")
+    passos = []
+    if not (destino / ".git").exists():
+        passos.append(f"git init   (dentro de {destino})")
+    if not (destino / "pyproject.toml").exists():
+        passos.append(f"uv init --lib --name {args.pacote} . && uv add numpy pandas")
+    passos.append("uv sync && uv run pytest -q")
+    passos.append("git add -A && git commit -m 'Adota o método Vibe Code Metrics'")
+    passos.append("Após a primeira iteração: uv run vcm balanco HEAD~1 HEAD")
+    print("\nPróximos passos:")
+    for numero, passo in enumerate(passos, start=1):
+        print(f"  {numero}. {passo}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="vcm", description="Vibe Code Metrics")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -89,6 +114,12 @@ def main(argv: list[str] | None = None) -> int:
 
     a = sub.add_parser("agentes", help="resumo das execuções de agentes por modelo")
     a.set_defaults(func=_cmd_agentes)
+
+    i = sub.add_parser("iniciar", help="adota o método num projeto (novo ou existente)")
+    i.add_argument("destino", nargs="?", default=".")
+    i.add_argument("--pacote", required=True, help="nome do pacote Python em src/")
+    i.add_argument("--forcar", action="store_true", help="sobrescreve arquivos existentes")
+    i.set_defaults(func=_cmd_iniciar)
 
     args = p.parse_args(argv)
     return args.func(args)
