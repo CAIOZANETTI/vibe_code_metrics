@@ -1,0 +1,19 @@
+id: scipy
+nome: SciPy
+papel: calculo
+descricao: Algoritmos científicos sobre NumPy, como otimização, interpolação, estatística e álgebra linear esparsa.
+quando_considerar:
+  - otimização numérica
+  - interpolação
+  - estatística
+  - álgebra linear esparsa
+quando_evitar:
+  - manipulação de tabelas com junções e agrupamentos
+cuidados:
+  - solvers iterativos dependem de tolerância e critério de parada; declarar ambos
+coopera_com: [numpy, pandas]
+compete_com: []
+pacote_python: scipy
+documentacao: https://docs.scipy.org/doc/scipy/
+evidencias: []
+status: candidato

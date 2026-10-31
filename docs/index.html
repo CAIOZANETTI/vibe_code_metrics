@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vibe Code Metrics — Arquitetura e Plano</title>
+<!-- Gerado por `uv run vcm docs` a partir de docs/*.md. Não edite este arquivo: edite o Markdown. -->
+<style>
+:root {
+  --bg: #fbfbfa; --fg: #1f2328; --muted: #5d6470; --line: #e3e5e8; --card: #ffffff;
+  --accent: #1f6feb; --accent-soft: #e8f0fe; --code: #f3f4f6; --side: #f4f5f6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111418; --fg: #e6e8eb; --muted: #9aa3ad; --line: #2b3138; --card: #171b20;
+    --accent: #58a6ff; --accent-soft: #15243a; --code: #1d2228; --side: #14181d;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: 100vh;
+}
+nav {
+  position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 24px 18px;
+  background: var(--side); border-right: 1px solid var(--line); font-size: 14px;
+}
+nav .marca { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+nav .sub { color: var(--muted); font-size: 12px; margin-bottom: 20px; }
+nav h4 { margin: 18px 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+nav a { display: block; color: var(--fg); text-decoration: none; padding: 3px 8px; border-radius: 6px; }
+nav a:hover { background: var(--accent-soft); color: var(--accent); }
+nav a.n3 { padding-left: 22px; color: var(--muted); font-size: 13px; }
+main { padding: 32px 48px 80px; max-width: 1040px; }
+article { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 40px 32px; margin-bottom: 40px; }
+.fonte { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  font-size: 13px; color: var(--muted); border-bottom: 1px solid var(--line); padding: 14px 0 10px; margin-bottom: 8px; }
+.fonte a { color: var(--accent); }
+h1 { font-size: 30px; line-height: 1.25; margin: 22px 0 8px; }
+h2 { font-size: 22px; margin: 40px 0 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+h3 { font-size: 18px; margin: 28px 0 8px; }
+h1, h2, h3 { scroll-margin-top: 16px; }
+a { color: var(--accent); }
+p, li { max-width: 78ch; }
+blockquote { margin: 16px 0; padding: 10px 16px; border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+blockquote p { margin: 4px 0; }
+code { font: 13.5px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--code); padding: 1px 5px; border-radius: 4px; }
+pre { background: var(--code); padding: 14px 16px; border-radius: 8px; overflow-x: auto; }
+pre code { padding: 0; background: none; }
+pre.mermaid { background: transparent; text-align: center; border: 1px solid var(--line); }
+table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14.5px; display: block; overflow-x: auto; }
+th, td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; vertical-align: top; }
+th { background: var(--side); font-weight: 600; }
+tr:nth-child(even) td { background: color-mix(in srgb, var(--side) 45%, transparent); }
+li.tarefa { list-style: none; margin-left: -1.3em; }
+li input[type=checkbox] { margin-right: 6px; accent-color: var(--accent); }
+footer { color: var(--muted); font-size: 12px; }
+@media (max-width: 860px) {
+  body { grid-template-columns: 1fr; }
+  nav { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+  main { padding: 16px; }
+  article { padding: 4px 18px 20px; }
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="marca">Vibe Code Metrics</div>
+  <div class="sub">fonte: docs/*.md · hash fbb476746b57</div>
+  
+  <h4>Guia rápido: usar o vcm num protótipo</h4>
+  <a href="#doc-guia">Início</a>
+  <a class="n2" href="#doc-guia-1-instalar">1. Instalar</a>
+  <a class="n2" href="#doc-guia-2-preparar-o-prototipo">2. Preparar o protótipo</a>
+  <a class="n2" href="#doc-guia-3-o-conjunto-de-referencia">3. O conjunto de referência</a>
+  <a class="n2" href="#doc-guia-4-o-ciclo-de-cada-iteracao">4. O ciclo de cada iteração</a>
+  <a class="n2" href="#doc-guia-5-usar-os-agentes">5. Usar os agentes</a>
+  <a class="n2" href="#doc-guia-6-comparar-alternativas-teses">6. Comparar alternativas (teses)</a>
+  <a class="n2" href="#doc-guia-7-calibrar-o-ruido">7. Calibrar o ruído</a>
+  <a class="n2" href="#doc-guia-8-problemas-comuns">8. Problemas comuns</a>
+  
+  
+  <h4>Arquitetura de funcionamento</h4>
+  <a href="#doc-arquitetura">Início</a>
+  <a class="n2" href="#doc-arquitetura-1-ideia-em-uma-pagina">1. Ideia em uma página</a>
+  <a class="n2" href="#doc-arquitetura-2-componentes">2. Componentes</a>
+  <a class="n2" href="#doc-arquitetura-3-o-ciclo-pdca-de-uma-iteracao">3. O ciclo PDCA de uma iteração</a>
+  <a class="n3" href="#doc-arquitetura-quem-faz-o-que">Quem faz o quê</a>
+  <a class="n2" href="#doc-arquitetura-4-retrospectiva-de-iteracao">4. Retrospectiva de iteração</a>
+  <a class="n3" href="#doc-arquitetura-radar-de-semaforo">Radar de semáforo</a>
+  <a class="n2" href="#doc-arquitetura-5-o-que-e-medido-passivamente-e-o-que-exige-protocolo">5. O que é medido passivamente e o que exige protocolo</a>
+  <a class="n2" href="#doc-arquitetura-6-multiagente-e-catalogo-de-modelos">6. Multiagente e catálogo de modelos</a>
+  <a class="n2" href="#doc-arquitetura-7-repertorio-uma-entrada">7. Repertório: uma entrada</a>
+  <a class="n2" href="#doc-arquitetura-8-dados-e-formatos">8. Dados e formatos</a>
+  <a class="n2" href="#doc-arquitetura-9-estrutura-do-repositorio">9. Estrutura do repositório</a>
+  <a class="n2" href="#doc-arquitetura-10-principios-inviolaveis">10. Princípios invioláveis</a>
+  <a class="n2" href="#doc-arquitetura-11-o-repositorio-como-prototipo-dele-mesmo-t000">11. O repositório como protótipo dele mesmo (T000)</a>
+  <a class="n2" href="#doc-arquitetura-12-como-esta-documentacao-se-mantem-atualizada">12. Como esta documentação se mantém atualizada</a>
+  
+  
+  <h4>Plano de implementação</h4>
+  <a href="#doc-plano">Início</a>
+  <a class="n2" href="#doc-plano-visao-geral-das-fases">Visão geral das fases</a>
+  <a class="n2" href="#doc-plano-fase-0-fundacao">Fase 0 — Fundação</a>
+  <a class="n2" href="#doc-plano-fase-1-retrospectiva-automatica">Fase 1 — Retrospectiva automática</a>
+  <a class="n3" href="#doc-plano-fase-1b-pronto-para-usar-num-prototipo">Fase 1b — Pronto para usar num protótipo</a>
+  <a class="n3" href="#doc-plano-licoes-da-fase-1-registradas-pelo-proprio-metodo">Lições da Fase 1 (registradas pelo próprio método)</a>
+  <a class="n2" href="#doc-plano-fase-2-telemetria-de-agentes">Fase 2 — Telemetria de agentes</a>
+  <a class="n2" href="#doc-plano-fase-3-repertorio-tese-e-runner">Fase 3 — Repertório, tese e runner</a>
+  <a class="n2" href="#doc-plano-fase-4-relatorios-html">Fase 4 — Relatórios HTML</a>
+  <a class="n2" href="#doc-plano-fase-5-orquestracao-multiagente">Fase 5 — Orquestração multiagente</a>
+  <a class="n2" href="#doc-plano-fase-6-recomendador">Fase 6 — Recomendador</a>
+  <a class="n2" href="#doc-plano-fase-7-multi-fornecedor-e-politica-de-dados">Fase 7 — Multi-fornecedor e política de dados</a>
+  <a class="n2" href="#doc-plano-fase-8-primeiro-programa-experimental">Fase 8 — Primeiro programa experimental</a>
+  <a class="n2" href="#doc-plano-regras-de-execucao-deste-plano">Regras de execução deste plano</a>
+  <a class="n2" href="#doc-plano-decisoes-em-aberto-para-o-humano">Decisões em aberto (para o humano)</a>
+  
+  
+  <h4>Estilo de código do repertório</h4>
+  <a href="#doc-estilo">Início</a>
+  <a class="n2" href="#doc-estilo-1-as-quatro-regras">1. As quatro regras</a>
+  <a class="n2" href="#doc-estilo-2-python-em-portugues">2. Python em português</a>
+  <a class="n2" href="#doc-estilo-3-unidade-no-nome">3. Unidade no nome</a>
+  <a class="n2" href="#doc-estilo-4-python-calcula-de-forma-vetorizada-e-deterministica">4. Python calcula de forma vetorizada e determinística</a>
+  <a class="n2" href="#doc-estilo-5-html-e-javascript-so-apresentam">5. HTML e JavaScript só apresentam</a>
+  <a class="n2" href="#doc-estilo-6-verificacao">6. Verificação</a>
+  
+  
+</nav>
+<main>
+
+<article id="doc-guia">
+  <div class="fonte">
+    <span>Fonte: <a href="guia.md">docs/guia.md</a></span>
+    <span>Gerado por <code>uv run vcm docs</code></span>
+  </div>
+  <h1 id="doc-guia-guia-rapido-usar-o-vcm-num-prototipo">Guia rápido: usar o vcm num protótipo</h1>
+<blockquote>
+<p>Passo a passo para aplicar o método a um projeto de engenharia em Python, do zero ao primeiro
+cartão de retrospectiva com radar de semáforo. Como funciona por dentro: <a href="#doc-arquitetura">arquitetura.md</a>.
+Regras de código: <a href="#doc-estilo">estilo.md</a>.</p>
+</blockquote>
+<h2 id="doc-guia-1-instalar">1. Instalar</h2>
+<p>O <code>vcm</code> é instalado como ferramenta do <code>uv</code>, direto do GitHub:</p>
+<pre><code class="language-bash">uv tool install git+https://github.com/CAIOZANETTI/vibe_code_metrics
+vcm --help
+</code></pre>
+<p>Para atualizar: <code>uv tool upgrade vibe-code-metrics</code>.</p>
+<h2 id="doc-guia-2-preparar-o-prototipo">2. Preparar o protótipo</h2>
+<pre><code class="language-bash">mkdir meu-prototipo &amp;&amp; cd meu-prototipo
+git init
+uv init --package --name calculo        # cria pyproject.toml e src/calculo/
+uv add numpy pandas
+uv add --dev pytest
+vcm iniciar . --pacote calculo
+git add -A &amp;&amp; git commit -m &quot;Início do protótipo com vcm&quot;
+</code></pre>
+<p>O <code>vcm iniciar</code> cria, sem sobrescrever o que já existe:</p>
+<table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Para quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vcm.yaml</code></td>
+<td>onde está o código, os testes e o conjunto de referência</td>
+</tr>
+<tr>
+<td><code>CLAUDE.md</code></td>
+<td>suas regras e o ciclo de trabalho, lidos por todo agente</td>
+</tr>
+<tr>
+<td><code>docs/estilo.md</code></td>
+<td>Python em português, Python calcula, HTML apresenta, SI</td>
+</tr>
+<tr>
+<td><code>.claude/agents/executor-sonnet.md</code>, <code>executor-haiku.md</code></td>
+<td>executores com modelo fixado</td>
+</tr>
+<tr>
+<td><code>src/calculo/referencia.py</code></td>
+<td>casos de cálculo usados para medir determinismo, tempo e memória</td>
+</tr>
+<tr>
+<td><code>tests/test_referencia.py</code></td>
+<td>o hash de referência é estável</td>
+</tr>
+<tr>
+<td><code>.github/workflows/vcm.yml</code></td>
+<td>retrospectiva automática em cada PR</td>
+</tr>
+</tbody>
+</table>
+<h2 id="doc-guia-3-o-conjunto-de-referencia">3. O conjunto de referência</h2>
+<p>Coloque em <code>src/calculo/referencia.py</code> os cálculos que <strong>não podem mudar de resultado sem
+querer</strong>, por exemplo a linha piezométrica, o dimensionamento de uma seção ou um volume de corte
+e aterro. A cada iteração, o <code>vcm</code>:</p>
+<ul>
+<li>roda o conjunto N vezes e confere se o hash é sempre o mesmo (<strong>determinismo</strong>);</li>
+<li>mede o tempo e o pico de memória (<strong>eficiência</strong>).</li>
+</ul>
+<p>A última linha impressa precisa ser um JSON: <code>{&quot;hash&quot;: ..., &quot;tempo_ms&quot;: ..., &quot;pico_ram_mb&quot;: ...}</code>.
+O modelo gerado já faz isso.</p>
+<h2 id="doc-guia-4-o-ciclo-de-cada-iteracao">4. O ciclo de cada iteração</h2>
+<pre class="mermaid">flowchart LR
+    E[&quot;Especificar a tarefa&lt;br/&gt;(você + Opus)&quot;] --&gt; X[&quot;Executar&lt;br/&gt;Sonnet ou Haiku&quot;]
+    X --&gt; C[&quot;Commit&quot;]
+    C --&gt; B[&quot;vcm balanco BASE HEAD&quot;]
+    B --&gt; D{&quot;Decisão&quot;}
+    D --&gt;|REVERTER| R[&quot;git revert&quot;]
+    D --&gt;|MANTER| M[&quot;seguir&quot;]
+    D --&gt;|DECISAO_HUMANA| H[&quot;você decide e registra&quot;]
+</pre>
+<pre><code class="language-bash"># depois de cada commit (ou par de commits) de uma tarefa:
+vcm balanco HEAD~1 HEAD
+# abre o cartão com radar e semáforo:
+#   results/iteracoes/&lt;base&gt;_&lt;alvo&gt;.html
+</code></pre>
+<p>O cartão responde, com números:</p>
+<ul>
+<li>ficou mais <strong>eficiente</strong>?</li>
+<li>ficou mais <strong>determinístico</strong>?</li>
+<li>ficou mais <strong>enxuto</strong>?</li>
+<li>ficou mais <strong>robusto</strong>?</li>
+<li><strong>perdeu</strong> algo?</li>
+</ul>
+<p>O <strong>radar</strong> compara antes e depois por dimensão (1,0 = igual; maior é melhor). O <strong>semáforo</strong>
+mostra o estado atual de cada dimensão:</p>
+<ul>
+<li>🟢 dentro do limite;</li>
+<li>🟡 atenção;</li>
+<li>🔴 fora do limite;</li>
+<li>⚪ sem medição.</li>
+</ul>
+<p>Os limites padrão podem ser ajustados em <code>vcm.yaml</code>, na chave <code>limites</code>.</p>
+<h2 id="doc-guia-5-usar-os-agentes">5. Usar os agentes</h2>
+<p>Na sessão do Claude Code, o Opus é o gerente. Peça explicitamente:</p>
+<blockquote>
+<p>&quot;Use o executor-sonnet para implementar X com testes, numa worktree. Depois rode o balanço.&quot;</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Tarefa</th>
+<th>Agente</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cálculo novo, módulo com lógica, protótipo de alternativa</td>
+<td><code>executor-sonnet</code></td>
+</tr>
+<tr>
+<td>Tabelas de dados, ajustes de lint, testes a partir de exemplos</td>
+<td><code>executor-haiku</code></td>
+</tr>
+<tr>
+<td>Decompor, revisar, integrar, decidir trocas</td>
+<td>sessão principal (Opus)</td>
+</tr>
+</tbody>
+</table>
+<p>Cada execução pode ser registrada para comparar custo e qualidade entre modelos:</p>
+<pre><code class="language-bash">uv run python -c &quot;from vcm import agentes; agentes.registrar(modelo='claude-sonnet-5-5', tarefa='...', tokens=..., duracao_s=..., aprovado=True)&quot;
+vcm agentes      # tokens por tarefa aprovada, por modelo
+</code></pre>
+<h2 id="doc-guia-6-comparar-alternativas-teses">6. Comparar alternativas (teses)</h2>
+<p>Quando houver dúvida entre duas formas de fazer, por exemplo NumPy × Polars, não escolha por
+gosto: implemente as duas atrás da mesma interface, meça e registre. O exemplo completo está na
+tese <strong>T005</strong> deste repositório (<code>theses/T005-perda-de-carga/</code> e <code>src/vcm/prototipos/perda_de_carga/</code>):
+dados sintéticos, gabarito independente, runner com repetições e relatório HTML.</p>
+<h2 id="doc-guia-7-calibrar-o-ruido">7. Calibrar o ruído</h2>
+<p>Antes de confiar em &quot;ficou mais eficiente&quot;, meça quanto as métricas oscilam sem mudança de código:</p>
+<pre><code class="language-bash">uv run python -c &quot;from pathlib import Path; from vcm import ruido; ruido.gravar(ruido.estimar(ruido.medir_repetido(Path('.'), repeticoes=3)))&quot;
+</code></pre>
+<p>O balanço passa a usar <code>results/ruido.parquet</code> automaticamente.</p>
+<h2 id="doc-guia-8-problemas-comuns">8. Problemas comuns</h2>
+<table>
+<thead>
+<tr>
+<th>Sintoma</th>
+<th>Causa provável</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&quot;Ficou mais determinístico?&quot; = sem medição</td>
+<td><code>referencia.comando</code> ausente no <code>vcm.yaml</code> ou o módulo não imprime o JSON</td>
+</tr>
+<tr>
+<td>Determinismo &lt; 1,0 com NumPy</td>
+<td>Número de threads do BLAS variando; fixe <code>OPENBLAS_NUM_THREADS</code> (ver repertório do NumPy)</td>
+</tr>
+<tr>
+<td>Balanço lento</td>
+<td>A suíte de testes roda dentro da medição; use <code>--sem-testes</code> para uma leitura rápida</td>
+</tr>
+<tr>
+<td><code>REVERTER</code> inesperado</td>
+<td>Veja a linha vermelha do cartão: teste falhando, alerta de segurança ou hash instável</td>
+</tr>
+</tbody>
+</table>
+
+</article>
+
+<article id="doc-arquitetura">
+  <div class="fonte">
+    <span>Fonte: <a href="arquitetura.md">docs/arquitetura.md</a></span>
+    <span>Gerado por <code>uv run vcm docs</code></span>
+  </div>
+  <h1 id="doc-arquitetura-arquitetura-de-funcionamento">Arquitetura de funcionamento</h1>
+<blockquote>
+<p><strong>Vibe Code Metrics</strong> é um laboratório de decisões técnicas para desenvolvimento assistido por IA.
+A IA propõe, o código executa, os testes verificam, as métricas comparam e o humano decide.
+O próprio repositório é desenvolvido com o seu método (tese <strong>T000</strong>).</p>
+</blockquote>
+<p>Versão 0.3 · 31/10/2026 · Status: protótipo em construção. Plano de execução: <a href="#doc-plano">plano.md</a>.
+Regras de código: <a href="#doc-estilo">estilo.md</a>.</p>
+<h2 id="doc-arquitetura-1-ideia-em-uma-pagina">1. Ideia em uma página</h2>
+<p>O repositório não escolhe ferramentas por gosto. Ele mantém um <strong>repertório</strong> de alternativas
+(NumPy, Polars, Parquet, NetworkX, JSON-LD, Haiku, Sonnet, Opus, Fable, Codex, modelos locais…),
+testa essas alternativas em <strong>teses</strong> com gabarito próprio e usa as evidências para <strong>recomendar</strong>
+o que usar em cada perfil de problema. Cada iteração de código termina com uma <strong>retrospectiva
+medida</strong>: ficou mais eficiente, mais determinístico, mais enxuto, mais robusto? Perdeu algo?
+Vale continuar?</p>
+<pre class="mermaid">flowchart TB
+    subgraph Conhecimento
+        R[&quot;Repertório&lt;br/&gt;alternativas por papel&quot;]
+        T[&quot;Teses&lt;br/&gt;hipótese + protocolo + gabarito&quot;]
+        E[&quot;Evidências&lt;br/&gt;runs em Parquet&quot;]
+        S[&quot;Recomendador&lt;br/&gt;perfil → alternativa&quot;]
+    end
+    subgraph Motor[&quot;Motor PDCA&quot;]
+        P[&quot;Plan&lt;br/&gt;humano + gerente&quot;]
+        D[&quot;Do&lt;br/&gt;agentes executores&quot;]
+        C[&quot;Check&lt;br/&gt;avaliador Python trancado&quot;]
+        A[&quot;Act&lt;br/&gt;manter · reverter · decidir&quot;]
+    end
+    subgraph Saida[&quot;Saída&quot;]
+        H[&quot;Relatórios HTML&lt;br/&gt;tese · iteração · histórico&quot;]
+    end
+    R --&gt; T --&gt; P --&gt; D --&gt; C --&gt; A
+    C --&gt; E --&gt; S --&gt; R
+    A --&gt; H
+    E --&gt; H
+    A --&gt;|&quot;estagnou? sugerir alternativa&quot;| R
+</pre>
+<h2 id="doc-arquitetura-2-componentes">2. Componentes</h2>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>O que é</th>
+<th>Formato</th>
+<th>Pasta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Repertório</strong></td>
+<td>Alternativas classificadas por <strong>papel</strong> (extração, cálculo, armazenamento, intercâmbio, apresentação, orquestração de IA). Só se compara o que cumpre o mesmo papel.</td>
+<td>YAML</td>
+<td><code>repertorio/</code></td>
+</tr>
+<tr>
+<td><strong>Catálogo de modelos</strong></td>
+<td>Modelos de IA disponíveis, preço, data de verificação e papéis sugeridos. Atualizado quando um fornecedor lança modelo novo, o que dispara regressão.</td>
+<td>YAML</td>
+<td><code>repertorio/modelos.yaml</code></td>
+</tr>
+<tr>
+<td><strong>Tese</strong></td>
+<td>Hipótese falsificável + protocolo (métricas, tolerâncias, orçamento, repetições) + gabarito congelado + decisão.</td>
+<td>Markdown + YAML</td>
+<td><code>theses/Txxx-*/</code></td>
+</tr>
+<tr>
+<td><strong>Runner</strong></td>
+<td>Executa alternativas sobre os mesmos casos, com repetições, isolamento em subprocesso, pico de RAM, hash de saída.</td>
+<td>Python</td>
+<td><code>src/vcm/runners/</code></td>
+</tr>
+<tr>
+<td><strong>Coletores</strong></td>
+<td>Medição passiva: telemetria do agente, git, análise estática, testes.</td>
+<td>Python → Parquet</td>
+<td><code>src/vcm/coletores/</code></td>
+</tr>
+<tr>
+<td><strong>Avaliador</strong></td>
+<td>Compara a saída com o gabarito por tolerância declarada. É código determinístico e os agentes não podem alterá-lo.</td>
+<td>Python</td>
+<td><code>theses/*/avaliador.py</code></td>
+</tr>
+<tr>
+<td><strong>Balanço</strong></td>
+<td>Retrospectiva de iteração: antes × depois, veredito por métrica e decisão proposta.</td>
+<td>Python</td>
+<td><code>src/vcm/balanco.py</code></td>
+</tr>
+<tr>
+<td><strong>Recomendador</strong></td>
+<td>Consulta as evidências por perfil de problema.</td>
+<td>Python</td>
+<td><code>src/vcm/recomendador.py</code></td>
+</tr>
+<tr>
+<td><strong>Relatórios</strong></td>
+<td>HTML autocontido com Plotly, um por tese, um por iteração e um painel histórico.</td>
+<td>HTML</td>
+<td><code>results/reports/</code></td>
+</tr>
+<tr>
+<td><strong>Documentação</strong></td>
+<td>Este Markdown é a fonte. <code>vcm docs</code> gera <code>docs/index.html</code>, e o CI garante que o HTML está em dia.</td>
+<td>MD → HTML</td>
+<td><code>docs/</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="doc-arquitetura-3-o-ciclo-pdca-de-uma-iteracao">3. O ciclo PDCA de uma iteração</h2>
+<p>Uma <strong>iteração</strong> é um commit ou um PR. Ela pode ser feita por um humano, por um agente ou por
+vários agentes coordenados por um gerente.</p>
+<pre class="mermaid">sequenceDiagram
+    actor H as Humano
+    participant G as Gerente (Fable/Opus)
+    participant W as Executores (Haiku/Sonnet/Opus/Codex)
+    participant C as Avaliador + coletores (Python)
+    participant R as Histórico (Parquet) + HTML
+    H-&gt;&gt;G: tese, protocolo e orçamento (Plan)
+    G-&gt;&gt;W: tarefas pequenas, cada uma com modelo e orçamento
+    W-&gt;&gt;W: implementa em worktree isolada (Do)
+    W-&gt;&gt;C: entrega a alteração
+    C-&gt;&gt;C: confere o hash do avaliador e do gabarito
+    C-&gt;&gt;C: mede antes × depois (Check)
+    C-&gt;&gt;R: grava o run e o balanço
+    C-&gt;&gt;G: veredito por métrica + decisão proposta
+    alt eliminatória piorou
+        G-&gt;&gt;W: reverter
+    else melhorou sem perdas
+        G-&gt;&gt;R: manter (commit)
+    else houve troca
+        G-&gt;&gt;H: decisão humana com a tabela de trocas
+    end
+    H-&gt;&gt;R: aprova o que entra no repertório (Act)
+</pre>
+<h3 id="doc-arquitetura-quem-faz-o-que">Quem faz o quê</h3>
+<table>
+<thead>
+<tr>
+<th>Etapa</th>
+<th>Responsável</th>
+<th>Regra que não se negocia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Plan</strong></td>
+<td>Humano + gerente</td>
+<td>Protocolo, métricas, tolerâncias e gabarito commitados <strong>antes</strong> de rodar</td>
+</tr>
+<tr>
+<td><strong>Do</strong></td>
+<td>Executores</td>
+<td>Cada um trabalha numa worktree isolada, com orçamento de tokens e de tempo</td>
+</tr>
+<tr>
+<td><strong>Check</strong></td>
+<td><strong>Código Python</strong>, nunca uma IA</td>
+<td>Avaliador e gabarito com hash conferido. Alteração detectada invalida o run.</td>
+</tr>
+<tr>
+<td><strong>Act</strong></td>
+<td>Regra automática + humano</td>
+<td>Reverter e manter podem ser automáticos. Trocas e entradas no repertório exigem aprovação humana.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="doc-arquitetura-4-retrospectiva-de-iteracao">4. Retrospectiva de iteração</h2>
+<p>Ao fim de cada iteração, o repositório faz as provocações abaixo. Primeiro responde com números,
+depois a IA interpreta e, por fim, o humano decide.</p>
+<table>
+<thead>
+<tr>
+<th>Pergunta</th>
+<th>Métricas (antes × depois)</th>
+<th>Coleta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ficou <strong>mais eficiente</strong>?</td>
+<td>tempo p50/p95, pico de RAM, custo da iteração</td>
+<td>pytest-benchmark ou asv, psutil, telemetria</td>
+</tr>
+<tr>
+<td>Ficou <strong>mais determinístico</strong>?</td>
+<td>fração de execuções idênticas em N repetições, cobertura determinística ponderada</td>
+<td>runner + numpy</td>
+</tr>
+<tr>
+<td>Ficou <strong>mais enxuto</strong>?</td>
+<td>SLOC, complexidade média, duplicação, nº de dependências</td>
+<td>radon, ruff, <code>pyproject.toml</code></td>
+</tr>
+<tr>
+<td>Ficou <strong>mais robusto</strong>?</td>
+<td>testes falhando, cobertura, mutation score, alertas de segurança</td>
+<td>pytest, coverage, mutmut, bandit</td>
+</tr>
+<tr>
+<td><strong>Perdeu</strong> algo?</td>
+<td>toda métrica que piorou além do ruído</td>
+<td><code>vcm.balanco</code></td>
+</tr>
+<tr>
+<td>Vale <strong>continuar</strong> nessa linha?</td>
+<td>tendência das últimas k iterações e ganho ÷ custo</td>
+<td>histórico em Parquet</td>
+</tr>
+</tbody>
+</table>
+<pre class="mermaid">flowchart TD
+    M[&quot;Medir antes × depois&lt;br/&gt;(variação além do ruído)&quot;] --&gt; E{&quot;Alguma eliminatória piorou?&lt;br/&gt;testes · determinismo · segurança&quot;}
+    E --&gt;|sim| REV[&quot;REVERTER&quot;]
+    E --&gt;|não| P{&quot;Alguma métrica piorou?&quot;}
+    P --&gt;|sim| HUM[&quot;DECISÃO HUMANA&lt;br/&gt;troca registrada com justificativa&quot;]
+    P --&gt;|não| G{&quot;Alguma melhorou?&quot;}
+    G --&gt;|sim| MAN[&quot;MANTER&quot;]
+    G --&gt;|não| SG[&quot;SEM GANHO&quot;]
+    SG --&gt; CV{&quot;3 iterações seguidas sem ganho?&quot;}
+    CV --&gt;|sim| PARE[&quot;PARAR esta linha&lt;br/&gt;consultar o repertório por alternativa&quot;]
+    CV --&gt;|não| MAN2[&quot;seguir iterando&quot;]
+</pre>
+<h3 id="doc-arquitetura-radar-de-semaforo">Radar de semáforo</h3>
+<p>O cartão de cada iteração traz duas leituras, ambas calculadas em Python:</p>
+<ul>
+<li><strong>Radar (relativo):</strong> por dimensão, um índice com antes = 1,0, calculado como a média
+geométrica das razões depois/antes orientadas para que acima de 1,0 seja melhor.</li>
+<li><strong>Semáforo (absoluto):</strong> cada métrica recebe 🟢🟡🔴 por limites (<code>limites_padrao.yaml</code>, que
+podem ser sobrepostos no <code>vcm.yaml</code> do projeto); a cor da dimensão é a pior entre as suas
+métricas, e ⚪ indica sem medição.</li>
+</ul>
+<p>Exemplos reais: <a href="exemplos/cartao-manter.html">cartão MANTER</a> e
+<a href="exemplos/cartao-reverter.html">cartão REVERTER</a>, gerados no teste ponta a ponta.</p>
+<p>O <strong>ruído</strong> de cada métrica vem de repetições. O tempo de execução oscila alguns por cento,
+enquanto SLOC não oscila nada. Uma variação dentro do ruído é declarada &quot;igual&quot;, nunca
+&quot;melhorou&quot;. O critério de parada funciona como num método iterativo: quando o resíduo para de
+cair, insistir só gasta tokens.</p>
+<h2 id="doc-arquitetura-5-o-que-e-medido-passivamente-e-o-que-exige-protocolo">5. O que é medido passivamente e o que exige protocolo</h2>
+<table>
+<thead>
+<tr>
+<th>Passivo (basta instrumentar)</th>
+<th>Exige protocolo de tese</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tokens, custo equivalente de API, latência por chamada (OpenTelemetry do Claude Code, logs de sessão)</td>
+<td>Delimitação da tarefa e critério de &quot;aprovada&quot;</td>
+</tr>
+<tr>
+<td>Edições aceitas e rejeitadas, tempo ativo, linhas, commits, PRs</td>
+<td>Gabarito e tolerâncias por grandeza (cotas: tolerância <strong>absoluta</strong>)</td>
+</tr>
+<tr>
+<td>Trailers <code>Co-Authored-By</code> (o que a IA escreveu)</td>
+<td>Classificação das intervenções humanas</td>
+</tr>
+<tr>
+<td>Testes, cobertura, complexidade e segurança no CI</td>
+<td>Repetições, variância e intervalos de confiança</td>
+</tr>
+<tr>
+<td>Histórico git: churn e retrabalho em 14 dias</td>
+<td>Linha de base de sistema existente (testes de caracterização)</td>
+</tr>
+<tr>
+<td></td>
+<td>Pesos de criticidade do índice de determinismo</td>
+</tr>
+</tbody>
+</table>
+<p>Cada sessão de agente é marcada com <code>OTEL_RESOURCE_ATTRIBUTES=&quot;tese=T000,tarefa=...&quot;</code>. É essa
+marcação que liga a telemetria à tarefa e permite calcular <strong>custo por tarefa aprovada</strong>.
+Em planos de assinatura, o custo medido é <strong>equivalente de API</strong>, não o gasto real. O relatório
+precisa dizer isso.</p>
+<h2 id="doc-arquitetura-6-multiagente-e-catalogo-de-modelos">6. Multiagente e catálogo de modelos</h2>
+<p><strong>Configuração atual (decisão do mantenedor):</strong> o <strong>Opus</strong> é o modelo máximo e atua como
+<strong>gerente</strong> na sessão principal. Ele delega ao <strong>Sonnet</strong> e ao <strong>Haiku</strong>. O Fable não é usado
+neste momento.</p>
+<table>
+<thead>
+<tr>
+<th>Papel</th>
+<th>Modelo</th>
+<th>Faz</th>
+<th>Não faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Gerente</strong></td>
+<td>Opus (sessão principal)</td>
+<td>Decompõe a fase em tarefas com especificação e teste de aceite; escolhe o executor; integra; roda o balanço; leva trocas ao humano</td>
+<td>Tarefas mecânicas que um executor faz mais barato</td>
+</tr>
+<tr>
+<td><strong>Executor padrão</strong></td>
+<td>Sonnet</td>
+<td>Implementação com testes a partir de especificação clara (coletores, protótipos de tese)</td>
+<td>Decidir arquitetura</td>
+</tr>
+<tr>
+<td><strong>Executor mecânico</strong></td>
+<td>Haiku</td>
+<td>Entradas de repertório, ajustes de lint, testes a partir de exemplos, resumos</td>
+<td>Qualquer coisa ambígua</td>
+</tr>
+<tr>
+<td><strong>Revisor</strong></td>
+<td>Opus, ou outro fornecedor na Fase 7</td>
+<td>Revisão do que um executor entregou</td>
+<td>Revisar o próprio código</td>
+</tr>
+<tr>
+<td><strong>Avaliador (Check)</strong></td>
+<td><strong>Python, não é IA</strong></td>
+<td><code>vcm balanco</code>, testes, tolerâncias</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Dados confidenciais</strong></td>
+<td>Modelo local de pesos abertos (Fase 7)</td>
+<td>Desenho de cliente não sai da máquina</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Cada execução delegada é registrada em <code>results/agentes/execucoes.csv</code> com modelo, tokens,
+chamadas de ferramenta, duração e se a entrega foi aprovada na integração. Essa é a base de
+dados da tese <strong>T003 (roteamento)</strong>: a tabela acima é hipótese e passa a ser corrigida pelo custo
+por tarefa aprovada de cada modelo.</p>
+<p>Nenhum nome de modelo fica fixo no código: tudo vem de <code>repertorio/modelos.yaml</code>.</p>
+<h2 id="doc-arquitetura-7-repertorio-uma-entrada">7. Repertório: uma entrada</h2>
+<pre><code class="language-yaml"># repertorio/calculo/numpy.yaml
+id: numpy
+papel: calculo
+quando_considerar: [matriz densa, algebra linear, vetorizacao]
+cuidados: [ordem de soma muda com threads do BLAS -&gt; medir determinismo]
+evidencias:
+  - tese: T005-perda-de-carga
+    perfil: {n_trechos: 5000, dtype: float64, operacao: cumsum}
+    resultado: venceu
+    metricas: {tempo_p50_ms: null, pico_ram_mb: null, deterministico: null}
+    run: results/runs/T005/....parquet
+status: em_teste   # em_teste | aprovado | rejeitado
+</code></pre>
+<p>Alternativas que não competem entre si não são comparadas. NumPy (cálculo matricial) e Polars
+(tabelas) costumam <strong>cooperar</strong>: Polars filtra e junta, <code>.to_numpy()</code> calcula. NetworkX
+(algoritmos em memória) e JSON-LD (intercâmbio semântico) estão em papéis diferentes.</p>
+<h2 id="doc-arquitetura-8-dados-e-formatos">8. Dados e formatos</h2>
+<table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Formato</th>
+<th>Por quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Protocolos, repertório, catálogo de modelos</td>
+<td>YAML</td>
+<td>Legível, versionado em git, validado com schema</td>
+</tr>
+<tr>
+<td>Runs, telemetria normalizada, histórico de iterações</td>
+<td>Parquet</td>
+<td>Colunar, tipado, lido direto por pandas e Polars</td>
+</tr>
+<tr>
+<td>Telemetria bruta</td>
+<td>JSON Lines</td>
+<td>Como sai dos coletores, sem perda</td>
+</tr>
+<tr>
+<td>Hash de entradas e saídas</td>
+<td>SHA-256 sobre os <strong>dados</strong> (não sobre os bytes do arquivo)</td>
+<td>Metadados do Parquet mudam sem os dados mudarem</td>
+</tr>
+<tr>
+<td>Documentação e relatórios</td>
+<td>Markdown → HTML</td>
+<td>Markdown para editar e versionar, HTML para ler</td>
+</tr>
+</tbody>
+</table>
+<h2 id="doc-arquitetura-9-estrutura-do-repositorio">9. Estrutura do repositório</h2>
+<pre><code class="language-text">vibe_code_metrics/
+  README.md                 método (visão geral)
+  CLAUDE.md                 regras para agentes que trabalham aqui
+  docs/
+    arquitetura.md          este documento (fonte)
+    plano.md                plano de implementação (fonte)
+    estilo.md               regras de código do mantenedor
+    index.html              gerado por `vcm docs`
+  repertorio/               alternativas por papel + modelos.yaml
+  theses/
+    T000-autodesenvolvimento/
+    T001-extracao-pranchas/ ...
+  src/vcm/
+    balanco.py              retrospectiva de iteração
+    docs.py                 Markdown -&gt; HTML
+    coletores/              git, código, testes, telemetria
+    runners/                execução de teses
+    relatorios/             HTML com Plotly
+  results/
+    iteracoes/              balanço de cada iteração (Parquet + HTML)
+    runs/                   runs de teses
+  tests/
+  reports/, research_notes/ pesquisa de referência
+</code></pre>
+<h2 id="doc-arquitetura-10-principios-inviolaveis">10. Princípios invioláveis</h2>
+<ol>
+<li><strong>Cálculo final de engenharia é código determinístico</strong>, com teste.</li>
+<li><strong>Avaliador e gabarito são trancados</strong>: hash conferido a cada run, e os agentes não têm permissão de escrita neles.</li>
+<li><strong>Critérios são fixados antes dos resultados</strong>, com commit do protocolo antes do run.</li>
+<li><strong>Nada vira nota única</strong>: as métricas aparecem lado a lado e as eliminatórias vêm primeiro.</li>
+<li><strong>Toda variação é comparada com o ruído</strong> medido em repetições.</li>
+<li><strong>Orçamento por ciclo</strong> (tokens, tempo e custo) com critério de parada.</li>
+<li><strong>Entrada no repertório exige aprovação humana</strong>, registrada em <code>decision.md</code>.</li>
+<li><strong>Dados confidenciais</strong> só vão para modelos autorizados pela política da tese.</li>
+</ol>
+<h2 id="doc-arquitetura-11-o-repositorio-como-prototipo-dele-mesmo-t000">11. O repositório como protótipo dele mesmo (T000)</h2>
+<p>O desenvolvimento do <code>vcm</code> é a primeira tese. Cada PR deste repositório passa pela retrospectiva
+(seção 4), e o histórico mostra, ao longo do tempo:</p>
+<ul>
+<li>quanto custou cada funcionalidade e qual modelo a fez;</li>
+<li>se o código ficou mais enxuto, robusto e determinístico, ou se degradou;</li>
+<li>quando uma linha de trabalho convergiu e foi trocada.</li>
+</ul>
+<p>Detalhes em <a href="../theses/T000-autodesenvolvimento/hypothesis.md">theses/T000-autodesenvolvimento</a>.</p>
+<h2 id="doc-arquitetura-12-como-esta-documentacao-se-mantem-atualizada">12. Como esta documentação se mantém atualizada</h2>
+<pre class="mermaid">flowchart LR
+    MD[&quot;docs/*.md&lt;br/&gt;(fonte)&quot;] --&gt;|&quot;uv run vcm docs&quot;| HTML[&quot;docs/index.html&quot;]
+    MD --&gt; GH[&quot;GitHub renderiza o Markdown&lt;br/&gt;e os diagramas&quot;]
+    HTML --&gt; CI{&quot;CI: vcm docs --check&quot;}
+    CI --&gt;|&quot;desatualizado&quot;| X[&quot;falha o build&quot;]
+    CI --&gt;|&quot;em dia&quot;| OK[&quot;ok&quot;]
+</pre>
+<p>A geração é <strong>determinística</strong>: sem data no arquivo, o mesmo Markdown sempre produz os mesmos
+bytes. Assim o CI consegue detectar HTML desatualizado. A regra está em <code>CLAUDE.md</code>, para que
+qualquer agente regenere o HTML ao editar a documentação.</p>
+
+</article>
+
+<article id="doc-plano">
+  <div class="fonte">
+    <span>Fonte: <a href="plano.md">docs/plano.md</a></span>
+    <span>Gerado por <code>uv run vcm docs</code></span>
+  </div>
+  <h1 id="doc-plano-plano-de-implementacao">Plano de implementação</h1>
+<blockquote>
+<p>Roteiro para implementar o Vibe Code Metrics <strong>usando o próprio método</strong> (tese T000).
+Cada fase é entregue em PRs pequenos. A partir da Fase 1, cada PR termina com a retrospectiva
+de iteração. Arquitetura de referência: <a href="#doc-arquitetura">arquitetura.md</a>.</p>
+</blockquote>
+<p>Legenda: <code>[x]</code> feito · <code>[ ]</code> a fazer · <strong>Aceite</strong> = critério objetivo para fechar a fase.</p>
+<h2 id="doc-plano-visao-geral-das-fases">Visão geral das fases</h2>
+<table>
+<thead>
+<tr>
+<th>Fase</th>
+<th>Entrega</th>
+<th>Depende de</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Fundação: pacote, documentação viva, balanço, CI, T000</td>
+<td>—</td>
+<td>concluída</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Retrospectiva automática por iteração, radar de semáforo, <code>vcm iniciar</code></td>
+<td>0</td>
+<td>concluída (3 itens menores em aberto)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Telemetria de agentes e custo por iteração</td>
+<td>1</td>
+<td>próxima</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Repertório, schema de tese e runner; primeira tese técnica (T005)</td>
+<td>1</td>
+<td>a fazer</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Relatórios HTML com Plotly e painel histórico</td>
+<td>1, 3</td>
+<td>a fazer</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Orquestração multiagente com avaliador trancado</td>
+<td>2, 3</td>
+<td>a fazer</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Recomendador (<code>vcm sugerir</code>)</td>
+<td>3, 4</td>
+<td>a fazer</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Multi-fornecedor (Codex, modelos locais) e política de dados</td>
+<td>2, 5</td>
+<td>a fazer</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Teses do primeiro programa (T001–T004) no projeto-em-camadas</td>
+<td>3–7</td>
+<td>a fazer</td>
+</tr>
+</tbody>
+</table>
+<pre class="mermaid">flowchart LR
+    F0[&quot;0 Fundação&quot;] --&gt; F1[&quot;1 Retrospectiva&quot;]
+    F1 --&gt; F2[&quot;2 Telemetria&quot;]
+    F1 --&gt; F3[&quot;3 Repertório + runner&quot;]
+    F1 --&gt; F4[&quot;4 Relatórios&quot;]
+    F3 --&gt; F4
+    F2 --&gt; F5[&quot;5 Multiagente&quot;]
+    F3 --&gt; F5
+    F3 --&gt; F6[&quot;6 Recomendador&quot;]
+    F4 --&gt; F6
+    F2 --&gt; F7[&quot;7 Multi-fornecedor&quot;]
+    F5 --&gt; F7
+    F5 --&gt; F8[&quot;8 Teses T001–T004&quot;]
+    F6 --&gt; F8
+    F7 --&gt; F8
+</pre>
+<h2 id="doc-plano-fase-0-fundacao">Fase 0 — Fundação</h2>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>pyproject.toml</code> com <code>uv</code>, pacote <code>vcm</code> em <code>src/</code>, CLI <code>vcm</code></li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm.balanco</code>: tabela antes × depois, veredito com ruído, regra de decisão, convergência, com testes</li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm docs</code>: Markdown → HTML único e determinístico, com diagramas Mermaid e <code>--check</code></li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>docs/arquitetura.md</code> e <code>docs/plano.md</code> (este arquivo)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> CI no GitHub Actions: <code>ruff</code>, <code>pytest</code> e <code>vcm docs --check</code></li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>CLAUDE.md</code> com as regras para agentes</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Esqueleto da tese T000 (<code>hypothesis.md</code>, <code>protocol.yaml</code>)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>docs/estilo.md</code>: regras de código do mantenedor (português, Python calcula, HTML apresenta, SI)</li>
+</ul>
+<p><strong>Aceite:</strong> <code>uv run pytest</code> verde; <code>uv run vcm docs --check</code> verde; HTML abre com navegação e diagramas.</p>
+<h2 id="doc-plano-fase-1-retrospectiva-automatica">Fase 1 — Retrospectiva automática</h2>
+<p>Objetivo: toda iteração (commit ou PR) gera o balanço antes × depois sem trabalho manual.
+Executada com agentes: <strong>Opus</strong> gerencia e integra; <strong>Sonnet</strong> e <strong>Haiku</strong> executam (modelo indicado em cada item).</p>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm.coletores.codigo</code> (Sonnet): SLOC e complexidade média (radon), nº de dependências (<code>pyproject.toml</code>), alertas de segurança (bandit)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm.coletores.testes</code> (Sonnet): testes totais e falhando, cobertura (coverage.py), tempo da suíte</li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm.coletores.determinismo</code> + <code>vcm.referencia</code> (Sonnet): N execuções do conjunto de referência em subprocesso, com fração de saídas idênticas por hash</li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm snapshot [--ref REF]</code> (Opus): mede um ref via <code>git worktree</code> e grava uma linha em <code>results/snapshots.parquet</code></li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm balanco BASE HEAD</code> (Opus): compara dois snapshots, grava <code>results/iteracoes/</code> e gera o cartão em Markdown e HTML</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Registro de execuções de agentes em <code>results/agentes/execucoes.csv</code> (Opus)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Estimar o <strong>ruído</strong> de cada métrica com repetições e gravar em <code>results/ruido.parquet</code></li>
+<li class="tarefa"><input type="checkbox" disabled checked> GitHub Action em PR: roda o balanço contra a base e anexa o cartão HTML como artefato (escrita; o Actions da conta ainda não executa jobs)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Métricas de &quot;enxuto&quot; normalizadas: SLOC bruto passa a ser informativo; julgam-se SLOC por função, complexidade e dependências</li>
+<li class="tarefa"><input type="checkbox" disabled> Tipo da iteração (funcionalidade, refatoração, correção) registrado no cartão</li>
+<li class="tarefa"><input type="checkbox" disabled> Métrica separada de sensibilidade a threads (mesmo código com 1 thread × N threads)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Registrar a Fase 0 como linha de base da T000</li>
+</ul>
+<p>Trabalho antecipado das Fases 3 e 4, a pedido do mantenedor:</p>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled checked> Repertório inicial em <code>repertorio/</code> (Haiku): uma entrada YAML por alternativa, por papel</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Protótipo da <strong>T005 — perda de carga na adutora</strong> (Sonnet): NumPy × Polars × Polars + NumPy, com dados sintéticos, gabarito analítico, runner e relatório HTML com Plotly</li>
+</ul>
+<p><strong>Aceite:</strong> o PR mostra o cartão com as 6 perguntas respondidas por números; uma regressão
+proposital em teste resulta em <code>REVERTER</code>. <strong>Atingido</strong> no teste ponta a ponta (ver Fase 1b).</p>
+<h3 id="doc-plano-fase-1b-pronto-para-usar-num-prototipo">Fase 1b — Pronto para usar num protótipo</h3>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm.yaml</code> por projeto (<code>vcm.config</code>), com autodetecção de pastas quando não existe (Sonnet)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Coletores genéricos: determinismo, tempo e memória pelo comando de referência do projeto (Sonnet)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Radar de semáforo no cartão (<code>vcm.semaforo</code>, <code>limites_padrao.yaml</code>) (Sonnet)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm iniciar</code>: adota o método num projeto em um passo (Sonnet)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> README em Markdown correto (Haiku)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Ruído medido por repetição (<code>vcm.ruido</code>) e usado no balanço (Opus)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Tempo e memória viram informativos quando o conjunto de referência muda (Opus)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Guia rápido (<code>docs/guia.md</code>) e cartões de exemplo em <code>docs/exemplos/</code> (Opus)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Teste ponta a ponta num protótipo novo: iteração boa → <code>MANTER</code>; iteração sem semente → <code>REVERTER</code> com código de saída 2 (Opus)</li>
+</ul>
+<h3 id="doc-plano-licoes-da-fase-1-registradas-pelo-proprio-metodo">Lições da Fase 1 (registradas pelo próprio método)</h3>
+<ul>
+<li><strong>O balanço pegou um problema real.</strong> O primeiro cartão (<code>18b6b59 → 8fe6d37</code>) propôs
+<code>REVERTER</code> por um alerta de segurança novo (B314, leitura de XML sem <code>defusedxml</code>). O alerta foi
+corrigido, não silenciado, e a troca (+1 dependência) aparece no cartão seguinte.</li>
+<li><strong>&quot;Enxuto&quot; precisa de contexto.</strong> Numa iteração que adiciona funcionalidade, SLOC e
+dependências sobem por definição. Sem normalização, a regra sempre pede decisão humana. Isso
+virou item do plano.</li>
+<li><strong>Determinismo depende de threads.</strong> Produto matricial e <code>solve</code> do NumPy mudam de hash entre
+1 thread e 4 threads, e são estáveis com o número de threads fixo. Isso foi registrado no
+repertório do NumPy, e a métrica separada virou item do plano.</li>
+<li><strong>O gerente também erra.</strong> Um commit do Opus entrou com teste falhando, porque o código de
+saída do pytest foi mascarado num pipeline de shell. O balanço seguinte propôs <code>REVERTER</code> e o
+erro foi corrigido no commit seguinte. Regra: <code>set -o pipefail</code> em todo pipeline de verificação.</li>
+<li><strong>Agentes em paralelo duplicam utilidades.</strong> O executor da T005 não via o <code>vcm.formatacao</code>,
+criado ao mesmo tempo pelo gerente, e escreveu o seu próprio. O gerente unificou na integração.
+A especificação deve listar os módulos compartilhados em construção.</li>
+<li><strong>Interfaces entre executores paralelos divergem em semântica, não em assinatura.</strong> O
+executor da configuração tratou <code>limites</code> como sobreposição; o do semáforo, como lista
+completa. Com <code>limites: {}</code> o semáforo ficou todo cinza. Os testes de cada um passavam, e só o
+teste ponta a ponta revelou o problema. Regra: a especificação deve dizer o <strong>significado</strong> de
+cada campo compartilhado, e toda integração termina com um teste ponta a ponta.</li>
+<li><strong>O executor também corrige o gerente.</strong> A especificação do radar tinha um erro de sinal no
+expoente. O executor detectou, explicou e implementou o sinal correto.</li>
+<li><strong>Eficiência só se compara com o mesmo trabalho.</strong> Ao acrescentar um cálculo ao conjunto de
+referência, o tempo sobe por mais trabalho, não por código pior. Agora o hash da referência
+identifica o trabalho; se ele muda, tempo e memória viram informativos.</li>
+<li><strong>Ruído medido neste repositório</strong> (3 repetições): tempo de referência ±6% (faixa aceita 12%),
+pico de memória ±0,1%, tempo da suíte ±1,3%.</li>
+<li><strong>Worktrees de agentes nasceram da <code>main</code>.</strong> Os executores precisaram trazer a branch de
+trabalho. Até a branch ir para a <code>main</code>, a especificação de cada tarefa precisa dizer a base.</li>
+</ul>
+<h2 id="doc-plano-fase-2-telemetria-de-agentes">Fase 2 — Telemetria de agentes</h2>
+<p>Objetivo: custo, tokens e tempo de cada iteração, ligados à tese e à tarefa.</p>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled> Documentar a ativação: <code>CLAUDE_CODE_ENABLE_TELEMETRY=1</code>, exportador OTLP e <code>OTEL_RESOURCE_ATTRIBUTES=tese=...,tarefa=...</code></li>
+<li class="tarefa"><input type="checkbox" disabled> Receptor local mínimo (coletor OpenTelemetry com exportador de arquivo, ou receptor OTLP em Python) → JSONL → Parquet</li>
+<li class="tarefa"><input type="checkbox" disabled> Alternativa sem coletor: parser dos logs de sessão locais do Claude Code → Parquet (validar o caminho e o formato atuais antes)</li>
+<li class="tarefa"><input type="checkbox" disabled> <code>repertorio/modelos.yaml</code>: modelo, fornecedor, preço por milhão de tokens (entrada, saída, cache), <strong>data e fonte da verificação</strong></li>
+<li class="tarefa"><input type="checkbox" disabled> Custo da iteração no balanço: tokens, custo equivalente de API, nº de chamadas, edições rejeitadas</li>
+<li class="tarefa"><input type="checkbox" disabled> Indicadores: <code>tokens_por_aprovacao</code>, <code>custo_por_aprovacao</code> (incluindo tempo humano), <code>taxa_de_retrabalho</code></li>
+</ul>
+<p><strong>Aceite:</strong> uma sessão real de Claude Code numa tarefa da T000 aparece no balanço com custo e
+tokens; a soma confere com o painel do fornecedor dentro de 5%.</p>
+<h2 id="doc-plano-fase-3-repertorio-tese-e-runner">Fase 3 — Repertório, tese e runner</h2>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled> Schemas pydantic: entrada de repertório, <code>protocol.yaml</code>, registro de run (campos da seção 10 do README, mais git commit, lockfile, seed, versões do gabarito e do protocolo)</li>
+<li class="tarefa"><input type="checkbox" disabled> <code>vcm tese nova Txxx</code> cria a estrutura da tese a partir de um modelo</li>
+<li class="tarefa"><input type="checkbox" disabled> Runner: mesma entrada para cada alternativa, N repetições, subprocesso isolado, pico de RSS, hash dos dados de saída, tempo p50/p95</li>
+<li class="tarefa"><input type="checkbox" disabled> Avaliador trancado: hash do avaliador e do gabarito gravado no protocolo e conferido no run</li>
+<li class="tarefa"><input type="checkbox" disabled> Separação desenvolvimento/teste no gabarito (holdout congelado)</li>
+<li class="tarefa"><input type="checkbox" disabled> <strong>T005 — Perda de carga na adutora</strong>: NumPy × Polars × Polars + NumPy
+<ul>
+<li>caso: perfil de 5 km com N trechos; Hazen-Williams e Darcy-Weisbach</li>
+<li>gabarito: solução analítica ou de referência com tolerância <strong>absoluta</strong> (m.c.a.)</li>
+<li>métricas: tempo, RAM, determinismo (threads 1 × N), SLOC, legibilidade (revisão)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Aceite:</strong> <code>vcm tese rodar T005</code> produz runs em Parquet e um <code>decision.md</code> preenchido com as evidências.</p>
+<h2 id="doc-plano-fase-4-relatorios-html">Fase 4 — Relatórios HTML</h2>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled checked> Template base compartilhado com <code>vcm docs</code> (mesma identidade visual)</li>
+<li class="tarefa"><input type="checkbox" disabled> Relatório de tese: protocolo, tabela por alternativa, gráficos Plotly (distribuição de tempo, Pareto custo × qualidade), decisão</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Relatório de iteração: cartão com <strong>radar de semáforo</strong> (índice por dimensão e cor por limite)</li>
+<li class="tarefa"><input type="checkbox" disabled> Painel histórico: trajetória de cada métrica por iteração, marcando convergência e degradação</li>
+<li class="tarefa"><input type="checkbox" disabled> Índice <code>results/reports/index.html</code> ligando tudo</li>
+</ul>
+<p><strong>Aceite:</strong> os três relatórios abrem offline (Plotly embutido ou em CDN com fallback) e são gerados de forma determinística.</p>
+<h2 id="doc-plano-fase-5-orquestracao-multiagente">Fase 5 — Orquestração multiagente</h2>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled> Definição de agentes por papel (gerente, executor, revisor) com modelo vindo de <code>modelos.yaml</code></li>
+<li class="tarefa"><input type="checkbox" disabled> Loop PDCA: o gerente decompõe; o executor trabalha numa worktree; o avaliador confere; o balanço decide</li>
+<li class="tarefa"><input type="checkbox" disabled> Orçamento por ciclo (tokens, tempo, custo) e critério de parada (convergência ou orçamento)</li>
+<li class="tarefa"><input type="checkbox" disabled> Bloqueio de escrita em avaliador e gabarito (permissões do agente + hash conferido)</li>
+<li class="tarefa"><input type="checkbox" disabled> Portão humano para trocas e para entradas no repertório</li>
+<li class="tarefa"><input type="checkbox" disabled> <strong>T003 — Roteamento</strong>: mesmo conjunto de tarefas com Haiku, Sonnet e Opus como executores; custo por tarefa aprovada</li>
+</ul>
+<p><strong>Aceite:</strong> um ciclo autônomo de pelo menos 3 iterações numa tarefa da T000, com balanço
+registrado e pelo menos uma decisão humana pedida e registrada.</p>
+<h2 id="doc-plano-fase-6-recomendador">Fase 6 — Recomendador</h2>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled> Índice de evidências por papel e perfil de problema</li>
+<li class="tarefa"><input type="checkbox" disabled> <code>vcm sugerir --papel calculo --perfil n=5000,dtype=float64</code> lista as alternativas com evidência, as lacunas e a sugestão de nova tese</li>
+<li class="tarefa"><input type="checkbox" disabled> Integração com o balanço: quando convergir, sugerir alternativa do repertório</li>
+</ul>
+<p><strong>Aceite:</strong> a consulta para o perfil da T005 retorna a alternativa vencedora com link para o run.</p>
+<h2 id="doc-plano-fase-7-multi-fornecedor-e-politica-de-dados">Fase 7 — Multi-fornecedor e política de dados</h2>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled> Camada de acesso a modelos (LiteLLM ou adaptadores próprios em <code>adapters/llm/</code>)</li>
+<li class="tarefa"><input type="checkbox" disabled> Codex e pelo menos um modelo local de pesos abertos como alternativas no repertório</li>
+<li class="tarefa"><input type="checkbox" disabled> Política de dados por classe (público, interno, confidencial do cliente) aplicada pelo runner</li>
+<li class="tarefa"><input type="checkbox" disabled> Regressão automática ao incluir um modelo novo no catálogo</li>
+</ul>
+<p><strong>Aceite:</strong> a mesma tarefa roda em três fornecedores, com custo e qualidade comparáveis no mesmo relatório.</p>
+<h2 id="doc-plano-fase-8-primeiro-programa-experimental">Fase 8 — Primeiro programa experimental</h2>
+<p>Teses T001 (extração de pranchas), T002 (armazenamento espacial), T003 (roteamento) e T004
+(determinismo) aplicadas ao <strong>projeto-em-camadas</strong>, que é consumido como repositório externo
+com adaptadores próprios.</p>
+<h2 id="doc-plano-regras-de-execucao-deste-plano">Regras de execução deste plano</h2>
+<ol>
+<li>Um PR por item, ou por grupo pequeno de itens; nada de PR monolítico.</li>
+<li>Todo PR atualiza os checkboxes deste arquivo e roda <code>uv run vcm docs</code>.</li>
+<li>A partir da Fase 1, todo PR anexa o cartão de retrospectiva. <code>REVERTER</code> bloqueia o merge.</li>
+<li>Decisões de arquitetura relevantes viram um registro curto em <code>docs/decisoes/</code> (formato ADR).</li>
+<li>Itens que dependem de informação externa (preços, formatos de log, APIs) são verificados na documentação oficial <strong>na hora de implementar</strong>, com data e fonte.</li>
+</ol>
+<h2 id="doc-plano-decisoes-em-aberto-para-o-humano">Decisões em aberto (para o humano)</h2>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled> Qual projeto a referência &quot;Document Parser Benchmark&quot; do README queria citar? (Candidatos: OmniDocBench, olmOCR-Bench, docling-eval.)</li>
+<li class="tarefa"><input type="checkbox" disabled> O uso será por assinatura ou por API? Isso define se o custo reportado é real ou equivalente.</li>
+<li class="tarefa"><input type="checkbox" disabled> Quais classes de dados do projeto-em-camadas podem sair da máquina?</li>
+<li class="tarefa"><input type="checkbox" disabled> Pesos de criticidade iniciais para o índice de determinismo.</li>
+</ul>
+
+</article>
+
+<article id="doc-estilo">
+  <div class="fonte">
+    <span>Fonte: <a href="estilo.md">docs/estilo.md</a></span>
+    <span>Gerado por <code>uv run vcm docs</code></span>
+  </div>
+  <h1 id="doc-estilo-estilo-de-codigo-do-repertorio">Estilo de código do repertório</h1>
+<blockquote>
+<p>Regras do mantenedor. Valem para humanos e para <strong>todos os agentes</strong>. Não são negociáveis:
+uma alteração que as viola é revertida, mesmo que melhore as métricas.</p>
+</blockquote>
+<h2 id="doc-estilo-1-as-quatro-regras">1. As quatro regras</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Regra</th>
+<th>Na prática</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Python em português</strong></td>
+<td>Nomes de variáveis, funções, classes, módulos, docstrings, comentários e mensagens em português. Palavras-chave da linguagem e APIs de bibliotecas ficam como são.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Python calcula</strong></td>
+<td>Todo cálculo, agregação, estatística, conversão de unidade e decisão acontece em Python. Nenhum cálculo vai para outra linguagem.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>HTML/JS apresentam</strong></td>
+<td>HTML, CSS e JavaScript só exibem o que o Python já calculou: tabelas, gráficos, navegação e filtros visuais. JS não soma, não converte, não decide.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Sistema métrico (SI)</strong></td>
+<td>Unidades do Sistema Internacional e as usuais no Brasil (m, mm, m³/s, L/s, kPa, m.c.a., kN, MPa, °C). Nada de pés, polegadas, psi ou galões, nem na entrada nem na saída.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="doc-estilo-2-python-em-portugues">2. Python em português</h2>
+<pre><code class="language-python">import numpy as np
+
+
+def perda_de_carga_hazen_williams(
+    vazao_m3s: np.ndarray,
+    diametro_m: np.ndarray,
+    comprimento_m: np.ndarray,
+    coef_c: np.ndarray,
+) -&gt; np.ndarray:
+    &quot;&quot;&quot;Perda de carga distribuída por trecho (m), fórmula de Hazen-Williams (SI).&quot;&quot;&quot;
+    return 10.67 * comprimento_m * vazao_m3s**1.852 / (coef_c**1.852 * diametro_m**4.87)
+</code></pre>
+<ul>
+<li>Nomes descritivos e sem abreviação obscura: <code>vazao_m3s</code>, não <code>q</code>; <code>perda_total_m</code>, não <code>hf_t</code>.</li>
+<li>Acentos ficam fora dos identificadores (<code>vazao</code>, <code>pressao</code>, <code>funcao</code>) e dentro das docstrings e mensagens.</li>
+<li>Mensagens de erro e de log também em português: <code>raise ValueError(&quot;diâmetro deve ser positivo&quot;)</code>.</li>
+<li>Termos técnicos sem tradução consagrada podem ficar como estão (<code>hash</code>, <code>commit</code>, <code>parquet</code>, <code>worktree</code>).</li>
+</ul>
+<h2 id="doc-estilo-3-unidade-no-nome">3. Unidade no nome</h2>
+<p>Toda grandeza física leva a unidade como <strong>sufixo</strong> do nome. Isso evita a classe de erro mais
+cara da engenharia, que é a de unidade.</p>
+<table>
+<thead>
+<tr>
+<th>Grandeza</th>
+<th>Sufixo</th>
+<th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>comprimento, cota, diâmetro</td>
+<td><code>_m</code>, <code>_mm</code></td>
+<td><code>cota_terreno_m</code>, <code>diametro_mm</code></td>
+</tr>
+<tr>
+<td>área</td>
+<td><code>_m2</code></td>
+<td><code>area_secao_m2</code></td>
+</tr>
+<tr>
+<td>vazão</td>
+<td><code>_m3s</code>, <code>_ls</code></td>
+<td><code>vazao_m3s</code></td>
+</tr>
+<tr>
+<td>velocidade</td>
+<td><code>_ms</code></td>
+<td><code>velocidade_ms</code></td>
+</tr>
+<tr>
+<td>pressão</td>
+<td><code>_kpa</code>, <code>_mca</code></td>
+<td><code>pressao_mca</code></td>
+</tr>
+<tr>
+<td>força, tensão</td>
+<td><code>_kn</code>, <code>_mpa</code></td>
+<td><code>carga_kn</code>, <code>tensao_mpa</code></td>
+</tr>
+<tr>
+<td>tempo</td>
+<td><code>_s</code>, <code>_ms</code>, <code>_min</code></td>
+<td><code>tempo_execucao_ms</code></td>
+</tr>
+<tr>
+<td>memória</td>
+<td><code>_mb</code></td>
+<td><code>pico_ram_mb</code></td>
+</tr>
+<tr>
+<td>adimensional</td>
+<td>sem sufixo, nome explícito</td>
+<td><code>fator_atrito</code>, <code>coef_c</code></td>
+</tr>
+</tbody>
+</table>
+<p>A conversão de unidade é feita <strong>uma vez, na entrada</strong>, por função explícita (<code>mm_para_m</code>).
+O núcleo de cálculo trabalha só em SI.</p>
+<h2 id="doc-estilo-4-python-calcula-de-forma-vetorizada-e-deterministica">4. Python calcula de forma vetorizada e determinística</h2>
+<ul>
+<li><strong>NumPy primeiro</strong> para cálculo numérico: operações vetorizadas e matriciais, sem laço Python sobre elementos.</li>
+<li><strong>pandas ou Polars</strong> para dados tabulares: filtrar, juntar, agrupar. A escolha entre eles é <strong>tese</strong>, não gosto (ver T005).</li>
+<li><strong>Parquet</strong> para persistir tabelas; YAML para configuração; JSON Lines para logs brutos.</li>
+<li><code>dtype</code> explícito (<code>float64</code> para engenharia) e <code>np.random.default_rng(semente)</code> sempre com semente.</li>
+<li>Comparações numéricas com tolerância declarada (<code>np.testing.assert_allclose</code>), nunca <code>==</code> em float.</li>
+<li>Cota, coordenada e nível usam <strong>tolerância absoluta</strong> (m), não relativa.</li>
+<li>Funções puras no núcleo de cálculo: mesma entrada, mesma saída; nada de ler relógio, rede ou estado global.</li>
+</ul>
+<h2 id="doc-estilo-5-html-e-javascript-so-apresentam">5. HTML e JavaScript só apresentam</h2>
+<pre><code class="language-text">Python (numpy/pandas) --calcula--&gt; tabela/figura pronta --serializa--&gt; HTML (+ Plotly JS)
+</code></pre>
+<ul>
+<li>O Python gera o HTML, com Jinja2 para o texto e Plotly para gráficos, já com os valores finais.</li>
+<li>O JavaScript se limita a renderizar gráficos, alternar abas, ordenar e filtrar tabelas.
+Valores exibidos vêm prontos e formatados.</li>
+<li>Formatação brasileira na apresentação: vírgula decimal e ponto de milhar (<code>1.234,56</code>),
+datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>vcm.formatacao</code>).</li>
+</ul>
+<h2 id="doc-estilo-6-verificacao">6. Verificação</h2>
+<p>O CI e a retrospectiva conferem estas regras automaticamente, na medida do possível:</p>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Verificação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Português</td>
+<td>revisão; vocabulário de identificadores em inglês sinalizado na retrospectiva (Fase 1)</td>
+</tr>
+<tr>
+<td>Python calcula</td>
+<td>busca por operações aritméticas em <code>&lt;script&gt;</code> dos HTML gerados (Fase 4)</td>
+</tr>
+<tr>
+<td>SI</td>
+<td>busca por unidades imperiais (<code>inch</code>, <code>ft</code>, <code>psi</code>, <code>gal</code>) no código e nos relatórios</td>
+</tr>
+<tr>
+<td>Unidade no nome</td>
+<td>revisão; testes de unidade nas funções de cálculo</td>
+</tr>
+</tbody>
+</table>
+
+</article>
+
+<footer>Este HTML é derivado dos Markdown (hash da fonte fbb476746b57). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+</main>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  const escuro = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  mermaid.initialize({ startOnLoad: true, theme: escuro ? "dark" : "neutral", securityLevel: "strict" });
+</script>
+</body>
+</html>

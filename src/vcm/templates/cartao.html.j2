@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retrospectiva {{ base }} → {{ alvo }}</title>
+<!-- Gerado por `uv run vcm balanco`. Valores calculados e formatados em Python. -->
+<style>
+{% include "_estilo.css" %}
+body { display: block; }
+main { margin: 0 auto; }
+.decisao { font-size: 20px; font-weight: 700; padding: 14px 18px; border-radius: 10px; margin: 16px 0; }
+.REVERTER { background: #fde8e8; color: #9b1c1c; }
+.MANTER { background: #e6f4ea; color: #1e6b34; }
+.SEM_GANHO { background: #eef1f4; color: #3c4650; }
+.DECISAO_HUMANA { background: #fff4e0; color: #8a5300; }
+td.melhorou { color: #1e6b34; font-weight: 600; }
+td.piorou { color: #b42318; font-weight: 600; }
+td.verde, td.amarelo, td.vermelho, td.cinza { font-weight: 600; }
+.bolinha { display: inline-block; width: 14px; height: 14px; border-radius: 50%; vertical-align: middle; margin-right: 6px; border: 1px solid rgba(0,0,0,.25); }
+.bolinha.verde { background: #2da44e; } .bolinha.amarelo { background: #e3b341; }
+.bolinha.vermelho { background: #d1242f; } .bolinha.cinza { background: #b6bdc6; }
+.dimensoes { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
+.dimensao { border: 1px solid #d0d7de; border-radius: 10px; padding: 10px 16px; min-width: 150px; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<main>
+<article>
+  <h1>Retrospectiva da iteração <code>{{ base }}</code> → <code>{{ alvo }}</code></h1>
+  {% if mensagem %}<p><em>{{ mensagem }}</em></p>{% endif %}
+  <div class="decisao {{ decisao }}">Decisão proposta: {{ decisao }}</div>
+  <p>{{ explicacao }}</p>
+  {% if aviso %}<blockquote>{{ aviso }}</blockquote>{% endif %}
+
+  <h2>Radar da iteração</h2>
+  <p><small>Índice por dimensão: antes = 1,0 (tracejado); acima de 1,0 é melhor. O rótulo traz a cor do semáforo de estado.</small></p>
+  {{ radar_html | safe }}
+
+  <h2>Semáforo por dimensão</h2>
+  <div class="dimensoes">
+    {% for d in semaforo.dimensoes %}<div class="dimensao"><span class="bolinha {{ d.cor }}"></span><strong>{{ d.dimensao }}</strong> ({{ d.cor }})<br><small>índice {{ d.indice }}</small></div>
+    {% endfor %}
+  </div>
+
+  <h2>Perguntas da retrospectiva</h2>
+  <table>
+    <tr><th>Pergunta</th><th>Resposta (medida)</th></tr>
+    {% for p in perguntas %}<tr><td>{{ p.pergunta }}</td><td>{{ p.resposta }}</td></tr>
+    {% endfor %}<tr><td>Vale continuar nessa linha?</td><td>decisão humana, com base no histórico</td></tr>
+  </table>
+
+  <h2>Métricas antes × depois</h2>
+  <table>
+    <tr><th>Métrica</th><th>Pergunta</th><th>Eliminatória</th><th>Antes</th><th>Depois</th><th>Variação</th><th>Veredito</th></tr>
+    {% for r in linhas %}<tr>
+      <td><code>{{ r.metrica }}</code></td><td>{{ r.pergunta }}</td><td>{{ r.eliminatoria }}</td>
+      <td class="num">{{ r.antes }}</td><td class="num">{{ r.depois }}</td><td class="num">{{ r.variacao }}</td>
+      <td class="{{ r.classe }}">{{ r.veredito }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <h2>Semáforo por métrica (estado depois)</h2>
+  <table>
+    <tr><th>Métrica</th><th>Dimensão</th><th>Valor</th><th>Cor</th><th>Regra</th></tr>
+    {% for m in semaforo.metricas %}<tr>
+      <td><code>{{ m.metrica }}</code></td><td>{{ m.dimensao }}</td><td class="num">{{ m.valor }}</td>
+      <td class="{{ m.cor }}"><span class="bolinha {{ m.cor }}"></span>{{ m.cor }}</td><td>{{ m.regra }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <p><small>Variações dentro do ruído de cada métrica são declaradas "igual". Regra de decisão: <code>vcm.balanco.decidir</code>.</small></p>
+</article>
+</main>
+</body>
+</html>

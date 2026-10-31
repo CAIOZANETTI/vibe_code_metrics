@@ -1,0 +1,17 @@
+id: json-ld
+nome: JSON-LD
+papel: intercambio
+descricao: Formato de dados ligados em JSON, em que um contexto associa termos a identificadores globais (IRIs).
+quando_considerar:
+  - intercambiar dados semânticos com vocabulário compartilhado
+  - publicar metadados vinculados a outros conjuntos de dados
+quando_evitar:
+  - troca interna simples, em que um JSON comum basta
+cuidados:
+  - a expansão de contexto pode buscar URLs remotos; usar carregador local e controlado
+coopera_com: []
+compete_com: []
+pacote_python: pyld
+documentacao: https://json-ld.org/
+evidencias: []
+status: candidato

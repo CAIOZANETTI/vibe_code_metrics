@@ -1,0 +1,17 @@
+id: plotly
+nome: Plotly
+papel: apresentacao
+descricao: Gráficos interativos gerados em Python e renderizados no navegador pelo Plotly.js.
+quando_considerar:
+  - gráficos interativos em HTML autocontido
+  - receber DataFrames de pandas e Polars
+quando_evitar:
+  - figuras estáticas para publicação impressa, em que uma ferramenta de figura estática é mais simples
+cuidados:
+  - o HTML gerado inclui JavaScript; o JavaScript só exibe valores já calculados
+coopera_com: [jinja2, numpy, pandas, polars]
+compete_com: []
+pacote_python: plotly
+documentacao: https://plotly.com/python/
+evidencias: []
+status: em_uso

@@ -1,0 +1,39 @@
+# Regras para agentes neste repositório
+
+Este projeto adota o método Vibe Code Metrics: toda iteração é medida (antes × depois) e só
+entra se as métricas permitirem. Antes de mudar algo, leia `docs/estilo.md` (obrigatório).
+
+## Regras do mantenedor (não negociáveis)
+1. **Python em português**: identificadores, docstrings, comentários e mensagens.
+2. **Python calcula**: todo cálculo acontece em Python (NumPy vetorizado, pandas ou Polars).
+3. **HTML/JS só apresentam** o que o Python calculou; nada de cálculo em JavaScript.
+4. **Sistema métrico (SI)**; unidade como sufixo do nome (`comprimento_m`, `vazao_m3s`).
+
+## Ambiente
+- Python gerenciado por `uv`: `uv sync`, `uv run pytest -q`, `uv run ruff check .`,
+  `uv run ruff format .`
+- Pacote do projeto: `src/[[ pacote ]]`. Conjunto de referência (determinismo, tempo, RAM):
+  `uv run python -m [[ pacote ]].referencia`.
+- Configuração do método: `vcm.yaml`.
+
+## Agentes
+- **Gerente:** a sessão principal (Opus). Especifica, divide, decide.
+- **Executores:** `executor-sonnet` (implementação com testes) e `executor-haiku` (tarefas
+  mecânicas), definidos em `.claude/agents/`.
+- Cada execução de agente é registrada em `results/agentes/execucoes.csv` (modelo, tokens,
+  ferramentas, duração, aprovado).
+
+## Ciclo de trabalho de cada iteração
+1. **Especificar:** tarefa pequena, com arquivos permitidos e critério de aceite.
+2. **Executar em worktree:** o executor trabalha isolado em `.claude/worktrees/`, com testes.
+3. **Medir:** `vcm balanco <base> HEAD` (por exemplo `vcm balanco HEAD~1 HEAD`; o `vcm` é instalado com `uv tool install`).
+   Gera o cartão em `results/iteracoes/`.
+4. **Decidir:** `MANTER` entra; havendo troca de métricas, decide o humano; `REVERTER`
+   **bloqueia** o merge (no CI: `--falhar-se-reverter`).
+5. **Registrar:** anotar a execução do agente em `results/agentes/execucoes.csv`.
+
+## Regras de processo
+- Cálculo de engenharia é determinístico: sem IA no caminho do resultado final; tolerâncias
+  declaradas; cotas e coordenadas com tolerância absoluta.
+- Não altere avaliadores nem gabaritos sem pedido explícito do humano.
+- PRs pequenos, com testes, e com o balanço (`vcm balanco`) anexado.

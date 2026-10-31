@@ -1,0 +1,18 @@
+id: rustworkx
+nome: rustworkx
+papel: grafos
+descricao: Biblioteca de grafos com núcleo em Rust e API em Python.
+quando_considerar:
+  - grafos grandes
+  - algoritmos de grafos com execução em código nativo
+quando_evitar:
+  - quando os nós precisam ser identificados diretamente por rótulos de domínio
+  - quando é preciso o ecossistema mais amplo de algoritmos do NetworkX
+cuidados:
+  - os nós são referenciados por índices inteiros; mapear os identificadores de domínio para esses índices
+coopera_com: [numpy, pandas]
+compete_com: [networkx]
+pacote_python: rustworkx
+documentacao: https://www.rustworkx.org/
+evidencias: []
+status: candidato

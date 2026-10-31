@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vibe Code Metrics — Arquitetura e Plano</title>
+<!-- Gerado por `uv run vcm docs` a partir de docs/*.md. Não edite este arquivo: edite o Markdown. -->
+<style>
+{% include "_estilo.css" %}</style>
+</head>
+<body>
+<nav>
+  <div class="marca">Vibe Code Metrics</div>
+  <div class="sub">fonte: docs/*.md · hash {{ hash_fonte }}</div>
+  {% for d in docs %}
+  <h4>{{ d.titulo }}</h4>
+  <a href="#{{ d.id }}">Início</a>
+  {% for s in d.secoes %}<a class="n{{ s.nivel }}" href="#{{ s.ancora }}">{{ s.titulo }}</a>
+  {% endfor %}
+  {% endfor %}
+</nav>
+<main>
+{% for d in docs %}
+<article id="{{ d.id }}">
+  <div class="fonte">
+    <span>Fonte: <a href="{{ d.arquivo }}">docs/{{ d.arquivo }}</a></span>
+    <span>Gerado por <code>uv run vcm docs</code></span>
+  </div>
+  {{ d.html | safe }}
+</article>
+{% endfor %}
+<footer>Este HTML é derivado dos Markdown (hash da fonte {{ hash_fonte }}). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+</main>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  const escuro = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  mermaid.initialize({ startOnLoad: true, theme: escuro ? "dark" : "neutral", securityLevel: "strict" });
+</script>
+</body>
+</html>

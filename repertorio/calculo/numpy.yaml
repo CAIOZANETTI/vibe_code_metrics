@@ -1,0 +1,18 @@
+id: numpy
+nome: NumPy
+papel: calculo
+descricao: Arrays N-dimensionais e álgebra linear vetorizada em Python.
+quando_considerar:
+  - cálculo matricial e vetorizado
+  - álgebra linear
+quando_evitar:
+  - dados tabulares heterogêneos com junções e agrupamentos
+cuidados:
+  - a ordem das somas pode variar com o número de threads do BLAS; medir determinismo
+  - medido em 31/10/2026 (vcm.coletores.determinismo, 4 núcleos): produto matricial 500×500 e solve 200×200 mudam de hash entre 1 thread e o padrão; com threads fixas, 100% estável; cumsum não muda. Fixar OPENBLAS_NUM_THREADS quando o resultado precisar ser reprodutível bit a bit
+coopera_com: [pandas, polars, plotly]
+compete_com: []
+pacote_python: numpy
+documentacao: https://numpy.org/doc/stable/
+evidencias: []
+status: em_uso

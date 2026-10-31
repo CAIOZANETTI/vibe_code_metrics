@@ -1,0 +1,34 @@
+# Catálogo de modelos de IA. Preços: preencher a partir da página oficial, com data e fonte.
+modelos:
+  - id: claude-opus-5-5
+    fornecedor: anthropic
+    familia: opus
+    papel_atual: gerente
+    status: em_uso
+    preco_usd_por_mtok: {entrada: null, saida: null, cache_leitura: null}
+    verificado_em: null
+    fonte: null
+  - id: claude-sonnet-5-5
+    fornecedor: anthropic
+    familia: sonnet
+    papel_atual: executor_padrao
+    status: em_uso
+    preco_usd_por_mtok: {entrada: null, saida: null, cache_leitura: null}
+    verificado_em: null
+    fonte: null
+  - id: claude-haiku-5-5
+    fornecedor: anthropic
+    familia: haiku
+    papel_atual: executor_mecanico
+    status: em_uso
+    preco_usd_por_mtok: {entrada: null, saida: null, cache_leitura: null}
+    verificado_em: null
+    fonte: null
+  - id: claude-fable-5-1
+    fornecedor: anthropic
+    familia: fable
+    papel_atual: null
+    status: nao_usado  # não usado por decisão do mantenedor
+    preco_usd_por_mtok: {entrada: null, saida: null, cache_leitura: null}
+    verificado_em: null
+    fonte: null

@@ -1,0 +1,45 @@
+[project]
+name = "vibe-code-metrics"
+version = "0.1.0"
+description = "Método experimental e métrico para desenvolvimento assistido por IA"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.0",
+    "pandas>=2.2",
+    "pyarrow>=15",
+    "pyyaml>=6",
+    "jinja2>=3.1",
+    "markdown-it-py>=3",
+    "radon>=6.0.1",
+    "bandit>=1.9.4",
+    "polars>=2.1.0",
+    "plotly>=7.1.0",
+    "psutil>=7.2.2",
+    "defusedxml>=0.7.1",
+]
+
+[project.scripts]
+vcm = "vcm.cli:main"
+
+[dependency-groups]
+dev = [
+    "coverage>=7.17.0",
+    "pytest>=8",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vcm"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+extend-exclude = [".claude/worktrees"]
