@@ -84,11 +84,19 @@ def _cmd_iniciar(args: argparse.Namespace) -> int:
     passos = []
     if not (destino / ".git").exists():
         passos.append(f"git init   (dentro de {destino})")
-    if not (destino / "pyproject.toml").exists():
+    raiz = iniciar.detectar_layout(destino, args.pacote) == "raiz"
+    if (destino / "pyproject.toml").exists():
+        passos.append("uv sync && uv run pytest -q")
+    elif raiz:
+        passos.append(
+            f"preencha {args.pacote}/referencia.py com os seus cálculos e rode "
+            f"python -m {args.pacote}.referencia"
+        )
+    else:
         passos.append(
             f"uv init --lib --name {args.pacote} . && uv add numpy pandas && uv add --dev pytest"
         )
-    passos.append("uv sync && uv run pytest -q")
+        passos.append("uv sync && uv run pytest -q")
     passos.append("git add -A && git commit -m 'Adota o método Vibe Code Metrics'")
     passos.append("Após a primeira iteração: vcm balanco HEAD~1 HEAD")
     print("\nPróximos passos:")

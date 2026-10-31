@@ -12,7 +12,7 @@ entra se as métricas permitirem. Antes de mudar algo, leia `docs/estilo.md` (ob
 ## Ambiente
 - Python gerenciado por `uv`: `uv sync`, `uv run pytest -q`, `uv run ruff check .`,
   `uv run ruff format .`
-- Pacote do projeto: `src/[[ pacote ]]`. Conjunto de referência (determinismo, tempo, RAM):
+- Pacote do projeto: `[[ caminho_pacote ]]`. Conjunto de referência (determinismo, tempo, RAM):
   `uv run python -m [[ pacote ]].referencia`.
 - Configuração do método: `vcm.yaml`.
 
@@ -37,3 +37,11 @@ entra se as métricas permitirem. Antes de mudar algo, leia `docs/estilo.md` (ob
   declaradas; cotas e coordenadas com tolerância absoluta.
 - Não altere avaliadores nem gabaritos sem pedido explícito do humano.
 - PRs pequenos, com testes, e com o balanço (`vcm balanco`) anexado.
+{% if tem_pdca %}
+
+## Integração com o PDCA do projeto
+Este projeto já tem `pdca/`. Ele e `scripts/afericao.py` / `scripts/determinismo.py` (se
+existirem) continuam valendo e rodam junto com o `vcm balanco`. O `vcm` chama de
+"reprodutibilidade" o que mede (mesma entrada, mesmos bytes), para não confundir com os
+índices próprios do projeto.
+{% endif %}
