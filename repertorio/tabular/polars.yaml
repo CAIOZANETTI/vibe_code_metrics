@@ -1,0 +1,20 @@
+id: polars
+nome: Polars
+papel: tabular
+descricao: Biblioteca de DataFrames com motor escrito em Rust, baseada em Apache Arrow e com API de expressões.
+quando_considerar:
+  - tabelas grandes
+  - agregações e junções em paralelo
+  - execução preguiçosa com otimização de consulta
+quando_evitar:
+  - código existente que depende fortemente da API do pandas
+  - bibliotecas que aceitam apenas pandas
+cuidados:
+  - a API difere do pandas, pois não há índice de linha
+  - na execução preguiçosa, o resultado só existe após collect()
+coopera_com: [numpy, parquet, plotly]
+compete_com: [pandas, duckdb]
+pacote_python: polars
+documentacao: https://docs.pola.rs/
+evidencias: []
+status: em_teste

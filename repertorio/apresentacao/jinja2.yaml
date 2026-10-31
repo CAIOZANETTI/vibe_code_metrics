@@ -1,0 +1,17 @@
+id: jinja2
+nome: Jinja2
+papel: apresentacao
+descricao: Motor de templates para gerar texto e HTML a partir de dados já calculados em Python.
+quando_considerar:
+  - montar relatórios HTML com laços e blocos reutilizáveis
+  - separar apresentação do cálculo
+quando_evitar:
+  - lógica de negócio dentro do template
+cuidados:
+  - o autoescape vem desligado por padrão no Environment; ligá-lo para HTML
+coopera_com: [plotly]
+compete_com: []
+pacote_python: jinja2
+documentacao: https://jinja.palletsprojects.com/
+evidencias: []
+status: em_uso

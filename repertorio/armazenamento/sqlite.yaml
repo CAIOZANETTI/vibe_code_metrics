@@ -1,0 +1,20 @@
+id: sqlite
+nome: SQLite
+papel: armazenamento
+descricao: Banco relacional em arquivo único, embutido, disponível pela biblioteca padrão do Python.
+quando_considerar:
+  - armazenar tabelas pequenas e médias com consultas SQL
+  - não exigir dependência extra
+quando_evitar:
+  - volumes analíticos grandes com varreduras de colunas
+  - muitos escritores concorrentes
+cuidados:
+  - aceita um escritor por vez
+  - os tipos são dinâmicos, não rígidos
+  - a verificação de chaves estrangeiras precisa ser ativada explicitamente
+coopera_com: [pandas, duckdb]
+compete_com: [parquet, geoparquet]
+pacote_python: sqlite3
+documentacao: https://docs.python.org/3/library/sqlite3.html
+evidencias: []
+status: candidato

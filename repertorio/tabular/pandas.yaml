@@ -1,0 +1,20 @@
+id: pandas
+nome: pandas
+papel: tabular
+descricao: Biblioteca de DataFrames para filtrar, juntar e agrupar dados tabulares em Python.
+quando_considerar:
+  - dados tabulares com junções e agrupamentos
+  - ecossistema maduro e amplamente documentado
+  - integração direta com NumPy e Parquet
+quando_evitar:
+  - volumes que não cabem com folga na memória
+  - pipelines que se beneficiam de execução preguiçosa otimizada
+cuidados:
+  - o comportamento de valores ausentes e os tipos dependem do dtype; definir dtype explícito
+  - algumas operações copiam os dados
+coopera_com: [numpy, parquet, plotly]
+compete_com: [polars, duckdb]
+pacote_python: pandas
+documentacao: https://pandas.pydata.org/docs/
+evidencias: []
+status: em_uso
