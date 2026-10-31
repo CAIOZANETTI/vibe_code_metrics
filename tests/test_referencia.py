@@ -1,9 +1,10 @@
 """Testes do conjunto de referência."""
 
+import json
 import subprocess
 import sys
 
-from vcm.referencia import casos, hash_referencia
+from vcm.referencia import casos, hash_referencia, medir_referencia
 
 
 def test_casos_de_referencia_com_bytes():
@@ -23,8 +24,18 @@ def test_hash_estavel_no_mesmo_processo():
     assert len(hash_referencia()) == 64
 
 
-def test_modulo_imprime_so_o_hash():
+def test_modulo_imprime_json_com_hash_tempo_e_ram():
     saida = subprocess.run(
         [sys.executable, "-m", "vcm.referencia"], capture_output=True, text=True, check=True
     )
-    assert saida.stdout.strip() == hash_referencia()
+    dados = json.loads(saida.stdout.strip().splitlines()[-1])
+    assert dados["hash"] == hash_referencia()
+    assert dados["tempo_ms"] > 0
+    assert dados["pico_ram_mb"] > 0
+
+
+def test_medir_referencia_traz_hash_tempo_e_ram():
+    medida = medir_referencia()
+    assert medida["hash"] == hash_referencia()
+    assert medida["tempo_ms"] > 0
+    assert medida["pico_ram_mb"] > 0

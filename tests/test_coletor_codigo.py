@@ -87,6 +87,8 @@ def test_diretorio_sem_pyproject_e_sem_fonte(tmp_path):
         "complexidade_media": 0.0,
         "n_dependencias": 0.0,
         "alertas_seguranca": 0.0,
+        "n_funcoes": 0.0,
+        "sloc_por_funcao": 0.0,
         "n_arquivos_py": 0.0,
         "arquivos_com_erro": 0.0,
     }
@@ -106,3 +108,55 @@ def test_pastas_fonte_personalizadas(tmp_path):
     (tmp_path / "lib" / "outro.py").write_text(MODULO, encoding="utf-8")
     assert medir_codigo(tmp_path, ("src", "lib"))["n_arquivos_py"] == 2.0
     assert medir_codigo(tmp_path, ("lib",))["n_arquivos_py"] == 1.0
+
+
+def test_n_funcoes_e_sloc_por_funcao(tmp_path):
+    _criar_projeto(tmp_path)
+    metricas = medir_codigo(tmp_path)
+    assert metricas["n_funcoes"] == 2.0
+    assert metricas["sloc_por_funcao"] == 5.0  # sloc 10 / 2 funções
+
+
+def test_metodos_contam_uma_vez_em_n_funcoes(tmp_path):
+    (tmp_path / "src").mkdir()
+    codigo = "class A:\n    def m(self):\n        return 1\n\n    def n(self):\n        return 2\n"
+    (tmp_path / "src" / "a.py").write_text(codigo, encoding="utf-8")
+    assert medir_codigo(tmp_path)["n_funcoes"] == 2.0
+
+
+def test_sem_funcoes_sloc_por_funcao_zero(tmp_path):
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "a.py").write_text("X = 1\n", encoding="utf-8")
+    metricas = medir_codigo(tmp_path)
+    assert metricas["n_funcoes"] == 0.0
+    assert metricas["sloc_por_funcao"] == 0.0
+
+
+def test_pacote_na_raiz_sem_src_via_autodeteccao(tmp_path):
+    (tmp_path / "pacote").mkdir()
+    (tmp_path / "pacote" / "__init__.py").write_text("", encoding="utf-8")
+    (tmp_path / "pacote" / "modulo.py").write_text(MODULO, encoding="utf-8")
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests" / "test_x.py").write_text(MODULO, encoding="utf-8")
+    metricas = medir_codigo(tmp_path)
+    assert metricas["n_arquivos_py"] == 2.0  # __init__.py + modulo.py
+    assert metricas["n_funcoes"] == 2.0
+
+
+def test_raiz_inteira_ignora_pastas_nao_fonte(tmp_path):
+    (tmp_path / "script.py").write_text(MODULO, encoding="utf-8")
+    for pasta in (".venv", "tests", ".git", ".claude", "results", "__pycache__"):
+        (tmp_path / pasta).mkdir()
+        (tmp_path / pasta / "lixo.py").write_text(MODULO, encoding="utf-8")
+    metricas = medir_codigo(tmp_path)
+    assert metricas["n_arquivos_py"] == 1.0
+    assert metricas["sloc"] == 10.0
+
+
+def test_usa_pastas_do_vcm_yaml(tmp_path):
+    (tmp_path / "vcm.yaml").write_text("pastas_fonte: [lib]\n", encoding="utf-8")
+    (tmp_path / "lib").mkdir()
+    (tmp_path / "lib" / "a.py").write_text(MODULO, encoding="utf-8")
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "b.py").write_text(MODULO, encoding="utf-8")
+    assert medir_codigo(tmp_path)["n_arquivos_py"] == 1.0

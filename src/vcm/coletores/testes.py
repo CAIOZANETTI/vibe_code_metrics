@@ -10,6 +10,8 @@ from pathlib import Path
 
 import defusedxml.ElementTree as ET
 
+from vcm.config import carregar_config
+
 
 def _executar(comando: list[str], timeout_s: float, ambiente: dict[str, str]) -> None:
     """Roda um comando; timeout ou ferramenta ausente viram `RuntimeError`."""
@@ -35,11 +37,13 @@ def _ler_junit(caminho: Path) -> tuple[int, int, float]:
 
 def medir_testes(raiz: Path, timeout_s: float = 900) -> dict[str, float]:
     """Roda a suíte de testes do projeto em `raiz` com cobertura, em subprocesso. Retorna:
-    testes_total, testes_falhando (falhas + erros), cobertura_testes (fração 0–1 das linhas de src/),
-    tempo_testes_s (duração da suíte). Se não houver pasta tests/, retorna testes_total=0 e não roda nada.
+    testes_total, testes_falhando (falhas + erros), cobertura_testes (fração 0–1 das linhas das pastas-fonte),
+    tempo_testes_s (duração da suíte). Pastas-fonte e de testes vêm do `vcm.yaml`
+    (ou da autodetecção). Se não houver a pasta de testes, retorna testes_total=0 e não roda nada.
     """
     raiz = Path(raiz).resolve()
-    if not (raiz / "tests").is_dir():
+    config = carregar_config(raiz)
+    if not (raiz / config.pasta_testes).is_dir():
         return {
             "testes_total": 0.0,
             "testes_falhando": 0.0,
@@ -52,13 +56,14 @@ def medir_testes(raiz: Path, timeout_s: float = 900) -> dict[str, float]:
         junit = tmp / "junit.xml"
         cobertura = tmp / "cov.json"
         ambiente = {**os.environ, "COVERAGE_FILE": str(tmp / ".coverage")}
+        fonte = ",".join(config.pastas_fonte)
         prefixo = ["uv", "run", "--directory", str(raiz), "--with", "coverage", "--with", "pytest"]
 
         _executar(
             [
                 *prefixo,
-                *["coverage", "run", "--source=src", "-m", "pytest", "-q"],
-                *["-p", "no:cacheprovider", f"--junitxml={junit}"],
+                *["coverage", "run", f"--source={fonte}", "-m", "pytest", "-q"],
+                *[config.pasta_testes, "-p", "no:cacheprovider", f"--junitxml={junit}"],
             ],
             timeout_s,
             ambiente,

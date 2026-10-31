@@ -6,6 +6,9 @@ Cada caso devolve bytes canônicos; o hash de todos os casos deve ser idêntico 
 from __future__ import annotations
 
 import hashlib
+import json
+import resource
+import time
 
 import numpy as np
 import pandas as pd
@@ -70,14 +73,36 @@ def casos() -> dict[str, bytes]:
     }
 
 
-def hash_referencia() -> str:
-    """SHA-256 (hex) de todos os casos, em ordem de nome."""
+def _hash_dos_casos(conteudos: dict[str, bytes]) -> str:
     resumo = hashlib.sha256()
-    for nome, conteudo in sorted(casos().items()):
+    for nome, conteudo in sorted(conteudos.items()):
         resumo.update(nome.encode())
         resumo.update(conteudo)
     return resumo.hexdigest()
 
 
+def hash_referencia() -> str:
+    """SHA-256 (hex) de todos os casos, em ordem de nome."""
+    return _hash_dos_casos(casos())
+
+
+def medir_referencia() -> dict[str, float | str]:
+    """Roda `casos()` uma vez e devolve hash, tempo (ms) e pico de RAM (MiB).
+
+    `tempo_ms`: duração de `casos()` com `time.perf_counter` dentro do processo.
+    `pico_ram_mb`: `ru_maxrss` do processo (KiB no Linux) dividido por 1024 -> MiB.
+    Só vale no Linux; no macOS `ru_maxrss` vem em bytes.
+    """
+    inicio_s = time.perf_counter()
+    conteudos = casos()
+    tempo_ms = (time.perf_counter() - inicio_s) * 1000.0
+    pico_ram_mb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
+    return {
+        "hash": _hash_dos_casos(conteudos),
+        "tempo_ms": tempo_ms,
+        "pico_ram_mb": pico_ram_mb,
+    }
+
+
 if __name__ == "__main__":
-    print(hash_referencia())
+    print(json.dumps(medir_referencia()))
