@@ -10,6 +10,7 @@ from pathlib import Path
 
 import defusedxml.ElementTree as ET
 
+from vcm.coletores.ambiente import prefixo_uv
 from vcm.config import carregar_config
 
 
@@ -57,7 +58,7 @@ def medir_testes(raiz: Path, timeout_s: float = 900) -> dict[str, float]:
         cobertura = tmp / "cov.json"
         ambiente = {**os.environ, "COVERAGE_FILE": str(tmp / ".coverage")}
         fonte = ",".join(config.pastas_fonte)
-        prefixo = ["uv", "run", "--directory", str(raiz), "--with", "coverage", "--with", "pytest"]
+        prefixo = prefixo_uv(raiz, ("coverage", "pytest", *config.dependencias_extras))
 
         _executar(
             [
