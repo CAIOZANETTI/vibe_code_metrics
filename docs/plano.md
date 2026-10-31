@@ -11,7 +11,7 @@ Legenda: `[x]` feito · `[ ]` a fazer · **Aceite** = critério objetivo para fe
 | Fase | Entrega | Depende de | Status |
 |---|---|---|---|
 | 0 | Fundação: pacote, documentação viva, balanço, CI, T000 | — | concluída |
-| 1 | Retrospectiva automática por iteração (`vcm snapshot` / `vcm balanco`) | 0 | próxima |
+| 1 | Retrospectiva automática por iteração (`vcm snapshot` / `vcm balanco`) | 0 | em andamento |
 | 2 | Telemetria de agentes e custo por iteração | 1 | a fazer |
 | 3 | Repertório, schema de tese e runner; primeira tese técnica (T005) | 1 | a fazer |
 | 4 | Relatórios HTML com Plotly e painel histórico | 1, 3 | a fazer |
@@ -47,26 +47,32 @@ flowchart LR
 - [x] CI no GitHub Actions: `ruff`, `pytest` e `vcm docs --check`
 - [x] `CLAUDE.md` com as regras para agentes
 - [x] Esqueleto da tese T000 (`hypothesis.md`, `protocol.yaml`)
+- [x] `docs/estilo.md`: regras de código do mantenedor (português, Python calcula, HTML apresenta, SI)
 
 **Aceite:** `uv run pytest` verde; `uv run vcm docs --check` verde; HTML abre com navegação e diagramas.
 
 ## Fase 1 — Retrospectiva automática
 
 Objetivo: toda iteração (commit ou PR) gera o balanço antes × depois sem trabalho manual.
+Executada com agentes: **Opus** gerencia e integra; **Sonnet** e **Haiku** executam (modelo indicado em cada item).
 
-- [ ] `vcm snapshot [--ref REF]` mede o código em um ref (via `git worktree`) e grava uma linha em Parquet:
-  - enxuto: SLOC e complexidade média (radon), nº de dependências (`pyproject.toml`)
-  - robusto: testes passando e falhando, cobertura (coverage.py), alertas (bandit)
-  - eficiente: tempo dos benchmarks marcados (pytest-benchmark) e pico de RAM (psutil)
-  - determinístico: N execuções do conjunto de referência, com fração de saídas idênticas
+- [ ] `vcm.coletores.codigo` (Sonnet): SLOC e complexidade média (radon), nº de dependências (`pyproject.toml`), alertas de segurança (bandit)
+- [ ] `vcm.coletores.testes` (Sonnet): testes totais e falhando, cobertura (coverage.py), tempo da suíte
+- [ ] `vcm.coletores.determinismo` + `vcm.referencia` (Sonnet): N execuções do conjunto de referência em subprocesso, com fração de saídas idênticas por hash
+- [ ] `vcm snapshot [--ref REF]` (Opus): mede um ref via `git worktree` e grava uma linha em `results/snapshots.parquet`
+- [ ] `vcm balanco BASE HEAD` (Opus): compara dois snapshots, grava `results/iteracoes/` e gera o cartão em Markdown e HTML
+- [ ] Registro de execuções de agentes em `results/agentes/execucoes.csv` (Opus)
 - [ ] Estimar o **ruído** de cada métrica com repetições e gravar em `results/ruido.parquet`
-- [ ] `vcm balanco BASE HEAD`: compara dois snapshots, grava `results/iteracoes/<id>.parquet` e imprime o cartão
-- [ ] Cartão da iteração em Markdown e HTML: tabela, respostas às perguntas, decisão proposta, campo de justificativa
 - [ ] GitHub Action em PR: roda o balanço contra a base e anexa o cartão HTML como artefato
-- [ ] Registrar retroativamente as iterações da Fase 0 como linha de base da T000
+- [ ] Registrar a Fase 0 como linha de base da T000
 
-**Aceite:** um PR de teste mostra o cartão com as 6 perguntas respondidas por números; uma
-regressão proposital em teste resulta em `REVERTER`.
+Trabalho antecipado das Fases 3 e 4, a pedido do mantenedor:
+
+- [ ] Repertório inicial em `repertorio/` (Haiku): uma entrada YAML por alternativa, por papel
+- [ ] Protótipo da **T005 — perda de carga na adutora** (Sonnet): NumPy × Polars × Polars + NumPy, com dados sintéticos, gabarito analítico, runner e relatório HTML com Plotly
+
+**Aceite:** o PR mostra o cartão com as 6 perguntas respondidas por números; uma regressão
+proposital em teste resulta em `REVERTER`.
 
 ## Fase 2 — Telemetria de agentes
 

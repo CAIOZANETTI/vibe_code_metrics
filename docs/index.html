@@ -68,7 +68,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash 12fb57107665</div>
+  <div class="sub">fonte: docs/*.md · hash e3c50742550e</div>
   
   <h4>Arquitetura de funcionamento</h4>
   <a href="#doc-arquitetura">Início</a>
@@ -103,6 +103,16 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n2" href="#doc-plano-decisoes-em-aberto-para-o-humano">Decisões em aberto (para o humano)</a>
   
   
+  <h4>Estilo de código do repertório</h4>
+  <a href="#doc-estilo">Início</a>
+  <a class="n2" href="#doc-estilo-1-as-quatro-regras">1. As quatro regras</a>
+  <a class="n2" href="#doc-estilo-2-python-em-portugues">2. Python em português</a>
+  <a class="n2" href="#doc-estilo-3-unidade-no-nome">3. Unidade no nome</a>
+  <a class="n2" href="#doc-estilo-4-python-calcula-de-forma-vetorizada-e-deterministica">4. Python calcula de forma vetorizada e determinística</a>
+  <a class="n2" href="#doc-estilo-5-html-e-javascript-so-apresentam">5. HTML e JavaScript só apresentam</a>
+  <a class="n2" href="#doc-estilo-6-verificacao">6. Verificação</a>
+  
+  
 </nav>
 <main>
 
@@ -117,7 +127,8 @@ footer { color: var(--muted); font-size: 12px; }
 A IA propõe, o código executa, os testes verificam, as métricas comparam e o humano decide.
 O próprio repositório é desenvolvido com o seu método (tese <strong>T000</strong>).</p>
 </blockquote>
-<p>Versão 0.2 · 31/10/2026 · Status: protótipo em construção. Plano de execução: <a href="#doc-plano">plano.md</a>.</p>
+<p>Versão 0.3 · 31/10/2026 · Status: protótipo em construção. Plano de execução: <a href="#doc-plano">plano.md</a>.
+Regras de código: <a href="#doc-estilo">estilo.md</a>.</p>
 <h2 id="doc-arquitetura-1-ideia-em-uma-pagina">1. Ideia em uma página</h2>
 <p>O repositório não escolhe ferramentas por gosto. Ele mantém um <strong>repertório</strong> de alternativas
 (NumPy, Polars, Parquet, NetworkX, JSON-LD, Haiku, Sonnet, Opus, Fable, Codex, modelos locais…),
@@ -378,45 +389,62 @@ marcação que liga a telemetria à tarefa e permite calcular <strong>custo por 
 Em planos de assinatura, o custo medido é <strong>equivalente de API</strong>, não o gasto real. O relatório
 precisa dizer isso.</p>
 <h2 id="doc-arquitetura-6-multiagente-e-catalogo-de-modelos">6. Multiagente e catálogo de modelos</h2>
+<p><strong>Configuração atual (decisão do mantenedor):</strong> o <strong>Opus</strong> é o modelo máximo e atua como
+<strong>gerente</strong> na sessão principal. Ele delega ao <strong>Sonnet</strong> e ao <strong>Haiku</strong>. O Fable não é usado
+neste momento.</p>
 <table>
 <thead>
 <tr>
 <th>Papel</th>
-<th>Perfil de modelo (a validar na tese T003)</th>
-<th>Por quê</th>
+<th>Modelo</th>
+<th>Faz</th>
+<th>Não faz</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Gerente / planejador</td>
-<td>Mais capaz (Fable, Opus)</td>
-<td>Decompor, priorizar, julgar trocas</td>
+<td><strong>Gerente</strong></td>
+<td>Opus (sessão principal)</td>
+<td>Decompõe a fase em tarefas com especificação e teste de aceite; escolhe o executor; integra; roda o balanço; leva trocas ao humano</td>
+<td>Tarefas mecânicas que um executor faz mais barato</td>
 </tr>
 <tr>
-<td>Executor de tarefa bem especificada</td>
-<td>Rápido e barato (Haiku)</td>
-<td>Especificação clara e teste objetivo</td>
+<td><strong>Executor padrão</strong></td>
+<td>Sonnet</td>
+<td>Implementação com testes a partir de especificação clara (coletores, protótipos de tese)</td>
+<td>Decidir arquitetura</td>
 </tr>
 <tr>
-<td>Executor de tarefa com julgamento</td>
-<td>Intermediário (Sonnet)</td>
-<td>Bom equilíbrio entre custo e qualidade</td>
+<td><strong>Executor mecânico</strong></td>
+<td>Haiku</td>
+<td>Entradas de repertório, ajustes de lint, testes a partir de exemplos, resumos</td>
+<td>Qualquer coisa ambígua</td>
 </tr>
 <tr>
-<td>Revisor</td>
-<td>Outro modelo ou outro fornecedor (Codex)</td>
-<td>Reduz erros correlacionados. Mesmo modelo não é revisão independente.</td>
+<td><strong>Revisor</strong></td>
+<td>Opus, ou outro fornecedor na Fase 7</td>
+<td>Revisão do que um executor entregou</td>
+<td>Revisar o próprio código</td>
 </tr>
 <tr>
-<td>Dados confidenciais</td>
-<td>Modelo local de pesos abertos</td>
+<td><strong>Avaliador (Check)</strong></td>
+<td><strong>Python, não é IA</strong></td>
+<td><code>vcm balanco</code>, testes, tolerâncias</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Dados confidenciais</strong></td>
+<td>Modelo local de pesos abertos (Fase 7)</td>
 <td>Desenho de cliente não sai da máquina</td>
+<td>—</td>
 </tr>
 </tbody>
 </table>
-<p>Esta tabela é <strong>hipótese</strong>, não regra. A tese T003 mede custo por tarefa aprovada por papel e
-modelo, e a tabela passa a ser derivada das evidências. Nenhum nome de modelo fica fixo no
-código: tudo vem de <code>repertorio/modelos.yaml</code>.</p>
+<p>Cada execução delegada é registrada em <code>results/agentes/execucoes.csv</code> com modelo, tokens,
+chamadas de ferramenta, duração e se a entrega foi aprovada na integração. Essa é a base de
+dados da tese <strong>T003 (roteamento)</strong>: a tabela acima é hipótese e passa a ser corrigida pelo custo
+por tarefa aprovada de cada modelo.</p>
+<p>Nenhum nome de modelo fica fixo no código: tudo vem de <code>repertorio/modelos.yaml</code>.</p>
 <h2 id="doc-arquitetura-7-repertorio-uma-entrada">7. Repertório: uma entrada</h2>
 <pre><code class="language-yaml"># repertorio/calculo/numpy.yaml
 id: numpy
@@ -478,6 +506,7 @@ status: em_teste   # em_teste | aprovado | rejeitado
   docs/
     arquitetura.md          este documento (fonte)
     plano.md                plano de implementação (fonte)
+    estilo.md               regras de código do mantenedor
     index.html              gerado por `vcm docs`
   repertorio/               alternativas por papel + modelos.yaml
   theses/
@@ -562,7 +591,7 @@ de iteração. Arquitetura de referência: <a href="#doc-arquitetura">arquitetur
 <td>1</td>
 <td>Retrospectiva automática por iteração (<code>vcm snapshot</code> / <code>vcm balanco</code>)</td>
 <td>0</td>
-<td>próxima</td>
+<td>em andamento</td>
 </tr>
 <tr>
 <td>2</td>
@@ -633,27 +662,30 @@ de iteração. Arquitetura de referência: <a href="#doc-arquitetura">arquitetur
 <li class="tarefa"><input type="checkbox" disabled checked> CI no GitHub Actions: <code>ruff</code>, <code>pytest</code> e <code>vcm docs --check</code></li>
 <li class="tarefa"><input type="checkbox" disabled checked> <code>CLAUDE.md</code> com as regras para agentes</li>
 <li class="tarefa"><input type="checkbox" disabled checked> Esqueleto da tese T000 (<code>hypothesis.md</code>, <code>protocol.yaml</code>)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>docs/estilo.md</code>: regras de código do mantenedor (português, Python calcula, HTML apresenta, SI)</li>
 </ul>
 <p><strong>Aceite:</strong> <code>uv run pytest</code> verde; <code>uv run vcm docs --check</code> verde; HTML abre com navegação e diagramas.</p>
 <h2 id="doc-plano-fase-1-retrospectiva-automatica">Fase 1 — Retrospectiva automática</h2>
-<p>Objetivo: toda iteração (commit ou PR) gera o balanço antes × depois sem trabalho manual.</p>
+<p>Objetivo: toda iteração (commit ou PR) gera o balanço antes × depois sem trabalho manual.
+Executada com agentes: <strong>Opus</strong> gerencia e integra; <strong>Sonnet</strong> e <strong>Haiku</strong> executam (modelo indicado em cada item).</p>
 <ul>
-<li class="tarefa"><input type="checkbox" disabled> <code>vcm snapshot [--ref REF]</code> mede o código em um ref (via <code>git worktree</code>) e grava uma linha em Parquet:
-<ul>
-<li>enxuto: SLOC e complexidade média (radon), nº de dependências (<code>pyproject.toml</code>)</li>
-<li>robusto: testes passando e falhando, cobertura (coverage.py), alertas (bandit)</li>
-<li>eficiente: tempo dos benchmarks marcados (pytest-benchmark) e pico de RAM (psutil)</li>
-<li>determinístico: N execuções do conjunto de referência, com fração de saídas idênticas</li>
-</ul>
-</li>
+<li class="tarefa"><input type="checkbox" disabled> <code>vcm.coletores.codigo</code> (Sonnet): SLOC e complexidade média (radon), nº de dependências (<code>pyproject.toml</code>), alertas de segurança (bandit)</li>
+<li class="tarefa"><input type="checkbox" disabled> <code>vcm.coletores.testes</code> (Sonnet): testes totais e falhando, cobertura (coverage.py), tempo da suíte</li>
+<li class="tarefa"><input type="checkbox" disabled> <code>vcm.coletores.determinismo</code> + <code>vcm.referencia</code> (Sonnet): N execuções do conjunto de referência em subprocesso, com fração de saídas idênticas por hash</li>
+<li class="tarefa"><input type="checkbox" disabled> <code>vcm snapshot [--ref REF]</code> (Opus): mede um ref via <code>git worktree</code> e grava uma linha em <code>results/snapshots.parquet</code></li>
+<li class="tarefa"><input type="checkbox" disabled> <code>vcm balanco BASE HEAD</code> (Opus): compara dois snapshots, grava <code>results/iteracoes/</code> e gera o cartão em Markdown e HTML</li>
+<li class="tarefa"><input type="checkbox" disabled> Registro de execuções de agentes em <code>results/agentes/execucoes.csv</code> (Opus)</li>
 <li class="tarefa"><input type="checkbox" disabled> Estimar o <strong>ruído</strong> de cada métrica com repetições e gravar em <code>results/ruido.parquet</code></li>
-<li class="tarefa"><input type="checkbox" disabled> <code>vcm balanco BASE HEAD</code>: compara dois snapshots, grava <code>results/iteracoes/&lt;id&gt;.parquet</code> e imprime o cartão</li>
-<li class="tarefa"><input type="checkbox" disabled> Cartão da iteração em Markdown e HTML: tabela, respostas às perguntas, decisão proposta, campo de justificativa</li>
 <li class="tarefa"><input type="checkbox" disabled> GitHub Action em PR: roda o balanço contra a base e anexa o cartão HTML como artefato</li>
-<li class="tarefa"><input type="checkbox" disabled> Registrar retroativamente as iterações da Fase 0 como linha de base da T000</li>
+<li class="tarefa"><input type="checkbox" disabled> Registrar a Fase 0 como linha de base da T000</li>
 </ul>
-<p><strong>Aceite:</strong> um PR de teste mostra o cartão com as 6 perguntas respondidas por números; uma
-regressão proposital em teste resulta em <code>REVERTER</code>.</p>
+<p>Trabalho antecipado das Fases 3 e 4, a pedido do mantenedor:</p>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled> Repertório inicial em <code>repertorio/</code> (Haiku): uma entrada YAML por alternativa, por papel</li>
+<li class="tarefa"><input type="checkbox" disabled> Protótipo da <strong>T005 — perda de carga na adutora</strong> (Sonnet): NumPy × Polars × Polars + NumPy, com dados sintéticos, gabarito analítico, runner e relatório HTML com Plotly</li>
+</ul>
+<p><strong>Aceite:</strong> o PR mostra o cartão com as 6 perguntas respondidas por números; uma regressão
+proposital em teste resulta em <code>REVERTER</code>.</p>
 <h2 id="doc-plano-fase-2-telemetria-de-agentes">Fase 2 — Telemetria de agentes</h2>
 <p>Objetivo: custo, tokens e tempo de cada iteração, ligados à tese e à tarefa.</p>
 <ul>
@@ -739,7 +771,180 @@ com adaptadores próprios.</p>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte 12fb57107665). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<article id="doc-estilo">
+  <div class="fonte">
+    <span>Fonte: <a href="estilo.md">docs/estilo.md</a></span>
+    <span>Gerado por <code>uv run vcm docs</code></span>
+  </div>
+  <h1 id="doc-estilo-estilo-de-codigo-do-repertorio">Estilo de código do repertório</h1>
+<blockquote>
+<p>Regras do mantenedor. Valem para humanos e para <strong>todos os agentes</strong>. Não são negociáveis:
+uma alteração que as viola é revertida, mesmo que melhore as métricas.</p>
+</blockquote>
+<h2 id="doc-estilo-1-as-quatro-regras">1. As quatro regras</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Regra</th>
+<th>Na prática</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Python em português</strong></td>
+<td>Nomes de variáveis, funções, classes, módulos, docstrings, comentários e mensagens em português. Palavras-chave da linguagem e APIs de bibliotecas ficam como são.</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Python calcula</strong></td>
+<td>Todo cálculo, agregação, estatística, conversão de unidade e decisão acontece em Python. Nenhum cálculo vai para outra linguagem.</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>HTML/JS apresentam</strong></td>
+<td>HTML, CSS e JavaScript só exibem o que o Python já calculou: tabelas, gráficos, navegação e filtros visuais. JS não soma, não converte, não decide.</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Sistema métrico (SI)</strong></td>
+<td>Unidades do Sistema Internacional e as usuais no Brasil (m, mm, m³/s, L/s, kPa, m.c.a., kN, MPa, °C). Nada de pés, polegadas, psi ou galões, nem na entrada nem na saída.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="doc-estilo-2-python-em-portugues">2. Python em português</h2>
+<pre><code class="language-python">import numpy as np
+
+
+def perda_de_carga_hazen_williams(
+    vazao_m3s: np.ndarray,
+    diametro_m: np.ndarray,
+    comprimento_m: np.ndarray,
+    coef_c: np.ndarray,
+) -&gt; np.ndarray:
+    &quot;&quot;&quot;Perda de carga distribuída por trecho (m), fórmula de Hazen-Williams (SI).&quot;&quot;&quot;
+    return 10.67 * comprimento_m * vazao_m3s**1.852 / (coef_c**1.852 * diametro_m**4.87)
+</code></pre>
+<ul>
+<li>Nomes descritivos e sem abreviação obscura: <code>vazao_m3s</code>, não <code>q</code>; <code>perda_total_m</code>, não <code>hf_t</code>.</li>
+<li>Acentos ficam fora dos identificadores (<code>vazao</code>, <code>pressao</code>, <code>funcao</code>) e dentro das docstrings e mensagens.</li>
+<li>Mensagens de erro e de log também em português: <code>raise ValueError(&quot;diâmetro deve ser positivo&quot;)</code>.</li>
+<li>Termos técnicos sem tradução consagrada podem ficar como estão (<code>hash</code>, <code>commit</code>, <code>parquet</code>, <code>worktree</code>).</li>
+</ul>
+<h2 id="doc-estilo-3-unidade-no-nome">3. Unidade no nome</h2>
+<p>Toda grandeza física leva a unidade como <strong>sufixo</strong> do nome. Isso evita a classe de erro mais
+cara da engenharia, que é a de unidade.</p>
+<table>
+<thead>
+<tr>
+<th>Grandeza</th>
+<th>Sufixo</th>
+<th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>comprimento, cota, diâmetro</td>
+<td><code>_m</code>, <code>_mm</code></td>
+<td><code>cota_terreno_m</code>, <code>diametro_mm</code></td>
+</tr>
+<tr>
+<td>área</td>
+<td><code>_m2</code></td>
+<td><code>area_secao_m2</code></td>
+</tr>
+<tr>
+<td>vazão</td>
+<td><code>_m3s</code>, <code>_ls</code></td>
+<td><code>vazao_m3s</code></td>
+</tr>
+<tr>
+<td>velocidade</td>
+<td><code>_ms</code></td>
+<td><code>velocidade_ms</code></td>
+</tr>
+<tr>
+<td>pressão</td>
+<td><code>_kpa</code>, <code>_mca</code></td>
+<td><code>pressao_mca</code></td>
+</tr>
+<tr>
+<td>força, tensão</td>
+<td><code>_kn</code>, <code>_mpa</code></td>
+<td><code>carga_kn</code>, <code>tensao_mpa</code></td>
+</tr>
+<tr>
+<td>tempo</td>
+<td><code>_s</code>, <code>_ms</code>, <code>_min</code></td>
+<td><code>tempo_execucao_ms</code></td>
+</tr>
+<tr>
+<td>memória</td>
+<td><code>_mb</code></td>
+<td><code>pico_ram_mb</code></td>
+</tr>
+<tr>
+<td>adimensional</td>
+<td>sem sufixo, nome explícito</td>
+<td><code>fator_atrito</code>, <code>coef_c</code></td>
+</tr>
+</tbody>
+</table>
+<p>A conversão de unidade é feita <strong>uma vez, na entrada</strong>, por função explícita (<code>mm_para_m</code>).
+O núcleo de cálculo trabalha só em SI.</p>
+<h2 id="doc-estilo-4-python-calcula-de-forma-vetorizada-e-deterministica">4. Python calcula de forma vetorizada e determinística</h2>
+<ul>
+<li><strong>NumPy primeiro</strong> para cálculo numérico: operações vetorizadas e matriciais, sem laço Python sobre elementos.</li>
+<li><strong>pandas ou Polars</strong> para dados tabulares: filtrar, juntar, agrupar. A escolha entre eles é <strong>tese</strong>, não gosto (ver T005).</li>
+<li><strong>Parquet</strong> para persistir tabelas; YAML para configuração; JSON Lines para logs brutos.</li>
+<li><code>dtype</code> explícito (<code>float64</code> para engenharia) e <code>np.random.default_rng(semente)</code> sempre com semente.</li>
+<li>Comparações numéricas com tolerância declarada (<code>np.testing.assert_allclose</code>), nunca <code>==</code> em float.</li>
+<li>Cota, coordenada e nível usam <strong>tolerância absoluta</strong> (m), não relativa.</li>
+<li>Funções puras no núcleo de cálculo: mesma entrada, mesma saída; nada de ler relógio, rede ou estado global.</li>
+</ul>
+<h2 id="doc-estilo-5-html-e-javascript-so-apresentam">5. HTML e JavaScript só apresentam</h2>
+<pre><code class="language-text">Python (numpy/pandas) --calcula--&gt; tabela/figura pronta --serializa--&gt; HTML (+ Plotly JS)
+</code></pre>
+<ul>
+<li>O Python gera o HTML, com Jinja2 para o texto e Plotly para gráficos, já com os valores finais.</li>
+<li>O JavaScript se limita a renderizar gráficos, alternar abas, ordenar e filtrar tabelas.
+Valores exibidos vêm prontos e formatados.</li>
+<li>Formatação brasileira na apresentação: vírgula decimal e ponto de milhar (<code>1.234,56</code>),
+datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>vcm.formatacao</code>).</li>
+</ul>
+<h2 id="doc-estilo-6-verificacao">6. Verificação</h2>
+<p>O CI e a retrospectiva conferem estas regras automaticamente, na medida do possível:</p>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Verificação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Português</td>
+<td>revisão; vocabulário de identificadores em inglês sinalizado na retrospectiva (Fase 1)</td>
+</tr>
+<tr>
+<td>Python calcula</td>
+<td>busca por operações aritméticas em <code>&lt;script&gt;</code> dos HTML gerados (Fase 4)</td>
+</tr>
+<tr>
+<td>SI</td>
+<td>busca por unidades imperiais (<code>inch</code>, <code>ft</code>, <code>psi</code>, <code>gal</code>) no código e nos relatórios</td>
+</tr>
+<tr>
+<td>Unidade no nome</td>
+<td>revisão; testes de unidade nas funções de cálculo</td>
+</tr>
+</tbody>
+</table>
+
+</article>
+
+<footer>Este HTML é derivado dos Markdown (hash da fonte e3c50742550e). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";

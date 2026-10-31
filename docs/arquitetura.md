@@ -4,7 +4,8 @@
 > A IA propõe, o código executa, os testes verificam, as métricas comparam e o humano decide.
 > O próprio repositório é desenvolvido com o seu método (tese **T000**).
 
-Versão 0.2 · 31/10/2026 · Status: protótipo em construção. Plano de execução: [plano.md](plano.md).
+Versão 0.3 · 31/10/2026 · Status: protótipo em construção. Plano de execução: [plano.md](plano.md).
+Regras de código: [estilo.md](estilo.md).
 
 ## 1. Ideia em uma página
 
@@ -144,17 +145,25 @@ precisa dizer isso.
 
 ## 6. Multiagente e catálogo de modelos
 
-| Papel | Perfil de modelo (a validar na tese T003) | Por quê |
-|---|---|---|
-| Gerente / planejador | Mais capaz (Fable, Opus) | Decompor, priorizar, julgar trocas |
-| Executor de tarefa bem especificada | Rápido e barato (Haiku) | Especificação clara e teste objetivo |
-| Executor de tarefa com julgamento | Intermediário (Sonnet) | Bom equilíbrio entre custo e qualidade |
-| Revisor | Outro modelo ou outro fornecedor (Codex) | Reduz erros correlacionados. Mesmo modelo não é revisão independente. |
-| Dados confidenciais | Modelo local de pesos abertos | Desenho de cliente não sai da máquina |
+**Configuração atual (decisão do mantenedor):** o **Opus** é o modelo máximo e atua como
+**gerente** na sessão principal. Ele delega ao **Sonnet** e ao **Haiku**. O Fable não é usado
+neste momento.
 
-Esta tabela é **hipótese**, não regra. A tese T003 mede custo por tarefa aprovada por papel e
-modelo, e a tabela passa a ser derivada das evidências. Nenhum nome de modelo fica fixo no
-código: tudo vem de `repertorio/modelos.yaml`.
+| Papel | Modelo | Faz | Não faz |
+|---|---|---|---|
+| **Gerente** | Opus (sessão principal) | Decompõe a fase em tarefas com especificação e teste de aceite; escolhe o executor; integra; roda o balanço; leva trocas ao humano | Tarefas mecânicas que um executor faz mais barato |
+| **Executor padrão** | Sonnet | Implementação com testes a partir de especificação clara (coletores, protótipos de tese) | Decidir arquitetura |
+| **Executor mecânico** | Haiku | Entradas de repertório, ajustes de lint, testes a partir de exemplos, resumos | Qualquer coisa ambígua |
+| **Revisor** | Opus, ou outro fornecedor na Fase 7 | Revisão do que um executor entregou | Revisar o próprio código |
+| **Avaliador (Check)** | **Python, não é IA** | `vcm balanco`, testes, tolerâncias | — |
+| **Dados confidenciais** | Modelo local de pesos abertos (Fase 7) | Desenho de cliente não sai da máquina | — |
+
+Cada execução delegada é registrada em `results/agentes/execucoes.csv` com modelo, tokens,
+chamadas de ferramenta, duração e se a entrega foi aprovada na integração. Essa é a base de
+dados da tese **T003 (roteamento)**: a tabela acima é hipótese e passa a ser corrigida pelo custo
+por tarefa aprovada de cada modelo.
+
+Nenhum nome de modelo fica fixo no código: tudo vem de `repertorio/modelos.yaml`.
 
 ## 7. Repertório: uma entrada
 
@@ -196,6 +205,7 @@ vibe_code_metrics/
   docs/
     arquitetura.md          este documento (fonte)
     plano.md                plano de implementação (fonte)
+    estilo.md               regras de código do mantenedor
     index.html              gerado por `vcm docs`
   repertorio/               alternativas por papel + modelos.yaml
   theses/
