@@ -139,6 +139,11 @@ def retrospectiva(
         # Outro trabalho: tempo e memória deixam de ser comparáveis e viram informativos.
         for nome in METRICAS_DA_REFERENCIA:
             catalogo[nome] = replace(catalogo[nome], sentido=0)
+    # Ruído automático do tempo: 2 × a maior oscilação observada nas repetições dos snapshots.
+    cvs = [float(s_["cv_tempo_referencia"]) for s_ in (a, d) if "cv_tempo_referencia" in s_]
+    if cvs:
+        auto = pd.Series({"tempo_referencia_ms": 2.0 * max(cvs)})
+        ruido_medido = auto if ruido_medido is None else ruido_medido.combine(auto, max, 0.0)
     tabela = bal.balanco(a, d, metricas=catalogo, ruido_medido=ruido_medido)
     return {
         "referencia_mudou": referencia_mudou,

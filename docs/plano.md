@@ -118,6 +118,11 @@ proposital em teste resulta em `REVERTER`. **Atingido** no teste ponta a ponta (
   identifica o trabalho; se ele muda, tempo e memória viram informativos.
 - **Ruído medido neste repositório** (3 repetições): tempo de referência ±6% (faixa aceita 12%),
   pico de memória ±0,1%, tempo da suíte ±1,3%.
+- **Tempo curto exige tolerância absoluta.** No teste da `main` recém-publicada, uma iteração
+  que só acrescentou um comentário deu `DECISAO_HUMANA`: o cálculo de referência de ~10 ms
+  oscilou +23%. Correção com lógica de engenharia: piso absoluto de ruído (5 ms; 2 MB) e ruído
+  automático = 2 × oscilação observada nas repetições do próprio snapshot. A mesma mudança agora
+  dá `SEM_GANHO`, e a iteração sem semente continua `REVERTER`.
 - **Worktrees de agentes nasceram da `main`.** Os executores precisaram trazer a branch de
   trabalho. Até a branch ir para a `main`, a especificação de cada tarefa precisa dizer a base.
 

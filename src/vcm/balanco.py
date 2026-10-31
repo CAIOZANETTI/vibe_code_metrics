@@ -26,15 +26,17 @@ class Metrica:
     pergunta: str  # qual provocação da retrospectiva ela responde
     eliminatoria: bool = False
     ruido_relativo: float = 0.0  # variação relativa considerada ruído (estimar por repetições)
+    ruido_absoluto: float = 0.0  # piso absoluto, na unidade da métrica (ex.: 5 ms)
 
 
 METRICAS_PADRAO: dict[str, Metrica] = {
     m.nome: m
     for m in [
-        Metrica("tempo_referencia_ms", -1, "eficiente", ruido_relativo=0.15),
+        # Cálculos de poucos ms oscilam mais de 20% entre execuções: piso absoluto de 5 ms.
+        Metrica("tempo_referencia_ms", -1, "eficiente", ruido_relativo=0.15, ruido_absoluto=5.0),
         Metrica("tempo_p50_ms", -1, "eficiente", ruido_relativo=0.05),
         Metrica("tempo_p95_ms", -1, "eficiente", ruido_relativo=0.10),
-        Metrica("pico_ram_mb", -1, "eficiente", ruido_relativo=0.03),
+        Metrica("pico_ram_mb", -1, "eficiente", ruido_relativo=0.03, ruido_absoluto=2.0),
         Metrica("custo_usd", -1, "eficiente", ruido_relativo=0.0),
         Metrica("frac_execucoes_identicas", +1, "deterministico", eliminatoria=True),
         Metrica("cobertura_deterministica", +1, "deterministico"),
@@ -87,6 +89,10 @@ def balanco(
     if ruido_medido is not None:
         medido = ruido_medido.reindex(nomes).fillna(0.0).astype(float)
         ruido = np.maximum(ruido, medido)
+    # Piso absoluto convertido para relativo na escala de cada métrica.
+    escala_ruido = a.abs().where(a != 0, 1.0)
+    piso = pd.Series({n: catalogo[n].ruido_absoluto for n in nomes}, dtype=float) / escala_ruido
+    ruido = np.maximum(ruido, piso)
 
     # Escala: |antes|; quando antes == 0 a variação é absoluta (evita divisão por zero).
     escala = a.abs().where(a != 0, 1.0)

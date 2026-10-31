@@ -128,3 +128,13 @@ def test_semaforo_mostra_metricas_que_a_base_nao_tinha():
     md = cartao.markdown(snap.retrospectiva(antes, depois))
     assert "| frac_execucoes_identicas | deterministico |" in md
     assert "🔴" in md
+
+
+def test_ruido_automatico_pelas_repeticoes_do_snapshot():
+    antes = pd.Series(
+        {"commit": "a" * 40, "tempo_referencia_ms": 100.0, "cv_tempo_referencia": 0.2}
+    )
+    depois = pd.Series({"commit": "b" * 40, "tempo_referencia_ms": 130.0})
+    # oscilação de 20% nas repetições -> faixa de 40%: +30% é ruído
+    r = snap.retrospectiva(antes, depois)
+    assert r["tabela"].loc["tempo_referencia_ms", "veredito"] == "igual"

@@ -68,7 +68,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash fbb476746b57</div>
+  <div class="sub">fonte: docs/*.md · hash 63d468f9133d</div>
   
   <h4>Guia rápido: usar o vcm num protótipo</h4>
   <a href="#doc-guia">Início</a>
@@ -934,6 +934,11 @@ referência, o tempo sobe por mais trabalho, não por código pior. Agora o hash
 identifica o trabalho; se ele muda, tempo e memória viram informativos.</li>
 <li><strong>Ruído medido neste repositório</strong> (3 repetições): tempo de referência ±6% (faixa aceita 12%),
 pico de memória ±0,1%, tempo da suíte ±1,3%.</li>
+<li><strong>Tempo curto exige tolerância absoluta.</strong> No teste da <code>main</code> recém-publicada, uma iteração
+que só acrescentou um comentário deu <code>DECISAO_HUMANA</code>: o cálculo de referência de ~10 ms
+oscilou +23%. Correção com lógica de engenharia: piso absoluto de ruído (5 ms; 2 MB) e ruído
+automático = 2 × oscilação observada nas repetições do próprio snapshot. A mesma mudança agora
+dá <code>SEM_GANHO</code>, e a iteração sem semente continua <code>REVERTER</code>.</li>
 <li><strong>Worktrees de agentes nasceram da <code>main</code>.</strong> Os executores precisaram trazer a branch de
 trabalho. Até a branch ir para a <code>main</code>, a especificação de cada tarefa precisa dizer a base.</li>
 </ul>
@@ -1195,7 +1200,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte fbb476746b57). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte 63d468f9133d). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";

@@ -65,3 +65,12 @@ def test_metrica_informativa_nao_e_julgada():
     assert t.loc["sloc", "veredito"] == "info"
     assert decidir(t) is Decisao.MANTER
     assert respostas(t)["enxuto"] == "sim"
+
+
+def test_piso_absoluto_de_ruido_no_tempo():
+    # 10 ms -> 13 ms é +30%, mas abaixo do piso de 5 ms: igual.
+    t = balanco(_s(tempo_referencia_ms=10.0), _s(tempo_referencia_ms=13.0))
+    assert t.loc["tempo_referencia_ms", "veredito"] == "igual"
+    # 100 ms -> 130 ms passa do piso e da faixa relativa: piorou.
+    t = balanco(_s(tempo_referencia_ms=100.0), _s(tempo_referencia_ms=130.0))
+    assert t.loc["tempo_referencia_ms", "veredito"] == "piorou"
