@@ -18,7 +18,7 @@ from pathlib import Path
 from jinja2 import Environment, PackageLoader, select_autoescape
 from markdown_it import MarkdownIt
 
-DOCS_PADRAO = ("arquitetura.md", "plano.md", "estilo.md")
+DOCS_PADRAO = ("guia.md", "arquitetura.md", "plano.md", "estilo.md")
 SAIDA_PADRAO = "index.html"
 
 

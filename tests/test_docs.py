@@ -13,6 +13,7 @@ def _pasta(tmp_path: Path) -> Path:
         "# Plano\n\n## Fase 0\n\n- [x] feito\n- [ ] a fazer\n", encoding="utf-8"
     )
     (tmp_path / "estilo.md").write_text("# Estilo\n\n## Regras\n", encoding="utf-8")
+    (tmp_path / "guia.md").write_text("# Guia\n\n## Instalar\n", encoding="utf-8")
     return tmp_path
 
 
