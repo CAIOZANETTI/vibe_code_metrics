@@ -11,3 +11,4 @@ data,fase,tarefa,papel,modelo,tokens,chamadas_ferramenta,duracao_s,aprovado,retr
 2026-10-31,fase 1b,formatar README em Markdown,executor_mecanico,claude-haiku-5-5,62290,7,60.4,True,nenhum,"+10 palavras, só marcação"
 2026-10-31,fase 1b,comando vcm iniciar,executor_padrao,claude-sonnet-5-5,74984,20,130.5,True,a verificar no teste ponta a ponta,modelos Jinja com [[ ]] para não colidir com o workflow
 2026-10-31,fase 1b,radar de semáforo no cartão,executor_padrao,claude-sonnet-5-5,89420,28,190.1,True,nenhum,corrigiu erro de sinal na especificação do gerente
+2026-10-31,fase 1b,configuração por projeto e coletores,executor_padrao,claude-sonnet-5-5,93108,41,208.1,True,"médio: semântica de limites divergente do semáforo, corrigida na integração",apontou o default de repetições do snapshot

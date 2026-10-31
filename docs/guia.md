@@ -9,11 +9,10 @@
 O `vcm` é instalado como ferramenta do `uv`, direto do GitHub:
 
 ```bash
-uv tool install git+https://github.com/CAIOZANETTI/vibe_code_metrics@ccr-a74a1d05-p8rjle
+uv tool install git+https://github.com/CAIOZANETTI/vibe_code_metrics
 vcm --help
 ```
 
-Quando o PR for para a `main`, troque `@ccr-a74a1d05-p8rjle` por `@main`.
 Para atualizar: `uv tool upgrade vibe-code-metrics`.
 
 ## 2. Preparar o protótipo
@@ -23,6 +22,7 @@ mkdir meu-prototipo && cd meu-prototipo
 git init
 uv init --package --name calculo        # cria pyproject.toml e src/calculo/
 uv add numpy pandas
+uv add --dev pytest
 vcm iniciar . --pacote calculo
 git add -A && git commit -m "Início do protótipo com vcm"
 ```

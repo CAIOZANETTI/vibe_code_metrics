@@ -68,7 +68,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash 892e27911ae6</div>
+  <div class="sub">fonte: docs/*.md · hash fbb476746b57</div>
   
   <h4>Guia rápido: usar o vcm num protótipo</h4>
   <a href="#doc-guia">Início</a>
@@ -89,6 +89,7 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n2" href="#doc-arquitetura-3-o-ciclo-pdca-de-uma-iteracao">3. O ciclo PDCA de uma iteração</a>
   <a class="n3" href="#doc-arquitetura-quem-faz-o-que">Quem faz o quê</a>
   <a class="n2" href="#doc-arquitetura-4-retrospectiva-de-iteracao">4. Retrospectiva de iteração</a>
+  <a class="n3" href="#doc-arquitetura-radar-de-semaforo">Radar de semáforo</a>
   <a class="n2" href="#doc-arquitetura-5-o-que-e-medido-passivamente-e-o-que-exige-protocolo">5. O que é medido passivamente e o que exige protocolo</a>
   <a class="n2" href="#doc-arquitetura-6-multiagente-e-catalogo-de-modelos">6. Multiagente e catálogo de modelos</a>
   <a class="n2" href="#doc-arquitetura-7-repertorio-uma-entrada">7. Repertório: uma entrada</a>
@@ -104,6 +105,7 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n2" href="#doc-plano-visao-geral-das-fases">Visão geral das fases</a>
   <a class="n2" href="#doc-plano-fase-0-fundacao">Fase 0 — Fundação</a>
   <a class="n2" href="#doc-plano-fase-1-retrospectiva-automatica">Fase 1 — Retrospectiva automática</a>
+  <a class="n3" href="#doc-plano-fase-1b-pronto-para-usar-num-prototipo">Fase 1b — Pronto para usar num protótipo</a>
   <a class="n3" href="#doc-plano-licoes-da-fase-1-registradas-pelo-proprio-metodo">Lições da Fase 1 (registradas pelo próprio método)</a>
   <a class="n2" href="#doc-plano-fase-2-telemetria-de-agentes">Fase 2 — Telemetria de agentes</a>
   <a class="n2" href="#doc-plano-fase-3-repertorio-tese-e-runner">Fase 3 — Repertório, tese e runner</a>
@@ -142,16 +144,16 @@ Regras de código: <a href="#doc-estilo">estilo.md</a>.</p>
 </blockquote>
 <h2 id="doc-guia-1-instalar">1. Instalar</h2>
 <p>O <code>vcm</code> é instalado como ferramenta do <code>uv</code>, direto do GitHub:</p>
-<pre><code class="language-bash">uv tool install git+https://github.com/CAIOZANETTI/vibe_code_metrics@ccr-a74a1d05-p8rjle
+<pre><code class="language-bash">uv tool install git+https://github.com/CAIOZANETTI/vibe_code_metrics
 vcm --help
 </code></pre>
-<p>Quando o PR for para a <code>main</code>, troque <code>@ccr-a74a1d05-p8rjle</code> por <code>@main</code>.
-Para atualizar: <code>uv tool upgrade vibe-code-metrics</code>.</p>
+<p>Para atualizar: <code>uv tool upgrade vibe-code-metrics</code>.</p>
 <h2 id="doc-guia-2-preparar-o-prototipo">2. Preparar o protótipo</h2>
 <pre><code class="language-bash">mkdir meu-prototipo &amp;&amp; cd meu-prototipo
 git init
 uv init --package --name calculo        # cria pyproject.toml e src/calculo/
 uv add numpy pandas
+uv add --dev pytest
 vcm iniciar . --pacote calculo
 git add -A &amp;&amp; git commit -m &quot;Início do protótipo com vcm&quot;
 </code></pre>
@@ -536,6 +538,17 @@ depois a IA interpreta e, por fim, o humano decide.</p>
     CV --&gt;|sim| PARE[&quot;PARAR esta linha&lt;br/&gt;consultar o repertório por alternativa&quot;]
     CV --&gt;|não| MAN2[&quot;seguir iterando&quot;]
 </pre>
+<h3 id="doc-arquitetura-radar-de-semaforo">Radar de semáforo</h3>
+<p>O cartão de cada iteração traz duas leituras, ambas calculadas em Python:</p>
+<ul>
+<li><strong>Radar (relativo):</strong> por dimensão, um índice com antes = 1,0, calculado como a média
+geométrica das razões depois/antes orientadas para que acima de 1,0 seja melhor.</li>
+<li><strong>Semáforo (absoluto):</strong> cada métrica recebe 🟢🟡🔴 por limites (<code>limites_padrao.yaml</code>, que
+podem ser sobrepostos no <code>vcm.yaml</code> do projeto); a cor da dimensão é a pior entre as suas
+métricas, e ⚪ indica sem medição.</li>
+</ul>
+<p>Exemplos reais: <a href="exemplos/cartao-manter.html">cartão MANTER</a> e
+<a href="exemplos/cartao-reverter.html">cartão REVERTER</a>, gerados no teste ponta a ponta.</p>
 <p>O <strong>ruído</strong> de cada métrica vem de repetições. O tempo de execução oscila alguns por cento,
 enquanto SLOC não oscila nada. Uma variação dentro do ruído é declarada &quot;igual&quot;, nunca
 &quot;melhorou&quot;. O critério de parada funciona como num método iterativo: quando o resíduo para de
@@ -780,15 +793,15 @@ de iteração. Arquitetura de referência: <a href="#doc-arquitetura">arquitetur
 </tr>
 <tr>
 <td>1</td>
-<td>Retrospectiva automática por iteração (<code>vcm snapshot</code> / <code>vcm balanco</code>)</td>
+<td>Retrospectiva automática por iteração, radar de semáforo, <code>vcm iniciar</code></td>
 <td>0</td>
-<td>em andamento</td>
+<td>concluída (3 itens menores em aberto)</td>
 </tr>
 <tr>
 <td>2</td>
 <td>Telemetria de agentes e custo por iteração</td>
 <td>1</td>
-<td>a fazer</td>
+<td>próxima</td>
 </tr>
 <tr>
 <td>3</td>
@@ -866,9 +879,10 @@ Executada com agentes: <strong>Opus</strong> gerencia e integra; <strong>Sonnet<
 <li class="tarefa"><input type="checkbox" disabled checked> <code>vcm snapshot [--ref REF]</code> (Opus): mede um ref via <code>git worktree</code> e grava uma linha em <code>results/snapshots.parquet</code></li>
 <li class="tarefa"><input type="checkbox" disabled checked> <code>vcm balanco BASE HEAD</code> (Opus): compara dois snapshots, grava <code>results/iteracoes/</code> e gera o cartão em Markdown e HTML</li>
 <li class="tarefa"><input type="checkbox" disabled checked> Registro de execuções de agentes em <code>results/agentes/execucoes.csv</code> (Opus)</li>
-<li class="tarefa"><input type="checkbox" disabled> Estimar o <strong>ruído</strong> de cada métrica com repetições e gravar em <code>results/ruido.parquet</code></li>
-<li class="tarefa"><input type="checkbox" disabled> GitHub Action em PR: roda o balanço contra a base e anexa o cartão HTML como artefato</li>
-<li class="tarefa"><input type="checkbox" disabled> Tipo da iteração (funcionalidade, refatoração, correção) e métricas de &quot;enxuto&quot; normalizadas (ex.: SLOC por função pública), para que adicionar funcionalidade não conte automaticamente como &quot;piorou&quot;</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Estimar o <strong>ruído</strong> de cada métrica com repetições e gravar em <code>results/ruido.parquet</code></li>
+<li class="tarefa"><input type="checkbox" disabled checked> GitHub Action em PR: roda o balanço contra a base e anexa o cartão HTML como artefato (escrita; o Actions da conta ainda não executa jobs)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Métricas de &quot;enxuto&quot; normalizadas: SLOC bruto passa a ser informativo; julgam-se SLOC por função, complexidade e dependências</li>
+<li class="tarefa"><input type="checkbox" disabled> Tipo da iteração (funcionalidade, refatoração, correção) registrado no cartão</li>
 <li class="tarefa"><input type="checkbox" disabled> Métrica separada de sensibilidade a threads (mesmo código com 1 thread × N threads)</li>
 <li class="tarefa"><input type="checkbox" disabled checked> Registrar a Fase 0 como linha de base da T000</li>
 </ul>
@@ -878,7 +892,19 @@ Executada com agentes: <strong>Opus</strong> gerencia e integra; <strong>Sonnet<
 <li class="tarefa"><input type="checkbox" disabled checked> Protótipo da <strong>T005 — perda de carga na adutora</strong> (Sonnet): NumPy × Polars × Polars + NumPy, com dados sintéticos, gabarito analítico, runner e relatório HTML com Plotly</li>
 </ul>
 <p><strong>Aceite:</strong> o PR mostra o cartão com as 6 perguntas respondidas por números; uma regressão
-proposital em teste resulta em <code>REVERTER</code>.</p>
+proposital em teste resulta em <code>REVERTER</code>. <strong>Atingido</strong> no teste ponta a ponta (ver Fase 1b).</p>
+<h3 id="doc-plano-fase-1b-pronto-para-usar-num-prototipo">Fase 1b — Pronto para usar num protótipo</h3>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm.yaml</code> por projeto (<code>vcm.config</code>), com autodetecção de pastas quando não existe (Sonnet)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Coletores genéricos: determinismo, tempo e memória pelo comando de referência do projeto (Sonnet)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Radar de semáforo no cartão (<code>vcm.semaforo</code>, <code>limites_padrao.yaml</code>) (Sonnet)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm iniciar</code>: adota o método num projeto em um passo (Sonnet)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> README em Markdown correto (Haiku)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Ruído medido por repetição (<code>vcm.ruido</code>) e usado no balanço (Opus)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Tempo e memória viram informativos quando o conjunto de referência muda (Opus)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Guia rápido (<code>docs/guia.md</code>) e cartões de exemplo em <code>docs/exemplos/</code> (Opus)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Teste ponta a ponta num protótipo novo: iteração boa → <code>MANTER</code>; iteração sem semente → <code>REVERTER</code> com código de saída 2 (Opus)</li>
+</ul>
 <h3 id="doc-plano-licoes-da-fase-1-registradas-pelo-proprio-metodo">Lições da Fase 1 (registradas pelo próprio método)</h3>
 <ul>
 <li><strong>O balanço pegou um problema real.</strong> O primeiro cartão (<code>18b6b59 → 8fe6d37</code>) propôs
@@ -896,6 +922,18 @@ erro foi corrigido no commit seguinte. Regra: <code>set -o pipefail</code> em to
 <li><strong>Agentes em paralelo duplicam utilidades.</strong> O executor da T005 não via o <code>vcm.formatacao</code>,
 criado ao mesmo tempo pelo gerente, e escreveu o seu próprio. O gerente unificou na integração.
 A especificação deve listar os módulos compartilhados em construção.</li>
+<li><strong>Interfaces entre executores paralelos divergem em semântica, não em assinatura.</strong> O
+executor da configuração tratou <code>limites</code> como sobreposição; o do semáforo, como lista
+completa. Com <code>limites: {}</code> o semáforo ficou todo cinza. Os testes de cada um passavam, e só o
+teste ponta a ponta revelou o problema. Regra: a especificação deve dizer o <strong>significado</strong> de
+cada campo compartilhado, e toda integração termina com um teste ponta a ponta.</li>
+<li><strong>O executor também corrige o gerente.</strong> A especificação do radar tinha um erro de sinal no
+expoente. O executor detectou, explicou e implementou o sinal correto.</li>
+<li><strong>Eficiência só se compara com o mesmo trabalho.</strong> Ao acrescentar um cálculo ao conjunto de
+referência, o tempo sobe por mais trabalho, não por código pior. Agora o hash da referência
+identifica o trabalho; se ele muda, tempo e memória viram informativos.</li>
+<li><strong>Ruído medido neste repositório</strong> (3 repetições): tempo de referência ±6% (faixa aceita 12%),
+pico de memória ±0,1%, tempo da suíte ±1,3%.</li>
 <li><strong>Worktrees de agentes nasceram da <code>main</code>.</strong> Os executores precisaram trazer a branch de
 trabalho. Até a branch ir para a <code>main</code>, a especificação de cada tarefa precisa dizer a base.</li>
 </ul>
@@ -929,9 +967,9 @@ tokens; a soma confere com o painel do fornecedor dentro de 5%.</p>
 <p><strong>Aceite:</strong> <code>vcm tese rodar T005</code> produz runs em Parquet e um <code>decision.md</code> preenchido com as evidências.</p>
 <h2 id="doc-plano-fase-4-relatorios-html">Fase 4 — Relatórios HTML</h2>
 <ul>
-<li class="tarefa"><input type="checkbox" disabled> Template base compartilhado com <code>vcm docs</code> (mesma identidade visual)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Template base compartilhado com <code>vcm docs</code> (mesma identidade visual)</li>
 <li class="tarefa"><input type="checkbox" disabled> Relatório de tese: protocolo, tabela por alternativa, gráficos Plotly (distribuição de tempo, Pareto custo × qualidade), decisão</li>
-<li class="tarefa"><input type="checkbox" disabled> Relatório de iteração: o cartão da Fase 1, com links</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Relatório de iteração: cartão com <strong>radar de semáforo</strong> (índice por dimensão e cor por limite)</li>
 <li class="tarefa"><input type="checkbox" disabled> Painel histórico: trajetória de cada métrica por iteração, marcando convergência e degradação</li>
 <li class="tarefa"><input type="checkbox" disabled> Índice <code>results/reports/index.html</code> ligando tudo</li>
 </ul>
@@ -1157,7 +1195,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte 892e27911ae6). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte fbb476746b57). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";

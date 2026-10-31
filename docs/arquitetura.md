@@ -122,6 +122,19 @@ flowchart TD
     CV -->|não| MAN2["seguir iterando"]
 ```
 
+### Radar de semáforo
+
+O cartão de cada iteração traz duas leituras, ambas calculadas em Python:
+
+- **Radar (relativo):** por dimensão, um índice com antes = 1,0, calculado como a média
+  geométrica das razões depois/antes orientadas para que acima de 1,0 seja melhor.
+- **Semáforo (absoluto):** cada métrica recebe 🟢🟡🔴 por limites (`limites_padrao.yaml`, que
+  podem ser sobrepostos no `vcm.yaml` do projeto); a cor da dimensão é a pior entre as suas
+  métricas, e ⚪ indica sem medição.
+
+Exemplos reais: [cartão MANTER](exemplos/cartao-manter.html) e
+[cartão REVERTER](exemplos/cartao-reverter.html), gerados no teste ponta a ponta.
+
 O **ruído** de cada métrica vem de repetições. O tempo de execução oscila alguns por cento,
 enquanto SLOC não oscila nada. Uma variação dentro do ruído é declarada "igual", nunca
 "melhorou". O critério de parada funciona como num método iterativo: quando o resíduo para de

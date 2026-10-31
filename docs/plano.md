@@ -11,8 +11,8 @@ Legenda: `[x]` feito · `[ ]` a fazer · **Aceite** = critério objetivo para fe
 | Fase | Entrega | Depende de | Status |
 |---|---|---|---|
 | 0 | Fundação: pacote, documentação viva, balanço, CI, T000 | — | concluída |
-| 1 | Retrospectiva automática por iteração (`vcm snapshot` / `vcm balanco`) | 0 | em andamento |
-| 2 | Telemetria de agentes e custo por iteração | 1 | a fazer |
+| 1 | Retrospectiva automática por iteração, radar de semáforo, `vcm iniciar` | 0 | concluída (3 itens menores em aberto) |
+| 2 | Telemetria de agentes e custo por iteração | 1 | próxima |
 | 3 | Repertório, schema de tese e runner; primeira tese técnica (T005) | 1 | a fazer |
 | 4 | Relatórios HTML com Plotly e painel histórico | 1, 3 | a fazer |
 | 5 | Orquestração multiagente com avaliador trancado | 2, 3 | a fazer |
@@ -62,9 +62,10 @@ Executada com agentes: **Opus** gerencia e integra; **Sonnet** e **Haiku** execu
 - [x] `vcm snapshot [--ref REF]` (Opus): mede um ref via `git worktree` e grava uma linha em `results/snapshots.parquet`
 - [x] `vcm balanco BASE HEAD` (Opus): compara dois snapshots, grava `results/iteracoes/` e gera o cartão em Markdown e HTML
 - [x] Registro de execuções de agentes em `results/agentes/execucoes.csv` (Opus)
-- [ ] Estimar o **ruído** de cada métrica com repetições e gravar em `results/ruido.parquet`
-- [ ] GitHub Action em PR: roda o balanço contra a base e anexa o cartão HTML como artefato
-- [ ] Tipo da iteração (funcionalidade, refatoração, correção) e métricas de "enxuto" normalizadas (ex.: SLOC por função pública), para que adicionar funcionalidade não conte automaticamente como "piorou"
+- [x] Estimar o **ruído** de cada métrica com repetições e gravar em `results/ruido.parquet`
+- [x] GitHub Action em PR: roda o balanço contra a base e anexa o cartão HTML como artefato (escrita; o Actions da conta ainda não executa jobs)
+- [x] Métricas de "enxuto" normalizadas: SLOC bruto passa a ser informativo; julgam-se SLOC por função, complexidade e dependências
+- [ ] Tipo da iteração (funcionalidade, refatoração, correção) registrado no cartão
 - [ ] Métrica separada de sensibilidade a threads (mesmo código com 1 thread × N threads)
 - [x] Registrar a Fase 0 como linha de base da T000
 
@@ -74,7 +75,19 @@ Trabalho antecipado das Fases 3 e 4, a pedido do mantenedor:
 - [x] Protótipo da **T005 — perda de carga na adutora** (Sonnet): NumPy × Polars × Polars + NumPy, com dados sintéticos, gabarito analítico, runner e relatório HTML com Plotly
 
 **Aceite:** o PR mostra o cartão com as 6 perguntas respondidas por números; uma regressão
-proposital em teste resulta em `REVERTER`.
+proposital em teste resulta em `REVERTER`. **Atingido** no teste ponta a ponta (ver Fase 1b).
+
+### Fase 1b — Pronto para usar num protótipo
+
+- [x] `vcm.yaml` por projeto (`vcm.config`), com autodetecção de pastas quando não existe (Sonnet)
+- [x] Coletores genéricos: determinismo, tempo e memória pelo comando de referência do projeto (Sonnet)
+- [x] Radar de semáforo no cartão (`vcm.semaforo`, `limites_padrao.yaml`) (Sonnet)
+- [x] `vcm iniciar`: adota o método num projeto em um passo (Sonnet)
+- [x] README em Markdown correto (Haiku)
+- [x] Ruído medido por repetição (`vcm.ruido`) e usado no balanço (Opus)
+- [x] Tempo e memória viram informativos quando o conjunto de referência muda (Opus)
+- [x] Guia rápido (`docs/guia.md`) e cartões de exemplo em `docs/exemplos/` (Opus)
+- [x] Teste ponta a ponta num protótipo novo: iteração boa → `MANTER`; iteração sem semente → `REVERTER` com código de saída 2 (Opus)
 
 ### Lições da Fase 1 (registradas pelo próprio método)
 
@@ -93,6 +106,18 @@ proposital em teste resulta em `REVERTER`.
 - **Agentes em paralelo duplicam utilidades.** O executor da T005 não via o `vcm.formatacao`,
   criado ao mesmo tempo pelo gerente, e escreveu o seu próprio. O gerente unificou na integração.
   A especificação deve listar os módulos compartilhados em construção.
+- **Interfaces entre executores paralelos divergem em semântica, não em assinatura.** O
+  executor da configuração tratou `limites` como sobreposição; o do semáforo, como lista
+  completa. Com `limites: {}` o semáforo ficou todo cinza. Os testes de cada um passavam, e só o
+  teste ponta a ponta revelou o problema. Regra: a especificação deve dizer o **significado** de
+  cada campo compartilhado, e toda integração termina com um teste ponta a ponta.
+- **O executor também corrige o gerente.** A especificação do radar tinha um erro de sinal no
+  expoente. O executor detectou, explicou e implementou o sinal correto.
+- **Eficiência só se compara com o mesmo trabalho.** Ao acrescentar um cálculo ao conjunto de
+  referência, o tempo sobe por mais trabalho, não por código pior. Agora o hash da referência
+  identifica o trabalho; se ele muda, tempo e memória viram informativos.
+- **Ruído medido neste repositório** (3 repetições): tempo de referência ±6% (faixa aceita 12%),
+  pico de memória ±0,1%, tempo da suíte ±1,3%.
 - **Worktrees de agentes nasceram da `main`.** Os executores precisaram trazer a branch de
   trabalho. Até a branch ir para a `main`, a especificação de cada tarefa precisa dizer a base.
 
@@ -126,9 +151,9 @@ tokens; a soma confere com o painel do fornecedor dentro de 5%.
 
 ## Fase 4 — Relatórios HTML
 
-- [ ] Template base compartilhado com `vcm docs` (mesma identidade visual)
+- [x] Template base compartilhado com `vcm docs` (mesma identidade visual)
 - [ ] Relatório de tese: protocolo, tabela por alternativa, gráficos Plotly (distribuição de tempo, Pareto custo × qualidade), decisão
-- [ ] Relatório de iteração: o cartão da Fase 1, com links
+- [x] Relatório de iteração: cartão com **radar de semáforo** (índice por dimensão e cor por limite)
 - [ ] Painel histórico: trajetória de cada métrica por iteração, marcando convergência e degradação
 - [ ] Índice `results/reports/index.html` ligando tudo
 
