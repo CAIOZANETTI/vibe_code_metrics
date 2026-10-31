@@ -1,0 +1,30 @@
+thesis_id: T005
+titulo: Perda de carga numa adutora de 5 km (NumPy x Polars x híbrida)
+versao_protocolo: 1
+projeto: vibe_code_metrics
+
+alternativas: [numpy, polars, hibrida]
+tamanhos_n_trechos: [100, 1000, 10000, 100000, 1000000]
+repeticoes: 7
+aquecimento: 1
+semente: 42
+comprimento_total_m: 5000.0
+limite_gabarito_n_trechos: 100000   # acima disso a referência é a alternativa NumPy
+
+metricas:
+  eficiencia: [tempo_p50_ms, tempo_p95_ms, pico_mb]
+  exatidao: [erro_max_abs_m]
+  determinismo: [deterministico]
+  enxuto: [sloc]
+
+tolerancia:
+  erro_max_abs_m: 1.0e-9    # absoluta, em metros, contra o gabarito
+
+eliminatorios:
+  - erro_max_abs_m > 1.0e-9
+  - deterministico == falso   # mais de um hash de saída entre as repetições
+
+nota_memoria: >
+  tracemalloc mede só alocações Python/NumPy; subestima a memória nativa do Polars (Rust).
+
+status: inconclusiva_preliminar
