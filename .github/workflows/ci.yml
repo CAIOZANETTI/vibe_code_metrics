@@ -17,3 +17,25 @@ jobs:
         run: uv run pytest -q
       - name: Documentação em dia (docs/index.html vs docs/*.md)
         run: uv run vcm docs --check
+
+  retrospectiva:
+    # Balanço da iteração: base do PR × cabeça do PR. REVERTER falha o job.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync
+      - name: Balanço da iteração
+        run: |
+          set -o pipefail
+          uv run vcm balanco "${{ github.event.pull_request.base.sha }}" HEAD \
+            --repeticoes 3 --falhar-se-reverter | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Cartão HTML como artefato
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: retrospectiva
+          path: results/iteracoes/

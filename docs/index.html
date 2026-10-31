@@ -68,7 +68,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash 89fadf227654</div>
+  <div class="sub">fonte: docs/*.md · hash f2fa4fafdd52</div>
   
   <h4>Arquitetura de funcionamento</h4>
   <a href="#doc-arquitetura">Início</a>
@@ -685,7 +685,7 @@ Executada com agentes: <strong>Opus</strong> gerencia e integra; <strong>Sonnet<
 <p>Trabalho antecipado das Fases 3 e 4, a pedido do mantenedor:</p>
 <ul>
 <li class="tarefa"><input type="checkbox" disabled checked> Repertório inicial em <code>repertorio/</code> (Haiku): uma entrada YAML por alternativa, por papel</li>
-<li class="tarefa"><input type="checkbox" disabled> Protótipo da <strong>T005 — perda de carga na adutora</strong> (Sonnet): NumPy × Polars × Polars + NumPy, com dados sintéticos, gabarito analítico, runner e relatório HTML com Plotly</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Protótipo da <strong>T005 — perda de carga na adutora</strong> (Sonnet): NumPy × Polars × Polars + NumPy, com dados sintéticos, gabarito analítico, runner e relatório HTML com Plotly</li>
 </ul>
 <p><strong>Aceite:</strong> o PR mostra o cartão com as 6 perguntas respondidas por números; uma regressão
 proposital em teste resulta em <code>REVERTER</code>.</p>
@@ -700,6 +700,12 @@ virou item do plano.</li>
 <li><strong>Determinismo depende de threads.</strong> Produto matricial e <code>solve</code> do NumPy mudam de hash entre
 1 thread e 4 threads, e são estáveis com o número de threads fixo. Isso foi registrado no
 repertório do NumPy, e a métrica separada virou item do plano.</li>
+<li><strong>O gerente também erra.</strong> Um commit do Opus entrou com teste falhando, porque o código de
+saída do pytest foi mascarado num pipeline de shell. O balanço seguinte propôs <code>REVERTER</code> e o
+erro foi corrigido no commit seguinte. Regra: <code>set -o pipefail</code> em todo pipeline de verificação.</li>
+<li><strong>Agentes em paralelo duplicam utilidades.</strong> O executor da T005 não via o <code>vcm.formatacao</code>,
+criado ao mesmo tempo pelo gerente, e escreveu o seu próprio. O gerente unificou na integração.
+A especificação deve listar os módulos compartilhados em construção.</li>
 <li><strong>Worktrees de agentes nasceram da <code>main</code>.</strong> Os executores precisaram trazer a branch de
 trabalho. Até a branch ir para a <code>main</code>, a especificação de cada tarefa precisa dizer a base.</li>
 </ul>
@@ -961,7 +967,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte 89fadf227654). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte f2fa4fafdd52). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";

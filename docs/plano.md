@@ -71,7 +71,7 @@ Executada com agentes: **Opus** gerencia e integra; **Sonnet** e **Haiku** execu
 Trabalho antecipado das Fases 3 e 4, a pedido do mantenedor:
 
 - [x] Repertório inicial em `repertorio/` (Haiku): uma entrada YAML por alternativa, por papel
-- [ ] Protótipo da **T005 — perda de carga na adutora** (Sonnet): NumPy × Polars × Polars + NumPy, com dados sintéticos, gabarito analítico, runner e relatório HTML com Plotly
+- [x] Protótipo da **T005 — perda de carga na adutora** (Sonnet): NumPy × Polars × Polars + NumPy, com dados sintéticos, gabarito analítico, runner e relatório HTML com Plotly
 
 **Aceite:** o PR mostra o cartão com as 6 perguntas respondidas por números; uma regressão
 proposital em teste resulta em `REVERTER`.
@@ -87,6 +87,12 @@ proposital em teste resulta em `REVERTER`.
 - **Determinismo depende de threads.** Produto matricial e `solve` do NumPy mudam de hash entre
   1 thread e 4 threads, e são estáveis com o número de threads fixo. Isso foi registrado no
   repertório do NumPy, e a métrica separada virou item do plano.
+- **O gerente também erra.** Um commit do Opus entrou com teste falhando, porque o código de
+  saída do pytest foi mascarado num pipeline de shell. O balanço seguinte propôs `REVERTER` e o
+  erro foi corrigido no commit seguinte. Regra: `set -o pipefail` em todo pipeline de verificação.
+- **Agentes em paralelo duplicam utilidades.** O executor da T005 não via o `vcm.formatacao`,
+  criado ao mesmo tempo pelo gerente, e escreveu o seu próprio. O gerente unificou na integração.
+  A especificação deve listar os módulos compartilhados em construção.
 - **Worktrees de agentes nasceram da `main`.** Os executores precisaram trazer a branch de
   trabalho. Até a branch ir para a `main`, a especificação de cada tarefa precisa dizer a base.
 
