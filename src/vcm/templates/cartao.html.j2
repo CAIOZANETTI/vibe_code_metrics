@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retrospectiva {{ base }} → {{ alvo }}</title>
+<!-- Gerado por `uv run vcm balanco`. Valores calculados e formatados em Python. -->
+<style>
+{% include "_estilo.css" %}
+body { display: block; }
+main { margin: 0 auto; }
+.decisao { font-size: 20px; font-weight: 700; padding: 14px 18px; border-radius: 10px; margin: 16px 0; }
+.REVERTER { background: #fde8e8; color: #9b1c1c; }
+.MANTER { background: #e6f4ea; color: #1e6b34; }
+.SEM_GANHO { background: #eef1f4; color: #3c4650; }
+.DECISAO_HUMANA { background: #fff4e0; color: #8a5300; }
+td.melhorou { color: #1e6b34; font-weight: 600; }
+td.piorou { color: #b42318; font-weight: 600; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<main>
+<article>
+  <h1>Retrospectiva da iteração <code>{{ base }}</code> → <code>{{ alvo }}</code></h1>
+  {% if mensagem %}<p><em>{{ mensagem }}</em></p>{% endif %}
+  <div class="decisao {{ decisao }}">Decisão proposta: {{ decisao }}</div>
+  <p>{{ explicacao }}</p>
+
+  <h2>Perguntas da retrospectiva</h2>
+  <table>
+    <tr><th>Pergunta</th><th>Resposta (medida)</th></tr>
+    {% for p in perguntas %}<tr><td>{{ p.pergunta }}</td><td>{{ p.resposta }}</td></tr>
+    {% endfor %}<tr><td>Vale continuar nessa linha?</td><td>decisão humana, com base no histórico</td></tr>
+  </table>
+
+  <h2>Métricas antes × depois</h2>
+  <table>
+    <tr><th>Métrica</th><th>Pergunta</th><th>Eliminatória</th><th>Antes</th><th>Depois</th><th>Variação</th><th>Veredito</th></tr>
+    {% for r in linhas %}<tr>
+      <td><code>{{ r.metrica }}</code></td><td>{{ r.pergunta }}</td><td>{{ r.eliminatoria }}</td>
+      <td class="num">{{ r.antes }}</td><td class="num">{{ r.depois }}</td><td class="num">{{ r.variacao }}</td>
+      <td class="{{ r.classe }}">{{ r.veredito }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <p><small>Variações dentro do ruído de cada métrica são declaradas "igual". Regra de decisão: <code>vcm.balanco.decidir</code>.</small></p>
+</article>
+</main>
+</body>
+</html>

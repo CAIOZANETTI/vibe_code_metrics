@@ -6,64 +6,7 @@
 <title>Vibe Code Metrics — Arquitetura e Plano</title>
 <!-- Gerado por `uv run vcm docs` a partir de docs/*.md. Não edite este arquivo: edite o Markdown. -->
 <style>
-:root {
-  --bg: #fbfbfa; --fg: #1f2328; --muted: #5d6470; --line: #e3e5e8; --card: #ffffff;
-  --accent: #1f6feb; --accent-soft: #e8f0fe; --code: #f3f4f6; --side: #f4f5f6;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #111418; --fg: #e6e8eb; --muted: #9aa3ad; --line: #2b3138; --card: #171b20;
-    --accent: #58a6ff; --accent-soft: #15243a; --code: #1d2228; --side: #14181d;
-  }
-}
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  margin: 0; background: var(--bg); color: var(--fg);
-  font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: 100vh;
-}
-nav {
-  position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 24px 18px;
-  background: var(--side); border-right: 1px solid var(--line); font-size: 14px;
-}
-nav .marca { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
-nav .sub { color: var(--muted); font-size: 12px; margin-bottom: 20px; }
-nav h4 { margin: 18px 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
-nav a { display: block; color: var(--fg); text-decoration: none; padding: 3px 8px; border-radius: 6px; }
-nav a:hover { background: var(--accent-soft); color: var(--accent); }
-nav a.n3 { padding-left: 22px; color: var(--muted); font-size: 13px; }
-main { padding: 32px 48px 80px; max-width: 1040px; }
-article { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 40px 32px; margin-bottom: 40px; }
-.fonte { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
-  font-size: 13px; color: var(--muted); border-bottom: 1px solid var(--line); padding: 14px 0 10px; margin-bottom: 8px; }
-.fonte a { color: var(--accent); }
-h1 { font-size: 30px; line-height: 1.25; margin: 22px 0 8px; }
-h2 { font-size: 22px; margin: 40px 0 10px; padding-top: 8px; border-top: 1px solid var(--line); }
-h3 { font-size: 18px; margin: 28px 0 8px; }
-h1, h2, h3 { scroll-margin-top: 16px; }
-a { color: var(--accent); }
-p, li { max-width: 78ch; }
-blockquote { margin: 16px 0; padding: 10px 16px; border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; }
-blockquote p { margin: 4px 0; }
-code { font: 13.5px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--code); padding: 1px 5px; border-radius: 4px; }
-pre { background: var(--code); padding: 14px 16px; border-radius: 8px; overflow-x: auto; }
-pre code { padding: 0; background: none; }
-pre.mermaid { background: transparent; text-align: center; border: 1px solid var(--line); }
-table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14.5px; display: block; overflow-x: auto; }
-th, td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; vertical-align: top; }
-th { background: var(--side); font-weight: 600; }
-tr:nth-child(even) td { background: color-mix(in srgb, var(--side) 45%, transparent); }
-li.tarefa { list-style: none; margin-left: -1.3em; }
-li input[type=checkbox] { margin-right: 6px; accent-color: var(--accent); }
-footer { color: var(--muted); font-size: 12px; }
-@media (max-width: 860px) {
-  body { grid-template-columns: 1fr; }
-  nav { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
-  main { padding: 16px; }
-  article { padding: 4px 18px 20px; }
-}
-</style>
+{% include "_estilo.css" %}</style>
 </head>
 <body>
 <nav>
