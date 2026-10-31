@@ -6,10 +6,11 @@ import sys
 from vcm.referencia import casos, hash_referencia
 
 
-def test_casos_tem_os_quatro_casos_com_bytes():
+def test_casos_de_referencia_com_bytes():
     resultado = casos()
     assert set(resultado) == {
         "balanco",
+        "perda_de_carga",
         "produto_matricial",
         "sistema_linear",
         "soma_acumulada",
