@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>{{ titulo }}</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 62rem; margin: 2rem auto; padding: 0 1rem; color: #1f2933; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+  th, td { border: 1px solid #cbd2d9; padding: 0.3rem 0.6rem; text-align: right; }
+  th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align: left; }
+  th { background: #f0f4f8; }
+  .veredito { font-weight: 600; }
+  .nota { color: #52606d; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<h1>{{ titulo }}</h1>
+<p class="nota">Status da tese: {{ status }}. Valores calculados em Python; esta página só apresenta.</p>
+
+<h2>Hipóteses</h2>
+<ul>
+{% for hipotese in hipoteses %}
+  <li><strong>{{ hipotese.rotulo }}</strong> {{ hipotese.texto }}
+    <span class="veredito">Veredito: {{ hipotese.veredito }}.</span> {{ hipotese.evidencia }}</li>
+{% endfor %}
+</ul>
+
+<h2>Resumo</h2>
+<table>
+  <thead><tr>{% for cabecalho in cabecalhos %}<th>{{ cabecalho }}</th>{% endfor %}</tr></thead>
+  <tbody>
+  {% for linha in linhas %}<tr>{% for celula in linha %}<td>{{ celula }}</td>{% endfor %}</tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p class="nota">{{ nota_memoria }}</p>
+
+<h2>Tempo p50 por tamanho</h2>
+{{ grafico_tempo | safe }}
+
+<h2>Linha piezométrica (n = {{ n_perfil }} trechos)</h2>
+{{ grafico_perfil | safe }}
+
+<h2>Leitura dos resultados</h2>
+<ul>
+{% for frase in leitura %}<li>{{ frase }}</li>
+{% endfor %}
+</ul>
+</body>
+</html>
