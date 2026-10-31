@@ -1,0 +1,20 @@
+id: parquet
+nome: Parquet
+papel: armazenamento
+descricao: Formato de arquivo colunar, lido e escrito em Python pelo pacote pyarrow.
+quando_considerar:
+  - persistir tabelas grandes
+  - leitura seletiva de colunas
+  - compressão por coluna
+quando_evitar:
+  - edição linha a linha
+  - arquivos pequenos que são reescritos com muita frequência
+cuidados:
+  - declarar os tipos explicitamente ao gravar
+  - o arquivo não é alterado no lugar; ele é reescrito por inteiro
+coopera_com: [pandas, polars, duckdb]
+compete_com: [sqlite]
+pacote_python: pyarrow
+documentacao: https://arrow.apache.org/docs/python/parquet.html
+evidencias: []
+status: em_uso

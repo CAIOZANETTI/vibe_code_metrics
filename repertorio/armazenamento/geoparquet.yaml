@@ -1,0 +1,19 @@
+id: geoparquet
+nome: GeoParquet
+papel: armazenamento
+descricao: Parquet com metadados geoespaciais padronizados, lido e escrito com GeoPandas.
+quando_considerar:
+  - tabelas com geometrias trocadas entre ferramentas
+  - preservar colunas e tipos do Parquet
+quando_evitar:
+  - consultas espaciais complexas e frequentes, para as quais um banco espacial é mais adequado
+  - dados sem geometria
+cuidados:
+  - a versão da especificação de metadados precisa ser declarada
+  - o sistema de referência de coordenadas precisa ser declarado
+coopera_com: [pandas, parquet]
+compete_com: [sqlite]
+pacote_python: geopandas
+documentacao: https://geoparquet.org/
+evidencias: []
+status: candidato

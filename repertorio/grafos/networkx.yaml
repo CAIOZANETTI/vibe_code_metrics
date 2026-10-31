@@ -1,0 +1,19 @@
+id: networkx
+nome: NetworkX
+papel: grafos
+descricao: Biblioteca de grafos em Python puro, com grande conjunto de algoritmos e API flexível.
+quando_considerar:
+  - prototipar algoritmos de grafos
+  - grafos de tamanho moderado
+  - atributos arbitrários em nós e arestas
+quando_evitar:
+  - grafos muito grandes em que o tempo de execução é o fator limitante
+cuidados:
+  - a implementação em Python é mais lenta que a de bibliotecas com núcleo nativo
+  - a ordem de iteração segue a ordem de inserção; fixá-la para resultados reproduzíveis
+coopera_com: [numpy, pandas]
+compete_com: [rustworkx]
+pacote_python: networkx
+documentacao: https://networkx.org/documentation/stable/
+evidencias: []
+status: candidato

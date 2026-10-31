@@ -1,0 +1,19 @@
+id: duckdb
+nome: DuckDB
+papel: tabular
+descricao: Banco SQL analítico embutido no processo, que lê arquivos Parquet e CSV diretamente.
+quando_considerar:
+  - consultas SQL sobre arquivos grandes
+  - junções e agregações complexas
+  - operação sem servidor
+quando_evitar:
+  - muitos processos escrevendo ao mesmo tempo
+  - aplicações transacionais de alta frequência de escrita
+cuidados:
+  - um arquivo de banco aceita um processo escritor por vez
+coopera_com: [parquet, pandas, polars]
+compete_com: [pandas, polars]
+pacote_python: duckdb
+documentacao: https://duckdb.org/docs/
+evidencias: []
+status: candidato
