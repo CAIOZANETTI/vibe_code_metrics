@@ -101,6 +101,11 @@ def medir_determinismo(
     }
     if tempos_ms:
         metricas["tempo_referencia_ms"] = float(statistics.median(tempos_ms))
+        if len(tempos_ms) > 1 and statistics.mean(tempos_ms) > 0:
+            # Oscilação entre as repetições deste snapshot (usada como ruído automático).
+            metricas["cv_tempo_referencia"] = float(
+                statistics.stdev(tempos_ms) / statistics.mean(tempos_ms)
+            )
     if picos_ram_mb:
         metricas["pico_ram_mb"] = float(max(picos_ram_mb))
     return metricas
