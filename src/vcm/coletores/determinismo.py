@@ -92,8 +92,10 @@ def medir_determinismo(
         if "pico_ram_mb" in extras:
             picos_ram_mb.append(float(extras["pico_ram_mb"]))
 
-    mais_frequente = Counter(hashes).most_common(1)[0][1]
+    hash_dominante, mais_frequente = Counter(hashes).most_common(1)[0]
     metricas = {
+        # texto, não métrica: identifica o trabalho medido (ver snapshot.retrospectiva)
+        "hash_referencia": hash_dominante,
         "frac_execucoes_identicas": mais_frequente / repeticoes,
         "repeticoes_determinismo": float(repeticoes),
     }

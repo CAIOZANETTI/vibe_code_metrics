@@ -10,6 +10,7 @@ from __future__ import annotations
 import subprocess
 import tempfile
 from contextlib import contextmanager
+from dataclasses import replace
 from pathlib import Path
 
 import pandas as pd
@@ -18,7 +19,9 @@ from vcm import balanco as bal
 
 ARQUIVO_SNAPSHOTS = Path("results/snapshots.parquet")
 PASTA_ITERACOES = Path("results/iteracoes")
-COLUNAS_META = ["commit", "ref", "data_commit", "mensagem"]
+COLUNAS_META = ["commit", "ref", "data_commit", "mensagem", "hash_referencia"]
+# Métricas que só são comparáveis se o conjunto de referência (o trabalho medido) for o mesmo.
+METRICAS_DA_REFERENCIA = ("tempo_referencia_ms", "pico_ram_mb")
 
 
 def _git(repo: Path, *args: str) -> str:
@@ -129,8 +132,16 @@ def retrospectiva(
     numericas = [i for i in antes.index if i not in COLUNAS_META]
     a = pd.to_numeric(antes[numericas], errors="coerce").dropna()
     d = pd.to_numeric(depois.drop(labels=COLUNAS_META, errors="ignore"), errors="coerce").dropna()
-    tabela = bal.balanco(a, d, ruido_medido=ruido_medido)
+    hash_a, hash_d = antes.get("hash_referencia"), depois.get("hash_referencia")
+    referencia_mudou = bool(hash_a and hash_d and hash_a != hash_d)
+    catalogo = dict(bal.METRICAS_PADRAO)
+    if referencia_mudou:
+        # Outro trabalho: tempo e memória deixam de ser comparáveis e viram informativos.
+        for nome in METRICAS_DA_REFERENCIA:
+            catalogo[nome] = replace(catalogo[nome], sentido=0)
+    tabela = bal.balanco(a, d, metricas=catalogo, ruido_medido=ruido_medido)
     return {
+        "referencia_mudou": referencia_mudou,
         "base": antes.get("commit", ""),
         "alvo": depois.get("commit", ""),
         "mensagem_alvo": depois.get("mensagem", ""),

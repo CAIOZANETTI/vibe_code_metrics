@@ -64,7 +64,11 @@ def test_protocolo_json(tmp_path):
 def test_protocolo_so_hash(tmp_path):
     _mini_projeto(tmp_path, "print('abc123')\n")
     resultado = medir_determinismo(tmp_path, repeticoes=2)
-    assert resultado == {"frac_execucoes_identicas": 1.0, "repeticoes_determinismo": 2.0}
+    assert resultado == {
+        "hash_referencia": "abc123",
+        "frac_execucoes_identicas": 1.0,
+        "repeticoes_determinismo": 2.0,
+    }
 
 
 @pytest.mark.lento

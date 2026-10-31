@@ -29,6 +29,11 @@ EXPLICACAO_DECISAO = {
     Decisao.DECISAO_HUMANA: "Houve troca: algo melhorou e algo piorou. Cabe ao humano decidir.",
 }
 
+AVISO_REFERENCIA = (
+    "O conjunto de referência mudou nesta iteração (hash diferente): tempo e memória medem "
+    "outro trabalho e foram tratados como informativos."
+)
+
 ICONE = {
     "melhorou": "▲ melhorou",
     "piorou": "▼ piorou",
@@ -62,7 +67,8 @@ def _perdas(tabela: pd.DataFrame) -> list[str]:
 
 def _semaforo(tabela: pd.DataFrame, limites: dict | None) -> tuple[dict, str]:
     """Semáforo (por métrica e por dimensão, já formatado) e o HTML do radar."""
-    estado = sem.avaliar_estado(tabela["depois"], limites)
+    # `limites` do vcm.yaml são SOBREPOSIÇÕES aos limites padrão, nunca a lista completa.
+    estado = sem.avaliar_estado(tabela["depois"], sem.carregar_limites(limites))
     cores = sem.cores_por_dimensao(estado)
     indices = sem.indices_iteracao(tabela)
     metricas = [
@@ -102,6 +108,7 @@ def contexto(resultado: dict, limites: dict | None = None) -> dict:
         "mensagem": resultado.get("mensagem_alvo", ""),
         "decisao": resultado["decisao"].value,
         "explicacao": EXPLICACAO_DECISAO[resultado["decisao"]],
+        "aviso": AVISO_REFERENCIA if resultado.get("referencia_mudou") else "",
         "perguntas": [
             {"pergunta": texto, "resposta": respostas.get(chave, "sem medição")}
             for chave, texto in PERGUNTAS.items()
@@ -126,6 +133,7 @@ def markdown(resultado: dict, limites: dict | None = None) -> str:
         f"_{c['mensagem']}_" if c["mensagem"] else "",
         "",
         f"**Decisão proposta: {c['decisao']}**. {c['explicacao']}",
+        *(["", f"> {c['aviso']}"] if c["aviso"] else []),
         "",
         "| Pergunta | Resposta |",
         "|---|---|",

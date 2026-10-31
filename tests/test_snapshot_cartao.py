@@ -86,3 +86,25 @@ def test_registro_de_agentes(tmp_path):
     assert r.loc["haiku", "taxa_aprovacao"] == 0.5
     with pytest.raises(ValueError):
         agentes.registrar(arq, modelo_errado="x")
+
+
+def test_limites_vazios_do_projeto_mantem_os_padroes():
+    # Regressão: `limites: {}` no vcm.yaml apagava os limites padrão (semáforo todo cinza).
+    antes = pd.Series({"commit": "a" * 40, "testes_falhando": 0.0, "cobertura_testes": 0.9})
+    depois = pd.Series({"commit": "b" * 40, "testes_falhando": 0.0, "cobertura_testes": 0.9})
+    md = cartao.markdown(snap.retrospectiva(antes, depois), limites={})
+    assert "sem limite definido" not in md
+    assert "🟢" in md
+
+
+def test_referencia_mudou_torna_tempo_informativo():
+    antes = pd.Series({"commit": "a" * 40, "hash_referencia": "x", "tempo_referencia_ms": 10.0})
+    depois = pd.Series({"commit": "b" * 40, "hash_referencia": "y", "tempo_referencia_ms": 20.0})
+    r = snap.retrospectiva(antes, depois)
+    assert r["referencia_mudou"]
+    assert r["tabela"].loc["tempo_referencia_ms", "veredito"] == "info"
+    assert "conjunto de referência mudou" in cartao.markdown(r)
+    mesmo = pd.Series({"commit": "c" * 40, "hash_referencia": "x", "tempo_referencia_ms": 20.0})
+    r2 = snap.retrospectiva(antes, mesmo)
+    assert not r2["referencia_mudou"]
+    assert r2["tabela"].loc["tempo_referencia_ms", "veredito"] == "piorou"

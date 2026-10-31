@@ -32,6 +32,7 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
   {% if mensagem %}<p><em>{{ mensagem }}</em></p>{% endif %}
   <div class="decisao {{ decisao }}">Decisão proposta: {{ decisao }}</div>
   <p>{{ explicacao }}</p>
+  {% if aviso %}<blockquote>{{ aviso }}</blockquote>{% endif %}
 
   <h2>Radar da iteração</h2>
   <p><small>Índice por dimensão: antes = 1,0 (tracejado); acima de 1,0 é melhor. O rótulo traz a cor do semáforo de estado.</small></p>
