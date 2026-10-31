@@ -68,7 +68,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash 63d468f9133d</div>
+  <div class="sub">fonte: docs/*.md · hash f99243f2b7d8</div>
   
   <h4>Guia rápido: usar o vcm num protótipo</h4>
   <a href="#doc-guia">Início</a>
@@ -299,6 +299,10 @@ dados sintéticos, gabarito independente, runner com repetições e relatório H
 <tr>
 <td>Balanço lento</td>
 <td>A suíte de testes roda dentro da medição; use <code>--sem-testes</code> para uma leitura rápida</td>
+</tr>
+<tr>
+<td>&quot;Pico de RAM&quot; sem medição no Windows</td>
+<td>O conjunto de referência mede memória com <code>psutil</code>; instale com <code>uv add --dev psutil</code></td>
 </tr>
 <tr>
 <td><code>REVERTER</code> inesperado</td>
@@ -939,7 +943,11 @@ que só acrescentou um comentário deu <code>DECISAO_HUMANA</code>: o cálculo d
 oscilou +23%. Correção com lógica de engenharia: piso absoluto de ruído (5 ms; 2 MB) e ruído
 automático = 2 × oscilação observada nas repetições do próprio snapshot. A mesma mudança agora
 dá <code>SEM_GANHO</code>, e a iteração sem semente continua <code>REVERTER</code>.</li>
-<li><strong>Worktrees de agentes nasceram da <code>main</code>.</strong> Os executores precisaram trazer a branch de
+<li><strong>Portabilidade revisada antes da operação.</strong> O <code>referencia.py</code> gerado usava o módulo
+<code>resource</code>, que não existe no Windows, e no macOS a unidade de memória é outra. Agora a medição
+é portável (<code>vcm.medicao</code>), e a memória fica &quot;sem medição&quot; quando não há como medir, sem quebrar.</li>
+<li><strong>Worktrees de agentes nasceram da <code>main</code>.</strong> (Resolvido: com o trabalho na <code>main</code>, as worktrees
+já nascem com o projeto.) Os executores precisaram trazer a branch de
 trabalho. Até a branch ir para a <code>main</code>, a especificação de cada tarefa precisa dizer a base.</li>
 </ul>
 <h2 id="doc-plano-fase-2-telemetria-de-agentes">Fase 2 — Telemetria de agentes</h2>
@@ -1200,7 +1208,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte 63d468f9133d). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte f99243f2b7d8). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";

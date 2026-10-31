@@ -105,3 +105,31 @@ def test_cli_iniciar_imprime_lista_e_proximos_passos(tmp_path, capsys):
     assert "Próximos passos" in saida
     assert "git init" in saida and "uv add numpy pandas" in saida
     assert "vcm balanco HEAD~1 HEAD" in saida
+
+
+def test_referencia_gerada_funciona_sem_resource(tmp_path):
+    """Simula Windows sem psutil: o JSON sai com pico_ram_mb = null, sem quebrar."""
+    import json
+    import subprocess
+    import sys
+
+    from vcm.iniciar import iniciar
+
+    iniciar(tmp_path, "calculo")
+    codigo = (
+        "import sys; sys.modules['resource'] = None; sys.modules['psutil'] = None; "
+        "import runpy; runpy.run_module('calculo.referencia', run_name='__main__')"
+    )
+    saida = (
+        subprocess.run(
+            [sys.executable, "-c", codigo],
+            check=True,
+            capture_output=True,
+            text=True,
+            env={"PYTHONPATH": str(tmp_path / "src")},
+        )
+        .stdout.strip()
+        .splitlines()[-1]
+    )
+    dado = json.loads(saida)
+    assert dado["pico_ram_mb"] is None and len(dado["hash"]) == 64

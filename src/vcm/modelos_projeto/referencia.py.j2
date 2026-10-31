@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-import resource
+import sys
 import time
 
 import numpy as np
@@ -46,16 +46,29 @@ def hash_resultados(resultados: list[np.ndarray]) -> str:
     return resumo.hexdigest()
 
 
+def pico_ram_mb() -> float | None:
+    """Pico de memória do processo (MB). Linux: KiB; macOS: bytes; Windows: psutil, se houver."""
+    try:
+        import resource
+    except ImportError:  # Windows
+        try:
+            import psutil
+        except ImportError:
+            return None
+        return psutil.Process().memory_info().peak_wset / 2**20
+    pico = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+    return pico / 2**20 if sys.platform == "darwin" else pico / 1024
+
+
 def executar() -> dict:
     """Roda o conjunto de referência e devolve hash, tempo (ms) e pico de RAM (MB)."""
     inicio_s = time.perf_counter()
     resultados = calcular_resultados()
     tempo_ms = (time.perf_counter() - inicio_s) * 1000.0
-    pico_ram_mb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
     return {
         "hash": hash_resultados(resultados),
         "tempo_ms": tempo_ms,
-        "pico_ram_mb": pico_ram_mb,
+        "pico_ram_mb": pico_ram_mb(),
     }
 
 

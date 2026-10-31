@@ -89,7 +89,7 @@ def medir_determinismo(
         hashes.append(hash_execucao)
         if "tempo_ms" in extras:
             tempos_ms.append(float(extras["tempo_ms"]))
-        if "pico_ram_mb" in extras:
+        if extras.get("pico_ram_mb") is not None:  # None: plataforma sem medição
             picos_ram_mb.append(float(extras["pico_ram_mb"]))
 
     hash_dominante, mais_frequente = Counter(hashes).most_common(1)[0]
