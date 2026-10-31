@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from jinja2 import Environment, FileSystemLoader, StrictUndefined
+from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
 
 PASTA_MODELOS = Path(__file__).parent / "modelos_projeto"
 LINHAS_GITIGNORE = [".venv/", "__pycache__/", ".claude/worktrees/"]
@@ -21,6 +21,9 @@ def _ambiente() -> Environment:
         comment_end_string="#]",
         undefined=StrictUndefined,
         keep_trailing_newline=True,
+        # Os modelos geram Python, YAML e Markdown: escapar como HTML os corromperia.
+        # A política fica explícita: só modelos .html seriam escapados.
+        autoescape=select_autoescape(enabled_extensions=("html",), default=False),
     )
 
 

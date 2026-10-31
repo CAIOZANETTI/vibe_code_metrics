@@ -65,10 +65,17 @@ def _perdas(tabela: pd.DataFrame) -> list[str]:
     return list(tabela.index[tabela["veredito"] == "piorou"])
 
 
-def _semaforo(tabela: pd.DataFrame, limites: dict | None) -> tuple[dict, str]:
-    """Semáforo (por métrica e por dimensão, já formatado) e o HTML do radar."""
+def _semaforo(
+    tabela: pd.DataFrame, limites: dict | None, depois_valores: pd.Series | None = None
+) -> tuple[dict, str]:
+    """Semáforo (por métrica e por dimensão, já formatado) e o HTML do radar.
+
+    O estado usa TODAS as métricas do snapshot "depois" (`depois_valores`), inclusive as que
+    a base não tinha; o radar compara só as métricas presentes nos dois lados.
+    """
     # `limites` do vcm.yaml são SOBREPOSIÇÕES aos limites padrão, nunca a lista completa.
-    estado = sem.avaliar_estado(tabela["depois"], sem.carregar_limites(limites))
+    valores = tabela["depois"] if depois_valores is None else depois_valores
+    estado = sem.avaliar_estado(valores, sem.carregar_limites(limites))
     cores = sem.cores_por_dimensao(estado)
     indices = sem.indices_iteracao(tabela)
     metricas = [
@@ -101,7 +108,7 @@ def contexto(resultado: dict, limites: dict | None = None) -> dict:
     tabela = resultado["tabela"]
     respostas = resultado["respostas"]
     perdas = _perdas(tabela)
-    semaforo, radar_html = _semaforo(tabela, limites)
+    semaforo, radar_html = _semaforo(tabela, limites, resultado.get("depois_valores"))
     return {
         "base": str(resultado["base"])[:7],
         "alvo": str(resultado["alvo"])[:7],

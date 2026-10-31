@@ -142,6 +142,7 @@ def retrospectiva(
     tabela = bal.balanco(a, d, metricas=catalogo, ruido_medido=ruido_medido)
     return {
         "referencia_mudou": referencia_mudou,
+        "depois_valores": d,
         "base": antes.get("commit", ""),
         "alvo": depois.get("commit", ""),
         "mensagem_alvo": depois.get("mensagem", ""),

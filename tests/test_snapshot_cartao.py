@@ -118,3 +118,13 @@ def test_radar_ignora_metricas_tornadas_informativas():
     indices = semaforo.indices_iteracao(snap.retrospectiva(antes, depois)["tabela"])
     eficiente = indices.set_index("dimensao").loc["eficiente"]
     assert eficiente["indice_desenho"] == 1.0
+
+
+def test_semaforo_mostra_metricas_que_a_base_nao_tinha():
+    antes = pd.Series({"commit": "a" * 40, "cobertura_testes": 0.9})
+    depois = pd.Series(
+        {"commit": "b" * 40, "cobertura_testes": 0.9, "frac_execucoes_identicas": 0.4}
+    )
+    md = cartao.markdown(snap.retrospectiva(antes, depois))
+    assert "| frac_execucoes_identicas | deterministico |" in md
+    assert "🔴" in md
