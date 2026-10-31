@@ -108,3 +108,13 @@ def test_referencia_mudou_torna_tempo_informativo():
     r2 = snap.retrospectiva(antes, mesmo)
     assert not r2["referencia_mudou"]
     assert r2["tabela"].loc["tempo_referencia_ms", "veredito"] == "piorou"
+
+
+def test_radar_ignora_metricas_tornadas_informativas():
+    from vcm import semaforo
+
+    antes = pd.Series({"commit": "a" * 40, "hash_referencia": "x", "tempo_referencia_ms": 10.0})
+    depois = pd.Series({"commit": "b" * 40, "hash_referencia": "y", "tempo_referencia_ms": 20.0})
+    indices = semaforo.indices_iteracao(snap.retrospectiva(antes, depois)["tabela"])
+    eficiente = indices.set_index("dimensao").loc["eficiente"]
+    assert eficiente["indice_desenho"] == 1.0

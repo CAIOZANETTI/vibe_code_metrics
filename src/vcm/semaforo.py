@@ -114,6 +114,9 @@ def indices_iteracao(tabela_balanco: pd.DataFrame) -> pd.DataFrame:
     ambos_zero = (antes == 0) & (depois == 0)
     with np.errstate(divide="ignore", invalid="ignore"):
         razao = np.where(ambos_zero, 1.0, depois / antes)
+    # O veredito "info" da tabela também exclui (ex.: referência mudou nesta iteração).
+    if "veredito" in t.columns:
+        sentido = np.where(t["veredito"].to_numpy() == "info", 0.0, sentido)
     valida = (sentido != 0) & np.isfinite(razao) & (razao > 0)
     log_orientado = np.where(valida, sentido * np.log(np.where(valida, razao, 1.0)), 0.0)
     dados = pd.DataFrame(
