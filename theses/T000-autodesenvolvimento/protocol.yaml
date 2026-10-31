@@ -1,0 +1,29 @@
+thesis_id: T000
+titulo: Autodesenvolvimento do Vibe Code Metrics
+versao_protocolo: 1
+projeto: vibe_code_metrics
+unidade_de_iteracao: pull_request
+
+metricas:
+  eliminatorias: [testes_falhando, frac_execucoes_identicas, alertas_seguranca]
+  eficiencia: [tempo_p50_ms, tempo_p95_ms, pico_ram_mb, custo_usd]
+  determinismo: [frac_execucoes_identicas, cobertura_deterministica]
+  enxuto: [sloc, complexidade_media, n_dependencias]
+  robustez: [testes_falhando, cobertura_testes, mutation_score, alertas_seguranca]
+  agente: [input_tokens, output_tokens, cached_tokens, chamadas, edicoes_rejeitadas]
+
+ruido:
+  metodo: repeticoes          # ruído estimado por N repetições do snapshot
+  repeticoes: 5               # a confirmar na Fase 1
+
+decisao:
+  regra: vcm.balanco.decidir
+  convergencia: {janela: 3, limiar: 0}
+  aprovacao_humana: [DECISAO_HUMANA, entrada_no_repertorio]
+
+orcamento_por_iteracao:
+  tokens: null                # definir após a Fase 2 (primeiras medições)
+  custo_usd: null
+  tempo_min: null
+
+status: em_andamento

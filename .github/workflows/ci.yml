@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync
+      - name: Lint
+        run: uv run ruff check .
+      - name: Testes
+        run: uv run pytest -q
+      - name: Documentação em dia (docs/index.html vs docs/*.md)
+        run: uv run vcm docs --check

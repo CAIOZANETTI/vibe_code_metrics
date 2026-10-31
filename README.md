@@ -1,3 +1,6 @@
+> **Documentação viva:** [arquitetura de funcionamento](docs/arquitetura.md) · [plano de implementação](docs/plano.md) · versão HTML em [`docs/index.html`](docs/index.html) (gerada com `uv run vcm docs`).
+> Pesquisa de referência: [reports/Métricas de desenvolvimento com IA.md](reports/Métricas%20de%20desenvolvimento%20com%20IA.md).
+
 Vibe Code Metrics — Método de Desenvolvimento Experimental com IA
 Documento metodológico | v0.1 | 31/10/2026
 Status: proposta a ser validada; não é ainda um framework implementado.
