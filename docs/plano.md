@@ -96,7 +96,9 @@ proposital em teste resulta em `REVERTER`. **Atingido** no teste ponta a ponta (
 - [x] `vcm iniciar` com pacote na raiz e integração com `pdca/` existente (Sonnet)
 - [x] `vcm html`: relatórios Markdown → HTML (Opus)
 - [ ] `vcm agentes` lendo `pdca/agentes.jsonl` do projeto
-- [ ] Adoção no `projetos_em_camadas` (PRs 1–4 do diagnóstico), depois das decisões do mantenedor
+- [x] Adoção no `projetos_em_camadas`, passos 1–3 do diagnóstico (PR #25 lá, aguardando aprovação; balanço total MANTER)
+- [ ] Passo 4: testes de caracterização do pipeline `obra.py`
+- [ ] Conferência JS × Python da medição interativa do visualizador
 
 ### Lições da Fase 1 (registradas pelo próprio método)
 
@@ -139,6 +141,13 @@ proposital em teste resulta em `REVERTER`. **Atingido** no teste ponta a ponta (
   pacote na raiz, dependências opcionais usadas pelos testes e um PDCA próprio com outra definição de
   "determinismo". Nenhum desses casos aparecia nos testes ponta a ponta com projetos criados do zero.
   Regra: diagnóstico só leitura antes de toda adoção.
+- **Executores em paralelo precisam de cópias isoladas também no projeto de destino.** Dois
+  executores na mesma pasta do `projetos_em_camadas` compartilharam o ambiente `uv`: um rodava
+  `uv sync` enquanto o outro rodava testes, e apareceram falhas fantasmas. Sozinho, o resultado foi
+  estável. Regra: paralelo só com worktree; na mesma pasta, em sequência.
+- **A régua do projeto de destino também pega o gerente.** O `determinismo.py` do projeto em camadas
+  reprovou uma lição registrada pelo Opus com formato errado. Respeitar e rodar as réguas
+  existentes é parte da adoção.
 - **Worktrees de agentes nasceram da `main`.** (Resolvido: com o trabalho na `main`, as worktrees
   já nascem com o projeto.) Os executores precisaram trazer a branch de
   trabalho. Até a branch ir para a `main`, a especificação de cada tarefa precisa dizer a base.
