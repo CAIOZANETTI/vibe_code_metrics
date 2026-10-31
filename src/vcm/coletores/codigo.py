@@ -36,10 +36,18 @@ def _listar_arquivos_py(raiz: Path, pastas_fonte: tuple[str, ...]) -> list[Path]
 
 
 def _contar_dependencias(raiz: Path) -> int:
-    """Conta as entradas de [project].dependencies do pyproject.toml (0 se ausente)."""
+    """Conta as entradas de [project].dependencies do pyproject.toml; sem ele, as linhas
+    válidas do requirements.txt (sem comentários, vazias ou opções `-`); 0 se ausentes."""
     caminho = raiz / "pyproject.toml"
     if not caminho.is_file():
-        return 0
+        requisitos = raiz / "requirements.txt"
+        if not requisitos.is_file():
+            return 0
+        linhas = (
+            linha.split("#", 1)[0].strip()
+            for linha in requisitos.read_text(encoding="utf-8").splitlines()
+        )
+        return sum(1 for linha in linhas if linha and not linha.startswith("-"))
     with caminho.open("rb") as arquivo:
         dados = tomllib.load(arquivo)
     return len(dados.get("project", {}).get("dependencies", []))
@@ -77,7 +85,7 @@ def medir_codigo(raiz: Path, pastas_fonte: tuple[str, ...] | None = None) -> dic
         sloc: linhas lógicas de código-fonte (radon raw, soma de 'sloc').
         complexidade_media: média da complexidade ciclomática de funções e métodos
             (0.0 se não houver funções).
-        n_dependencias: entradas em [project].dependencies do pyproject.toml (0 se ausente).
+        n_dependencias: entradas em [project].dependencies do pyproject.toml (sem pyproject: linhas do requirements.txt).
         alertas_seguranca: alertas do bandit com severidade MEDIUM ou HIGH.
         n_funcoes: funções e métodos (cada um contado uma vez).
         sloc_por_funcao: sloc / n_funcoes (0.0 se não houver funções).

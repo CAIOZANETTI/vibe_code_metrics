@@ -8,6 +8,7 @@ import subprocess
 from collections import Counter
 from pathlib import Path
 
+from vcm.coletores.ambiente import prefixo_uv
 from vcm.config import carregar_config
 
 
@@ -63,7 +64,7 @@ def medir_determinismo(
         repeticoes = config.repeticoes
     if repeticoes < 1:
         raise ValueError("repeticoes deve ser pelo menos 1")
-    completo = ["uv", "run", "--directory", str(raiz), *comando]
+    completo = [*prefixo_uv(raiz, config.dependencias_extras), *comando]
     hashes: list[str] = []
     tempos_ms: list[float] = []
     picos_ram_mb: list[float] = []

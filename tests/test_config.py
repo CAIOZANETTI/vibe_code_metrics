@@ -87,3 +87,16 @@ def test_vcm_yaml_do_repositorio():
     config = carregar_config(RAIZ_REPOSITORIO)
     assert config.pastas_fonte == ("src",)
     assert config.comando_referencia == ("python", "-m", "vcm.referencia")
+
+
+def test_dependencias_extras(tmp_path):
+    assert carregar_config(tmp_path).dependencias_extras == ()
+    (tmp_path / "vcm.yaml").write_text("dependencias_extras: [pymupdf, rasterio]\n")
+    assert carregar_config(tmp_path).dependencias_extras == ("pymupdf", "rasterio")
+
+
+@pytest.mark.parametrize("valor", ["pymupdf", "[1, 2]", "[a, '']"])
+def test_dependencias_extras_invalidas(tmp_path, valor):
+    (tmp_path / "vcm.yaml").write_text(f"dependencias_extras: {valor}\n")
+    with pytest.raises(ValueError, match="dependencias_extras"):
+        carregar_config(tmp_path)
