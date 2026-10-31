@@ -64,7 +64,7 @@ def medir(raiz: Path, repeticoes_determinismo: int | None = None, com_testes: bo
 def snapshot(
     repo: Path,
     ref: str = "HEAD",
-    repeticoes_determinismo: int = 5,
+    repeticoes_determinismo: int | None = None,
     com_testes: bool = True,
     medidor=medir,
 ) -> pd.Series:
@@ -119,12 +119,17 @@ def obter_snapshot(
     return linha
 
 
-def retrospectiva(antes: pd.Series, depois: pd.Series) -> dict:
-    """Balanço completo entre dois snapshots: tabela, respostas e decisão."""
+def retrospectiva(
+    antes: pd.Series, depois: pd.Series, ruido_medido: pd.Series | None = None
+) -> dict:
+    """Balanço completo entre dois snapshots: tabela, respostas e decisão.
+
+    `ruido_medido`: ruído relativo por métrica estimado com `vcm.ruido` (opcional).
+    """
     numericas = [i for i in antes.index if i not in COLUNAS_META]
     a = pd.to_numeric(antes[numericas], errors="coerce").dropna()
     d = pd.to_numeric(depois.drop(labels=COLUNAS_META, errors="ignore"), errors="coerce").dropna()
-    tabela = bal.balanco(a, d)
+    tabela = bal.balanco(a, d, ruido_medido=ruido_medido)
     return {
         "base": antes.get("commit", ""),
         "alvo": depois.get("commit", ""),

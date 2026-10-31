@@ -44,9 +44,13 @@ def _cmd_balanco(args: argparse.Namespace) -> int:
     opcoes = {"repeticoes_determinismo": args.repeticoes, "com_testes": not args.sem_testes}
     antes = snap.obter_snapshot(repo, args.base, refazer=args.refazer, **opcoes)
     depois = snap.obter_snapshot(repo, args.alvo, refazer=args.refazer, **opcoes)
-    resultado = snap.retrospectiva(antes, depois)
-    caminhos = cartao.gravar(resultado, snap.PASTA_ITERACOES)
-    print(cartao.markdown(resultado))
+    from vcm import ruido
+    from vcm.config import carregar_config
+
+    config = carregar_config(repo)
+    resultado = snap.retrospectiva(antes, depois, ruido_medido=ruido.carregar())
+    caminhos = cartao.gravar(resultado, snap.PASTA_ITERACOES, limites=config.limites)
+    print(cartao.markdown(resultado, limites=config.limites))
     print(f"Cartão HTML: {caminhos['html']}")
     if args.falhar_se_reverter and resultado["decisao"].value == "REVERTER":
         return 2
@@ -75,10 +79,12 @@ def _cmd_iniciar(args: argparse.Namespace) -> int:
     if not (destino / ".git").exists():
         passos.append(f"git init   (dentro de {destino})")
     if not (destino / "pyproject.toml").exists():
-        passos.append(f"uv init --lib --name {args.pacote} . && uv add numpy pandas")
+        passos.append(
+            f"uv init --lib --name {args.pacote} . && uv add numpy pandas && uv add --dev pytest"
+        )
     passos.append("uv sync && uv run pytest -q")
     passos.append("git add -A && git commit -m 'Adota o método Vibe Code Metrics'")
-    passos.append("Após a primeira iteração: uv run vcm balanco HEAD~1 HEAD")
+    passos.append("Após a primeira iteração: vcm balanco HEAD~1 HEAD")
     print("\nPróximos passos:")
     for numero, passo in enumerate(passos, start=1):
         print(f"  {numero}. {passo}")
@@ -96,7 +102,12 @@ def main(argv: list[str] | None = None) -> int:
 
     def opcoes_medicao(sp: argparse.ArgumentParser) -> None:
         sp.add_argument("--repo", default=".")
-        sp.add_argument("--repeticoes", type=int, default=5, help="repetições de determinismo")
+        sp.add_argument(
+            "--repeticoes",
+            type=int,
+            default=None,
+            help="repetições de determinismo (padrão: vcm.yaml)",
+        )
         sp.add_argument("--sem-testes", action="store_true", help="não roda a suíte de testes")
         sp.add_argument("--refazer", action="store_true", help="ignora o cache de snapshots")
 

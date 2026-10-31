@@ -26,7 +26,7 @@ entra se as métricas permitirem. Antes de mudar algo, leia `docs/estilo.md` (ob
 ## Ciclo de trabalho de cada iteração
 1. **Especificar:** tarefa pequena, com arquivos permitidos e critério de aceite.
 2. **Executar em worktree:** o executor trabalha isolado em `.claude/worktrees/`, com testes.
-3. **Medir:** `uv run vcm balanco <base> HEAD` (por exemplo `uv run vcm balanco HEAD~1 HEAD`).
+3. **Medir:** `vcm balanco <base> HEAD` (por exemplo `vcm balanco HEAD~1 HEAD`; o `vcm` é instalado com `uv tool install`).
    Gera o cartão em `results/iteracoes/`.
 4. **Decidir:** `MANTER` entra; havendo troca de métricas, decide o humano; `REVERTER`
    **bloqueia** o merge (no CI: `--falhar-se-reverter`).
