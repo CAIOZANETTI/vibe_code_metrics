@@ -9,6 +9,7 @@ import plotly.graph_objects as go
 import plotly.io as pio
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+from vcm import formatacao as fmt
 from vcm.prototipos.perda_de_carga import alternativa_numpy
 from vcm.prototipos.perda_de_carga.dados import gerar_perfil
 
@@ -21,17 +22,6 @@ NOTA_MEMORIA = (
     "memória nativa (Rust) do Polars. Referência 'numpy' (acima de 100.000 trechos) não valida "
     "o próprio NumPy."
 )
-
-
-def formatar(valor: float, casas: int = 2) -> str:
-    """Formata número no padrão brasileiro: ponto de milhar e vírgula decimal."""
-    texto = f"{valor:,.{casas}f}"
-    return texto.replace(",", "\0").replace(".", ",").replace("\0", ".")
-
-
-def formatar_cientifica(valor: float) -> str:
-    """Notação científica com vírgula decimal (ex.: 1,2e-14)."""
-    return f"{valor:.1e}".replace(".", ",")
 
 
 def _p50(resumo: pd.DataFrame, alternativa: str, n_trechos: int, coluna: str) -> float:
@@ -60,7 +50,7 @@ def avaliar_hipoteses(resumo: pd.DataFrame) -> list[dict[str, str]]:
     h1_grande = razao <= 0.8
     v1 = "confirmada" if h1_grande and numpy_vence_pequenos else "rejeitada"
     ev1 = (
-        f"Em n = {formatar(n_max, 0)}, Polars/NumPy = {formatar(razao, 2)} no p50 "
+        f"Em n = {fmt.numero(n_max, 0)}, Polars/NumPy = {fmt.numero(razao, 2)} no p50 "
         f"(limite 0,80); NumPy foi a mais rápida em todos os n ≤ 1.000: "
         f"{'sim' if numpy_vence_pequenos else 'não'}."
     )
@@ -71,8 +61,8 @@ def avaliar_hipoteses(resumo: pd.DataFrame) -> list[dict[str, str]]:
     todas_deterministicas = bool(resumo["deterministico"].all())
     v2 = "confirmada" if erro_max <= TOLERANCIA_M and todas_deterministicas else "rejeitada"
     ev2 = (
-        f"Erro máximo contra o gabarito: {formatar_cientifica(erro_max)} m "
-        f"(tolerância {formatar_cientifica(TOLERANCIA_M)} m); determinismo (hash único) em "
+        f"Erro máximo contra o gabarito: {fmt.cientifica(erro_max)} m "
+        f"(tolerância {fmt.cientifica(TOLERANCIA_M)} m); determinismo (hash único) em "
         f"todas as combinações: {'sim' if todas_deterministicas else 'não'}."
     )
 
@@ -82,8 +72,8 @@ def avaliar_hipoteses(resumo: pd.DataFrame) -> list[dict[str, str]]:
     menor_sloc = str(final["sloc"].idxmin())
     v3 = "confirmada" if menor_pico == "numpy" and menor_sloc == "polars" else "rejeitada"
     ev3 = (
-        f"Em n = {formatar(n_max, 0)}, menor pico (tracemalloc): {menor_pico} "
-        f"({formatar(float(final['pico_mb'].min()), 1)} MB); menor SLOC: {menor_sloc} "
+        f"Em n = {fmt.numero(n_max, 0)}, menor pico (tracemalloc): {menor_pico} "
+        f"({fmt.numero(float(final['pico_mb'].min()), 1)} MB); menor SLOC: {menor_sloc} "
         f"({int(final['sloc'].min())} linhas)."
     )
     return [
@@ -116,13 +106,13 @@ def montar_leitura(resumo: pd.DataFrame) -> list[str]:
         grupo = resumo[resumo["n_trechos"] == n_trechos].sort_values("tempo_p50_ms")
         rapida = grupo.iloc[0]
         outras = [
-            f"{formatar(float(linha.tempo_p50_ms / rapida.tempo_p50_ms), 1)}x mais lenta que "
-            f"{rapida.alternativa} ({linha.alternativa}, {formatar(float(linha.tempo_p50_ms), 3)} ms)"
+            f"{fmt.numero(float(linha.tempo_p50_ms / rapida.tempo_p50_ms), 1)}x mais lenta que "
+            f"{rapida.alternativa} ({linha.alternativa}, {fmt.numero(float(linha.tempo_p50_ms), 3)} ms)"
             for linha in grupo.iloc[1:].itertuples()
         ]
         frases.append(
-            f"Com {formatar(n_trechos, 0)} trechos, a mais rápida foi {rapida.alternativa} "
-            f"({formatar(float(rapida.tempo_p50_ms), 3)} ms no p50); " + "; ".join(outras) + "."
+            f"Com {fmt.numero(n_trechos, 0)} trechos, a mais rápida foi {rapida.alternativa} "
+            f"({fmt.numero(float(rapida.tempo_p50_ms), 3)} ms no p50); " + "; ".join(outras) + "."
         )
     sloc = resumo.groupby("alternativa")["sloc"].first()
     frases.append(
@@ -203,11 +193,11 @@ def _tabela(resumo: pd.DataFrame) -> tuple[list[str], list[list[str]]]:
     linhas = [
         [
             str(linha.alternativa),
-            formatar(linha.n_trechos, 0),
-            formatar(linha.tempo_p50_ms, 3),
-            formatar(linha.tempo_p95_ms, 3),
-            formatar(linha.pico_mb, 2),
-            formatar_cientifica(linha.erro_max_abs_m),
+            fmt.numero(linha.n_trechos, 0),
+            fmt.numero(linha.tempo_p50_ms, 3),
+            fmt.numero(linha.tempo_p95_ms, 3),
+            fmt.numero(linha.pico_mb, 2),
+            fmt.cientifica(linha.erro_max_abs_m),
             str(linha.referencia),
             "sim" if linha.deterministico else "não",
             str(int(linha.sloc)),
@@ -238,7 +228,7 @@ def gerar_relatorio(
         nota_memoria=NOTA_MEMORIA,
         grafico_tempo=_grafico_tempo(resumo),
         grafico_perfil=_grafico_perfil(n_perfil),
-        n_perfil=formatar(n_perfil, 0),
+        n_perfil=fmt.numero(n_perfil, 0),
         leitura=montar_leitura(resumo),
     )
     destino = Path(caminho_html)

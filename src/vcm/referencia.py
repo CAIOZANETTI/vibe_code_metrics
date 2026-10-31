@@ -50,10 +50,20 @@ def _caso_produto_matricial() -> bytes:
     return _bytes_vetor(a @ b)
 
 
+def _caso_perda_de_carga() -> bytes:
+    """Linha piezométrica da adutora de 5 km (T005, alternativa NumPy), 1.000 trechos."""
+    from vcm.prototipos.perda_de_carga import alternativa_numpy, dados
+
+    perfil = dados.gerar_perfil(1_000)
+    saida = alternativa_numpy.calcular(perfil, dados.VAZAO_M3S, dados.COTA_RESERVATORIO_M)
+    return np.ascontiguousarray(saida.to_numpy(), dtype=np.float64).tobytes()
+
+
 def casos() -> dict[str, bytes]:
     """Nome do caso -> bytes canônicos do resultado."""
     return {
         "balanco": _caso_balanco(),
+        "perda_de_carga": _caso_perda_de_carga(),
         "produto_matricial": _caso_produto_matricial(),
         "sistema_linear": _caso_sistema_linear(),
         "soma_acumulada": _caso_soma_acumulada(),

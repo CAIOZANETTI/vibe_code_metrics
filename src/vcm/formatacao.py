@@ -22,3 +22,8 @@ def percentual(valor: float | None, casas: int = 1, sinal: bool = True) -> str:
         return "—"
     prefixo = "+" if sinal and valor > 0 else ""
     return f"{prefixo}{numero(valor, casas)}%"
+
+
+def cientifica(valor: float, casas: int = 1) -> str:
+    """Notação científica com vírgula decimal: 1.2e-14 -> '1,2e-14'."""
+    return f"{valor:.{casas}e}".replace(".", ",")
