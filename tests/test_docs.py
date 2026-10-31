@@ -56,3 +56,4 @@ def test_markdown_avulso_vira_html_com_titulo(tmp_path):
     h = saida.read_text(encoding="utf-8")
     assert saida.name == "diagnostico.html"
     assert "<title>Diagnóstico X</title>" in h and "<table>" in h
+    assert "docs/diagnostico.md" not in h and "vcm html diagnostico.md" in h

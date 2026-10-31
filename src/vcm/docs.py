@@ -110,7 +110,10 @@ def renderizar_documento(caminho: Path, md: MarkdownIt, prefixo: str) -> Documen
 
 
 def construir(
-    pasta: Path, arquivos: tuple[str, ...] = DOCS_PADRAO, titulo_pagina: str | None = None
+    pasta: Path,
+    arquivos: tuple[str, ...] = DOCS_PADRAO,
+    titulo_pagina: str | None = None,
+    rotulos: dict | None = None,
 ) -> str:
     md = _md()
     ids = {a: f"doc-{Path(a).stem}" for a in arquivos}
@@ -127,6 +130,7 @@ def construir(
         docs=docs,
         hash_fonte=hashlib.sha256(fonte).hexdigest()[:12],
         **({"titulo_pagina": titulo_pagina} if titulo_pagina else {}),
+        **(rotulos or {}),
     )
 
 
@@ -144,8 +148,10 @@ def gerar_avulso(markdown: Path, saida: Path | None = None) -> Path:
         ),
         markdown.stem,
     )
+    rotulos = {"pasta_rotulo": "", "comando_rotulo": f"vcm html {markdown.name}"}
     saida.write_text(
-        construir(markdown.parent, (markdown.name,), titulo_pagina=primeira), encoding="utf-8"
+        construir(markdown.parent, (markdown.name,), titulo_pagina=primeira, rotulos=rotulos),
+        encoding="utf-8",
     )
     return saida
 

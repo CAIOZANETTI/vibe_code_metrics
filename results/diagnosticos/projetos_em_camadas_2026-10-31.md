@@ -118,12 +118,19 @@ chamar a do `vcm` de "reprodutibilidade" dentro deste projeto, para não confund
 
 ## 6. Ajustes no vcm revelados por este projeto
 
-Foram feitos no `vibe_code_metrics`, antes da adoção:
+Estes ajustes foram **implementados e testados** no `vibe_code_metrics` durante o diagnóstico:
 
-- suporte a projeto **sem `pyproject.toml`** (testes rodam com `requirements.txt` e as dependências são contadas a partir dele);
-- `vcm iniciar` com o pacote **na raiz** (`camadas/`, sem `src/`);
-- `vcm html`, que transforma um Markdown (como este diagnóstico) em HTML formatado;
-- `vcm agentes` lendo também `pdca/agentes.jsonl`, sem duplicar o registro (proposto).
+| Ajuste | Situação |
+|---|---|
+| Projeto **sem `pyproject.toml`**: testes rodam com `requirements.txt`; campo `dependencias_extras` no `vcm.yaml` para as opcionais | feito (Sonnet) |
+| `vcm iniciar` com o pacote **na raiz** (`camadas/`, sem `src/`), sem sobrescrever `.claude/skills/` e com seção de integração ao `pdca/` no `CLAUDE.md` | feito (Sonnet) |
+| `vcm html`: Markdown → HTML formatado (este relatório) | feito (Opus) |
+| `vcm agentes` lendo também `pdca/agentes.jsonl`, sem registro duplicado | **a fazer** |
+
+**Prova integrada** numa cópia do projeto em `/tmp` (o repositório não foi tocado):
+`vcm iniciar . --pacote camadas`, commit e `vcm balanco HEAD~1 HEAD` em **25 s**, com resultado
+**MANTER**. Os números batem com a medição manual: 179 testes, 0 falhando, cobertura de 58,2%,
+complexidade de 6,80, 3 alertas e reprodutibilidade de 1,0.
 
 ## 7. Plano de adoção proposto
 
