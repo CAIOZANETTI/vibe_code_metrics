@@ -1,0 +1,7 @@
+projeto: vibe-code-metrics
+pastas_fonte: [src]
+pasta_testes: tests
+referencia:
+  comando: [python, -m, vcm.referencia]
+  repeticoes: 5
+limites: {}

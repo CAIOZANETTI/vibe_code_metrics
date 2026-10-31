@@ -43,8 +43,12 @@ def worktree_temporaria(repo: Path, commit: str):
         _git(repo, "worktree", "remove", "--force", str(pasta))
 
 
-def medir(raiz: Path, repeticoes_determinismo: int = 5, com_testes: bool = True) -> dict:
-    """Roda todos os coletores sobre um diretório de projeto."""
+def medir(raiz: Path, repeticoes_determinismo: int | None = None, com_testes: bool = True) -> dict:
+    """Roda todos os coletores sobre um diretório de projeto.
+
+    As pastas, o comando de referência e (se `repeticoes_determinismo` for None) as repetições
+    vêm do `vcm.yaml` do projeto medido (ver `vcm.config`).
+    """
     from vcm.coletores.codigo import medir_codigo
     from vcm.coletores.determinismo import medir_determinismo
     from vcm.coletores.testes import medir_testes
