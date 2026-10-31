@@ -68,7 +68,19 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash f2fa4fafdd52</div>
+  <div class="sub">fonte: docs/*.md · hash 892e27911ae6</div>
+  
+  <h4>Guia rápido: usar o vcm num protótipo</h4>
+  <a href="#doc-guia">Início</a>
+  <a class="n2" href="#doc-guia-1-instalar">1. Instalar</a>
+  <a class="n2" href="#doc-guia-2-preparar-o-prototipo">2. Preparar o protótipo</a>
+  <a class="n2" href="#doc-guia-3-o-conjunto-de-referencia">3. O conjunto de referência</a>
+  <a class="n2" href="#doc-guia-4-o-ciclo-de-cada-iteracao">4. O ciclo de cada iteração</a>
+  <a class="n2" href="#doc-guia-5-usar-os-agentes">5. Usar os agentes</a>
+  <a class="n2" href="#doc-guia-6-comparar-alternativas-teses">6. Comparar alternativas (teses)</a>
+  <a class="n2" href="#doc-guia-7-calibrar-o-ruido">7. Calibrar o ruído</a>
+  <a class="n2" href="#doc-guia-8-problemas-comuns">8. Problemas comuns</a>
+  
   
   <h4>Arquitetura de funcionamento</h4>
   <a href="#doc-arquitetura">Início</a>
@@ -116,6 +128,184 @@ footer { color: var(--muted); font-size: 12px; }
   
 </nav>
 <main>
+
+<article id="doc-guia">
+  <div class="fonte">
+    <span>Fonte: <a href="guia.md">docs/guia.md</a></span>
+    <span>Gerado por <code>uv run vcm docs</code></span>
+  </div>
+  <h1 id="doc-guia-guia-rapido-usar-o-vcm-num-prototipo">Guia rápido: usar o vcm num protótipo</h1>
+<blockquote>
+<p>Passo a passo para aplicar o método a um projeto de engenharia em Python, do zero ao primeiro
+cartão de retrospectiva com radar de semáforo. Como funciona por dentro: <a href="#doc-arquitetura">arquitetura.md</a>.
+Regras de código: <a href="#doc-estilo">estilo.md</a>.</p>
+</blockquote>
+<h2 id="doc-guia-1-instalar">1. Instalar</h2>
+<p>O <code>vcm</code> é instalado como ferramenta do <code>uv</code>, direto do GitHub:</p>
+<pre><code class="language-bash">uv tool install git+https://github.com/CAIOZANETTI/vibe_code_metrics@ccr-a74a1d05-p8rjle
+vcm --help
+</code></pre>
+<p>Quando o PR for para a <code>main</code>, troque <code>@ccr-a74a1d05-p8rjle</code> por <code>@main</code>.
+Para atualizar: <code>uv tool upgrade vibe-code-metrics</code>.</p>
+<h2 id="doc-guia-2-preparar-o-prototipo">2. Preparar o protótipo</h2>
+<pre><code class="language-bash">mkdir meu-prototipo &amp;&amp; cd meu-prototipo
+git init
+uv init --package --name calculo        # cria pyproject.toml e src/calculo/
+uv add numpy pandas
+vcm iniciar . --pacote calculo
+git add -A &amp;&amp; git commit -m &quot;Início do protótipo com vcm&quot;
+</code></pre>
+<p>O <code>vcm iniciar</code> cria, sem sobrescrever o que já existe:</p>
+<table>
+<thead>
+<tr>
+<th>Arquivo</th>
+<th>Para quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vcm.yaml</code></td>
+<td>onde está o código, os testes e o conjunto de referência</td>
+</tr>
+<tr>
+<td><code>CLAUDE.md</code></td>
+<td>suas regras e o ciclo de trabalho, lidos por todo agente</td>
+</tr>
+<tr>
+<td><code>docs/estilo.md</code></td>
+<td>Python em português, Python calcula, HTML apresenta, SI</td>
+</tr>
+<tr>
+<td><code>.claude/agents/executor-sonnet.md</code>, <code>executor-haiku.md</code></td>
+<td>executores com modelo fixado</td>
+</tr>
+<tr>
+<td><code>src/calculo/referencia.py</code></td>
+<td>casos de cálculo usados para medir determinismo, tempo e memória</td>
+</tr>
+<tr>
+<td><code>tests/test_referencia.py</code></td>
+<td>o hash de referência é estável</td>
+</tr>
+<tr>
+<td><code>.github/workflows/vcm.yml</code></td>
+<td>retrospectiva automática em cada PR</td>
+</tr>
+</tbody>
+</table>
+<h2 id="doc-guia-3-o-conjunto-de-referencia">3. O conjunto de referência</h2>
+<p>Coloque em <code>src/calculo/referencia.py</code> os cálculos que <strong>não podem mudar de resultado sem
+querer</strong>, por exemplo a linha piezométrica, o dimensionamento de uma seção ou um volume de corte
+e aterro. A cada iteração, o <code>vcm</code>:</p>
+<ul>
+<li>roda o conjunto N vezes e confere se o hash é sempre o mesmo (<strong>determinismo</strong>);</li>
+<li>mede o tempo e o pico de memória (<strong>eficiência</strong>).</li>
+</ul>
+<p>A última linha impressa precisa ser um JSON: <code>{&quot;hash&quot;: ..., &quot;tempo_ms&quot;: ..., &quot;pico_ram_mb&quot;: ...}</code>.
+O modelo gerado já faz isso.</p>
+<h2 id="doc-guia-4-o-ciclo-de-cada-iteracao">4. O ciclo de cada iteração</h2>
+<pre class="mermaid">flowchart LR
+    E[&quot;Especificar a tarefa&lt;br/&gt;(você + Opus)&quot;] --&gt; X[&quot;Executar&lt;br/&gt;Sonnet ou Haiku&quot;]
+    X --&gt; C[&quot;Commit&quot;]
+    C --&gt; B[&quot;vcm balanco BASE HEAD&quot;]
+    B --&gt; D{&quot;Decisão&quot;}
+    D --&gt;|REVERTER| R[&quot;git revert&quot;]
+    D --&gt;|MANTER| M[&quot;seguir&quot;]
+    D --&gt;|DECISAO_HUMANA| H[&quot;você decide e registra&quot;]
+</pre>
+<pre><code class="language-bash"># depois de cada commit (ou par de commits) de uma tarefa:
+vcm balanco HEAD~1 HEAD
+# abre o cartão com radar e semáforo:
+#   results/iteracoes/&lt;base&gt;_&lt;alvo&gt;.html
+</code></pre>
+<p>O cartão responde, com números:</p>
+<ul>
+<li>ficou mais <strong>eficiente</strong>?</li>
+<li>ficou mais <strong>determinístico</strong>?</li>
+<li>ficou mais <strong>enxuto</strong>?</li>
+<li>ficou mais <strong>robusto</strong>?</li>
+<li><strong>perdeu</strong> algo?</li>
+</ul>
+<p>O <strong>radar</strong> compara antes e depois por dimensão (1,0 = igual; maior é melhor). O <strong>semáforo</strong>
+mostra o estado atual de cada dimensão:</p>
+<ul>
+<li>🟢 dentro do limite;</li>
+<li>🟡 atenção;</li>
+<li>🔴 fora do limite;</li>
+<li>⚪ sem medição.</li>
+</ul>
+<p>Os limites padrão podem ser ajustados em <code>vcm.yaml</code>, na chave <code>limites</code>.</p>
+<h2 id="doc-guia-5-usar-os-agentes">5. Usar os agentes</h2>
+<p>Na sessão do Claude Code, o Opus é o gerente. Peça explicitamente:</p>
+<blockquote>
+<p>&quot;Use o executor-sonnet para implementar X com testes, numa worktree. Depois rode o balanço.&quot;</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Tarefa</th>
+<th>Agente</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cálculo novo, módulo com lógica, protótipo de alternativa</td>
+<td><code>executor-sonnet</code></td>
+</tr>
+<tr>
+<td>Tabelas de dados, ajustes de lint, testes a partir de exemplos</td>
+<td><code>executor-haiku</code></td>
+</tr>
+<tr>
+<td>Decompor, revisar, integrar, decidir trocas</td>
+<td>sessão principal (Opus)</td>
+</tr>
+</tbody>
+</table>
+<p>Cada execução pode ser registrada para comparar custo e qualidade entre modelos:</p>
+<pre><code class="language-bash">uv run python -c &quot;from vcm import agentes; agentes.registrar(modelo='claude-sonnet-5-5', tarefa='...', tokens=..., duracao_s=..., aprovado=True)&quot;
+vcm agentes      # tokens por tarefa aprovada, por modelo
+</code></pre>
+<h2 id="doc-guia-6-comparar-alternativas-teses">6. Comparar alternativas (teses)</h2>
+<p>Quando houver dúvida entre duas formas de fazer, por exemplo NumPy × Polars, não escolha por
+gosto: implemente as duas atrás da mesma interface, meça e registre. O exemplo completo está na
+tese <strong>T005</strong> deste repositório (<code>theses/T005-perda-de-carga/</code> e <code>src/vcm/prototipos/perda_de_carga/</code>):
+dados sintéticos, gabarito independente, runner com repetições e relatório HTML.</p>
+<h2 id="doc-guia-7-calibrar-o-ruido">7. Calibrar o ruído</h2>
+<p>Antes de confiar em &quot;ficou mais eficiente&quot;, meça quanto as métricas oscilam sem mudança de código:</p>
+<pre><code class="language-bash">uv run python -c &quot;from pathlib import Path; from vcm import ruido; ruido.gravar(ruido.estimar(ruido.medir_repetido(Path('.'), repeticoes=3)))&quot;
+</code></pre>
+<p>O balanço passa a usar <code>results/ruido.parquet</code> automaticamente.</p>
+<h2 id="doc-guia-8-problemas-comuns">8. Problemas comuns</h2>
+<table>
+<thead>
+<tr>
+<th>Sintoma</th>
+<th>Causa provável</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&quot;Ficou mais determinístico?&quot; = sem medição</td>
+<td><code>referencia.comando</code> ausente no <code>vcm.yaml</code> ou o módulo não imprime o JSON</td>
+</tr>
+<tr>
+<td>Determinismo &lt; 1,0 com NumPy</td>
+<td>Número de threads do BLAS variando; fixe <code>OPENBLAS_NUM_THREADS</code> (ver repertório do NumPy)</td>
+</tr>
+<tr>
+<td>Balanço lento</td>
+<td>A suíte de testes roda dentro da medição; use <code>--sem-testes</code> para uma leitura rápida</td>
+</tr>
+<tr>
+<td><code>REVERTER</code> inesperado</td>
+<td>Veja a linha vermelha do cartão: teste falhando, alerta de segurança ou hash instável</td>
+</tr>
+</tbody>
+</table>
+
+</article>
 
 <article id="doc-arquitetura">
   <div class="fonte">
@@ -967,7 +1157,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte f2fa4fafdd52). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte 892e27911ae6). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";

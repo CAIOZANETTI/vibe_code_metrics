@@ -1,3 +1,4 @@
+> **Comece por aqui:** [guia rápido para usar o vcm num protótipo](docs/guia.md).
 > **Documentação viva:** [arquitetura de funcionamento](docs/arquitetura.md) · [plano de implementação](docs/plano.md) · versão HTML em [`docs/index.html`](docs/index.html) (gerada com `uv run vcm docs`).
 > Pesquisa de referência: [reports/Métricas de desenvolvimento com IA.md](reports/Métricas%20de%20desenvolvimento%20com%20IA.md).
 
