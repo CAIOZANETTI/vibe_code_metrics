@@ -68,7 +68,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash e3c50742550e</div>
+  <div class="sub">fonte: docs/*.md · hash 89fadf227654</div>
   
   <h4>Arquitetura de funcionamento</h4>
   <a href="#doc-arquitetura">Início</a>
@@ -92,6 +92,7 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n2" href="#doc-plano-visao-geral-das-fases">Visão geral das fases</a>
   <a class="n2" href="#doc-plano-fase-0-fundacao">Fase 0 — Fundação</a>
   <a class="n2" href="#doc-plano-fase-1-retrospectiva-automatica">Fase 1 — Retrospectiva automática</a>
+  <a class="n3" href="#doc-plano-licoes-da-fase-1-registradas-pelo-proprio-metodo">Lições da Fase 1 (registradas pelo próprio método)</a>
   <a class="n2" href="#doc-plano-fase-2-telemetria-de-agentes">Fase 2 — Telemetria de agentes</a>
   <a class="n2" href="#doc-plano-fase-3-repertorio-tese-e-runner">Fase 3 — Repertório, tese e runner</a>
   <a class="n2" href="#doc-plano-fase-4-relatorios-html">Fase 4 — Relatórios HTML</a>
@@ -669,23 +670,39 @@ de iteração. Arquitetura de referência: <a href="#doc-arquitetura">arquitetur
 <p>Objetivo: toda iteração (commit ou PR) gera o balanço antes × depois sem trabalho manual.
 Executada com agentes: <strong>Opus</strong> gerencia e integra; <strong>Sonnet</strong> e <strong>Haiku</strong> executam (modelo indicado em cada item).</p>
 <ul>
-<li class="tarefa"><input type="checkbox" disabled> <code>vcm.coletores.codigo</code> (Sonnet): SLOC e complexidade média (radon), nº de dependências (<code>pyproject.toml</code>), alertas de segurança (bandit)</li>
-<li class="tarefa"><input type="checkbox" disabled> <code>vcm.coletores.testes</code> (Sonnet): testes totais e falhando, cobertura (coverage.py), tempo da suíte</li>
-<li class="tarefa"><input type="checkbox" disabled> <code>vcm.coletores.determinismo</code> + <code>vcm.referencia</code> (Sonnet): N execuções do conjunto de referência em subprocesso, com fração de saídas idênticas por hash</li>
-<li class="tarefa"><input type="checkbox" disabled> <code>vcm snapshot [--ref REF]</code> (Opus): mede um ref via <code>git worktree</code> e grava uma linha em <code>results/snapshots.parquet</code></li>
-<li class="tarefa"><input type="checkbox" disabled> <code>vcm balanco BASE HEAD</code> (Opus): compara dois snapshots, grava <code>results/iteracoes/</code> e gera o cartão em Markdown e HTML</li>
-<li class="tarefa"><input type="checkbox" disabled> Registro de execuções de agentes em <code>results/agentes/execucoes.csv</code> (Opus)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm.coletores.codigo</code> (Sonnet): SLOC e complexidade média (radon), nº de dependências (<code>pyproject.toml</code>), alertas de segurança (bandit)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm.coletores.testes</code> (Sonnet): testes totais e falhando, cobertura (coverage.py), tempo da suíte</li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm.coletores.determinismo</code> + <code>vcm.referencia</code> (Sonnet): N execuções do conjunto de referência em subprocesso, com fração de saídas idênticas por hash</li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm snapshot [--ref REF]</code> (Opus): mede um ref via <code>git worktree</code> e grava uma linha em <code>results/snapshots.parquet</code></li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm balanco BASE HEAD</code> (Opus): compara dois snapshots, grava <code>results/iteracoes/</code> e gera o cartão em Markdown e HTML</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Registro de execuções de agentes em <code>results/agentes/execucoes.csv</code> (Opus)</li>
 <li class="tarefa"><input type="checkbox" disabled> Estimar o <strong>ruído</strong> de cada métrica com repetições e gravar em <code>results/ruido.parquet</code></li>
 <li class="tarefa"><input type="checkbox" disabled> GitHub Action em PR: roda o balanço contra a base e anexa o cartão HTML como artefato</li>
-<li class="tarefa"><input type="checkbox" disabled> Registrar a Fase 0 como linha de base da T000</li>
+<li class="tarefa"><input type="checkbox" disabled> Tipo da iteração (funcionalidade, refatoração, correção) e métricas de &quot;enxuto&quot; normalizadas (ex.: SLOC por função pública), para que adicionar funcionalidade não conte automaticamente como &quot;piorou&quot;</li>
+<li class="tarefa"><input type="checkbox" disabled> Métrica separada de sensibilidade a threads (mesmo código com 1 thread × N threads)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Registrar a Fase 0 como linha de base da T000</li>
 </ul>
 <p>Trabalho antecipado das Fases 3 e 4, a pedido do mantenedor:</p>
 <ul>
-<li class="tarefa"><input type="checkbox" disabled> Repertório inicial em <code>repertorio/</code> (Haiku): uma entrada YAML por alternativa, por papel</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Repertório inicial em <code>repertorio/</code> (Haiku): uma entrada YAML por alternativa, por papel</li>
 <li class="tarefa"><input type="checkbox" disabled> Protótipo da <strong>T005 — perda de carga na adutora</strong> (Sonnet): NumPy × Polars × Polars + NumPy, com dados sintéticos, gabarito analítico, runner e relatório HTML com Plotly</li>
 </ul>
 <p><strong>Aceite:</strong> o PR mostra o cartão com as 6 perguntas respondidas por números; uma regressão
 proposital em teste resulta em <code>REVERTER</code>.</p>
+<h3 id="doc-plano-licoes-da-fase-1-registradas-pelo-proprio-metodo">Lições da Fase 1 (registradas pelo próprio método)</h3>
+<ul>
+<li><strong>O balanço pegou um problema real.</strong> O primeiro cartão (<code>18b6b59 → 8fe6d37</code>) propôs
+<code>REVERTER</code> por um alerta de segurança novo (B314, leitura de XML sem <code>defusedxml</code>). O alerta foi
+corrigido, não silenciado, e a troca (+1 dependência) aparece no cartão seguinte.</li>
+<li><strong>&quot;Enxuto&quot; precisa de contexto.</strong> Numa iteração que adiciona funcionalidade, SLOC e
+dependências sobem por definição. Sem normalização, a regra sempre pede decisão humana. Isso
+virou item do plano.</li>
+<li><strong>Determinismo depende de threads.</strong> Produto matricial e <code>solve</code> do NumPy mudam de hash entre
+1 thread e 4 threads, e são estáveis com o número de threads fixo. Isso foi registrado no
+repertório do NumPy, e a métrica separada virou item do plano.</li>
+<li><strong>Worktrees de agentes nasceram da <code>main</code>.</strong> Os executores precisaram trazer a branch de
+trabalho. Até a branch ir para a <code>main</code>, a especificação de cada tarefa precisa dizer a base.</li>
+</ul>
 <h2 id="doc-plano-fase-2-telemetria-de-agentes">Fase 2 — Telemetria de agentes</h2>
 <p>Objetivo: custo, tokens e tempo de cada iteração, ligados à tese e à tarefa.</p>
 <ul>
@@ -944,7 +961,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte e3c50742550e). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte 89fadf227654). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";

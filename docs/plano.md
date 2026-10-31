@@ -56,23 +56,39 @@ flowchart LR
 Objetivo: toda iteração (commit ou PR) gera o balanço antes × depois sem trabalho manual.
 Executada com agentes: **Opus** gerencia e integra; **Sonnet** e **Haiku** executam (modelo indicado em cada item).
 
-- [ ] `vcm.coletores.codigo` (Sonnet): SLOC e complexidade média (radon), nº de dependências (`pyproject.toml`), alertas de segurança (bandit)
-- [ ] `vcm.coletores.testes` (Sonnet): testes totais e falhando, cobertura (coverage.py), tempo da suíte
-- [ ] `vcm.coletores.determinismo` + `vcm.referencia` (Sonnet): N execuções do conjunto de referência em subprocesso, com fração de saídas idênticas por hash
-- [ ] `vcm snapshot [--ref REF]` (Opus): mede um ref via `git worktree` e grava uma linha em `results/snapshots.parquet`
-- [ ] `vcm balanco BASE HEAD` (Opus): compara dois snapshots, grava `results/iteracoes/` e gera o cartão em Markdown e HTML
-- [ ] Registro de execuções de agentes em `results/agentes/execucoes.csv` (Opus)
+- [x] `vcm.coletores.codigo` (Sonnet): SLOC e complexidade média (radon), nº de dependências (`pyproject.toml`), alertas de segurança (bandit)
+- [x] `vcm.coletores.testes` (Sonnet): testes totais e falhando, cobertura (coverage.py), tempo da suíte
+- [x] `vcm.coletores.determinismo` + `vcm.referencia` (Sonnet): N execuções do conjunto de referência em subprocesso, com fração de saídas idênticas por hash
+- [x] `vcm snapshot [--ref REF]` (Opus): mede um ref via `git worktree` e grava uma linha em `results/snapshots.parquet`
+- [x] `vcm balanco BASE HEAD` (Opus): compara dois snapshots, grava `results/iteracoes/` e gera o cartão em Markdown e HTML
+- [x] Registro de execuções de agentes em `results/agentes/execucoes.csv` (Opus)
 - [ ] Estimar o **ruído** de cada métrica com repetições e gravar em `results/ruido.parquet`
 - [ ] GitHub Action em PR: roda o balanço contra a base e anexa o cartão HTML como artefato
-- [ ] Registrar a Fase 0 como linha de base da T000
+- [ ] Tipo da iteração (funcionalidade, refatoração, correção) e métricas de "enxuto" normalizadas (ex.: SLOC por função pública), para que adicionar funcionalidade não conte automaticamente como "piorou"
+- [ ] Métrica separada de sensibilidade a threads (mesmo código com 1 thread × N threads)
+- [x] Registrar a Fase 0 como linha de base da T000
 
 Trabalho antecipado das Fases 3 e 4, a pedido do mantenedor:
 
-- [ ] Repertório inicial em `repertorio/` (Haiku): uma entrada YAML por alternativa, por papel
+- [x] Repertório inicial em `repertorio/` (Haiku): uma entrada YAML por alternativa, por papel
 - [ ] Protótipo da **T005 — perda de carga na adutora** (Sonnet): NumPy × Polars × Polars + NumPy, com dados sintéticos, gabarito analítico, runner e relatório HTML com Plotly
 
 **Aceite:** o PR mostra o cartão com as 6 perguntas respondidas por números; uma regressão
 proposital em teste resulta em `REVERTER`.
+
+### Lições da Fase 1 (registradas pelo próprio método)
+
+- **O balanço pegou um problema real.** O primeiro cartão (`18b6b59 → 8fe6d37`) propôs
+  `REVERTER` por um alerta de segurança novo (B314, leitura de XML sem `defusedxml`). O alerta foi
+  corrigido, não silenciado, e a troca (+1 dependência) aparece no cartão seguinte.
+- **"Enxuto" precisa de contexto.** Numa iteração que adiciona funcionalidade, SLOC e
+  dependências sobem por definição. Sem normalização, a regra sempre pede decisão humana. Isso
+  virou item do plano.
+- **Determinismo depende de threads.** Produto matricial e `solve` do NumPy mudam de hash entre
+  1 thread e 4 threads, e são estáveis com o número de threads fixo. Isso foi registrado no
+  repertório do NumPy, e a métrica separada virou item do plano.
+- **Worktrees de agentes nasceram da `main`.** Os executores precisaram trazer a branch de
+  trabalho. Até a branch ir para a `main`, a especificação de cada tarefa precisa dizer a base.
 
 ## Fase 2 — Telemetria de agentes
 
