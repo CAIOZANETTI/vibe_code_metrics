@@ -68,7 +68,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash 53670a576720</div>
+  <div class="sub">fonte: docs/*.md · hash bc459fd5c1eb</div>
   
   <h4>Guia rápido: usar o vcm num protótipo</h4>
   <a href="#doc-guia">Início</a>
@@ -917,7 +917,9 @@ proposital em teste resulta em <code>REVERTER</code>. <strong>Atingido</strong> 
 <li class="tarefa"><input type="checkbox" disabled checked> <code>vcm iniciar</code> com pacote na raiz e integração com <code>pdca/</code> existente (Sonnet)</li>
 <li class="tarefa"><input type="checkbox" disabled checked> <code>vcm html</code>: relatórios Markdown → HTML (Opus)</li>
 <li class="tarefa"><input type="checkbox" disabled> <code>vcm agentes</code> lendo <code>pdca/agentes.jsonl</code> do projeto</li>
-<li class="tarefa"><input type="checkbox" disabled> Adoção no <code>projetos_em_camadas</code> (PRs 1–4 do diagnóstico), depois das decisões do mantenedor</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Adoção no <code>projetos_em_camadas</code>, passos 1–3 do diagnóstico (PR #25 lá, aguardando aprovação; balanço total MANTER)</li>
+<li class="tarefa"><input type="checkbox" disabled> Passo 4: testes de caracterização do pipeline <code>obra.py</code></li>
+<li class="tarefa"><input type="checkbox" disabled> Conferência JS × Python da medição interativa do visualizador</li>
 </ul>
 <h3 id="doc-plano-licoes-da-fase-1-registradas-pelo-proprio-metodo">Lições da Fase 1 (registradas pelo próprio método)</h3>
 <ul>
@@ -960,6 +962,13 @@ dá <code>SEM_GANHO</code>, e a iteração sem semente continua <code>REVERTER</
 pacote na raiz, dependências opcionais usadas pelos testes e um PDCA próprio com outra definição de
 &quot;determinismo&quot;. Nenhum desses casos aparecia nos testes ponta a ponta com projetos criados do zero.
 Regra: diagnóstico só leitura antes de toda adoção.</li>
+<li><strong>Executores em paralelo precisam de cópias isoladas também no projeto de destino.</strong> Dois
+executores na mesma pasta do <code>projetos_em_camadas</code> compartilharam o ambiente <code>uv</code>: um rodava
+<code>uv sync</code> enquanto o outro rodava testes, e apareceram falhas fantasmas. Sozinho, o resultado foi
+estável. Regra: paralelo só com worktree; na mesma pasta, em sequência.</li>
+<li><strong>A régua do projeto de destino também pega o gerente.</strong> O <code>determinismo.py</code> do projeto em camadas
+reprovou uma lição registrada pelo Opus com formato errado. Respeitar e rodar as réguas
+existentes é parte da adoção.</li>
 <li><strong>Worktrees de agentes nasceram da <code>main</code>.</strong> (Resolvido: com o trabalho na <code>main</code>, as worktrees
 já nascem com o projeto.) Os executores precisaram trazer a branch de
 trabalho. Até a branch ir para a <code>main</code>, a especificação de cada tarefa precisa dizer a base.</li>
@@ -1222,7 +1231,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte 53670a576720). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte bc459fd5c1eb). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";

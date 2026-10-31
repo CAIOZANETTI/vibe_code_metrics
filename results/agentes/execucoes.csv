@@ -14,3 +14,5 @@ data,fase,tarefa,papel,modelo,tokens,chamadas_ferramenta,duracao_s,aprovado,retr
 2026-10-31,fase 1b,configuração por projeto e coletores,executor_padrao,claude-sonnet-5-5,93108,41,208.1,True,"médio: semântica de limites divergente do semáforo, corrigida na integração",apontou o default de repetições do snapshot
 2026-10-31,camadas,suporte a requirements.txt nos coletores,executor_padrao,claude-sonnet-5-5,60983,10,84.7,True,nenhum,"prova real: 178 testes, 0 falhas, cobertura 0,58"
 2026-10-31,camadas,vcm iniciar com pacote na raiz,executor_padrao,claude-sonnet-5-5,61826,8,79.8,True,nenhum,prova real numa cópia do projeto
+2026-10-31,camadas adoção,"higiene: testes opcionais, segurança, gitignore",executor_mecanico,claude-haiku-5-5,78455,32,167.7,True,baixo: comentário do nosec,seguiu o padrão importorskip do repositório
+2026-10-31,camadas adoção,pyproject.toml e uv.lock,executor_padrao,claude-sonnet-5-5,53924,8,64.5,True,nenhum,detectou rasterio>=1.5 exigir Python 3.12
