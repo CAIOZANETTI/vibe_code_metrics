@@ -67,10 +67,13 @@ def balanco(
     antes: pd.Series,
     depois: pd.Series,
     metricas: dict[str, Metrica] | None = None,
+    ruido_medido: pd.Series | None = None,
 ) -> pd.DataFrame:
     """Tabela antes × depois com variação e veredito por métrica.
 
     Só entram métricas presentes nos dois lados e conhecidas no catálogo.
+    `ruido_medido` (de `vcm.ruido`): por métrica, vale o maior entre o ruído do
+    catálogo e o medido por repetição.
     """
     catalogo = METRICAS_PADRAO if metricas is None else metricas
     nomes = [n for n in catalogo if n in antes.index and n in depois.index]
@@ -81,6 +84,9 @@ def balanco(
     d = depois.loc[nomes].astype(float)
     sentido = pd.Series({n: catalogo[n].sentido for n in nomes}, dtype=float)
     ruido = pd.Series({n: catalogo[n].ruido_relativo for n in nomes}, dtype=float)
+    if ruido_medido is not None:
+        medido = ruido_medido.reindex(nomes).fillna(0.0).astype(float)
+        ruido = np.maximum(ruido, medido)
 
     # Escala: |antes|; quando antes == 0 a variação é absoluta (evita divisão por zero).
     escala = a.abs().where(a != 0, 1.0)
@@ -99,6 +105,7 @@ def balanco(
             "antes": a,
             "depois": d,
             "variacao_pct": 100.0 * variacao,
+            "ruido_pct": 100.0 * ruido,
             "veredito": veredito,
         },
         index=pd.Index(nomes, name="metrica"),
