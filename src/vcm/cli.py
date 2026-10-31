@@ -22,6 +22,12 @@ def _cmd_docs(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_html(args: argparse.Namespace) -> int:
+    saida = docs.gerar_avulso(Path(args.markdown), Path(args.saida) if args.saida else None)
+    print(f"{saida} gerado")
+    return 0
+
+
 def _cmd_snapshot(args: argparse.Namespace) -> int:
     from vcm import snapshot as snap
 
@@ -99,6 +105,11 @@ def main(argv: list[str] | None = None) -> int:
     d.add_argument("--pasta", default="docs")
     d.add_argument("--check", action="store_true", help="falha se o HTML estiver desatualizado")
     d.set_defaults(func=_cmd_docs)
+
+    h = sub.add_parser("html", help="converte um Markdown (relatório) em HTML formatado")
+    h.add_argument("markdown")
+    h.add_argument("-o", "--saida", default=None)
+    h.set_defaults(func=_cmd_html)
 
     def opcoes_medicao(sp: argparse.ArgumentParser) -> None:
         sp.add_argument("--repo", default=".")
