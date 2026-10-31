@@ -1,0 +1,63 @@
+"""Conjunto de referência do projeto: cálculos determinísticos medidos a cada iteração.
+
+A última linha impressa é um JSON com o hash dos resultados (determinismo), o tempo de execução
+e o pico de memória. O método Vibe Code Metrics usa esses valores para comparar antes × depois.
+
+ONDE COLOCAR OS SEUS CÁLCULOS: escreva funções vetorizadas (NumPy) em SI, com a unidade no
+nome, e inclua o resultado em `calcular_resultados`. Use entradas fixas ou geradas com semente
+(`np.random.default_rng(semente)`), para que o hash seja idêntico entre execuções.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import resource
+import time
+
+import numpy as np
+
+
+def area_e_volume_secoes(
+    largura_m: np.ndarray, altura_m: np.ndarray, comprimento_m: np.ndarray
+) -> tuple[np.ndarray, np.ndarray]:
+    """Área (m²) e volume (m³) de seções retangulares prismáticas, vetorizado."""
+    area_m2 = largura_m * altura_m
+    volume_m3 = area_m2 * comprimento_m
+    return area_m2, volume_m3
+
+
+def calcular_resultados() -> list[np.ndarray]:
+    """Executa os casos de referência e devolve os vetores de resultado (float64)."""
+    gerador = np.random.default_rng(42)
+    largura_m = gerador.uniform(0.2, 1.0, 100_000)
+    altura_m = gerador.uniform(0.3, 2.0, 100_000)
+    comprimento_m = gerador.uniform(1.0, 12.0, 100_000)
+    area_m2, volume_m3 = area_e_volume_secoes(largura_m, altura_m, comprimento_m)
+    # Acrescente aqui os resultados dos seus próprios cálculos.
+    return [area_m2, volume_m3]
+
+
+def hash_resultados(resultados: list[np.ndarray]) -> str:
+    """sha256 dos bytes float64 dos resultados, em ordem."""
+    resumo = hashlib.sha256()
+    for vetor in resultados:
+        resumo.update(np.ascontiguousarray(vetor, dtype=np.float64).tobytes())
+    return resumo.hexdigest()
+
+
+def executar() -> dict:
+    """Roda o conjunto de referência e devolve hash, tempo (ms) e pico de RAM (MB)."""
+    inicio_s = time.perf_counter()
+    resultados = calcular_resultados()
+    tempo_ms = (time.perf_counter() - inicio_s) * 1000.0
+    pico_ram_mb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
+    return {
+        "hash": hash_resultados(resultados),
+        "tempo_ms": tempo_ms,
+        "pico_ram_mb": pico_ram_mb,
+    }
+
+
+if __name__ == "__main__":
+    print(json.dumps(executar()))
