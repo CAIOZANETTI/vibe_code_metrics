@@ -29,7 +29,7 @@ def _repo(tmp_path: Path) -> Path:
 
 def _medidor_falso(raiz: Path, **_):
     linhas = len((raiz / "a.py").read_text().splitlines())
-    return {"sloc": float(linhas), "testes_falhando": 0.0}
+    return {"sloc_por_funcao": float(linhas), "testes_falhando": 0.0}
 
 
 def test_snapshot_em_worktree_e_cache(tmp_path):
@@ -37,12 +37,12 @@ def test_snapshot_em_worktree_e_cache(tmp_path):
     arquivo = tmp_path / "snap.parquet"
     s1 = snap.obter_snapshot(repo, "HEAD~1", arquivo=arquivo, medidor=_medidor_falso)
     s2 = snap.obter_snapshot(repo, "HEAD", arquivo=arquivo, medidor=_medidor_falso)
-    assert s1["sloc"] == 1 and s2["sloc"] == 3
+    assert s1["sloc_por_funcao"] == 1 and s2["sloc_por_funcao"] == 3
     assert s2["mensagem"] == "segundo"
     assert len(snap.ler_snapshots(arquivo)) == 2
     # cache: não chama o medidor de novo
     s2b = snap.obter_snapshot(repo, "HEAD", arquivo=arquivo, medidor=None)
-    assert s2b["sloc"] == 3
+    assert s2b["sloc_por_funcao"] == 3
     # worktrees temporárias foram removidas
     lista = subprocess.run(
         ["git", "-C", str(repo), "worktree", "list"], check=True, capture_output=True, text=True
@@ -51,12 +51,14 @@ def test_snapshot_em_worktree_e_cache(tmp_path):
 
     r = snap.retrospectiva(s1, s2)
     assert r["decisao"] is Decisao.DECISAO_HUMANA
-    assert r["tabela"].loc["sloc", "veredito"] == "piorou"
+    assert r["tabela"].loc["sloc_por_funcao", "veredito"] == "piorou"
 
 
 def test_cartao_markdown_e_html(tmp_path):
-    antes = pd.Series({"commit": "a" * 40, "sloc": 100.0, "tempo_p50_ms": 50.0})
-    depois = pd.Series({"commit": "b" * 40, "mensagem": "m", "sloc": 90.0, "tempo_p50_ms": 50.0})
+    antes = pd.Series({"commit": "a" * 40, "sloc_por_funcao": 100.0, "tempo_p50_ms": 50.0})
+    depois = pd.Series(
+        {"commit": "b" * 40, "mensagem": "m", "sloc_por_funcao": 90.0, "tempo_p50_ms": 50.0}
+    )
     r = snap.retrospectiva(antes, depois)
     assert r["decisao"] is Decisao.MANTER
     md = cartao.markdown(r)

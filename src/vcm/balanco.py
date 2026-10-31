@@ -22,7 +22,7 @@ import pandas as pd
 @dataclass(frozen=True)
 class Metrica:
     nome: str
-    sentido: int  # +1 = maior é melhor; -1 = menor é melhor
+    sentido: int  # +1 = maior é melhor; -1 = menor é melhor; 0 = informativa (não julgada)
     pergunta: str  # qual provocação da retrospectiva ela responde
     eliminatoria: bool = False
     ruido_relativo: float = 0.0  # variação relativa considerada ruído (estimar por repetições)
@@ -31,16 +31,24 @@ class Metrica:
 METRICAS_PADRAO: dict[str, Metrica] = {
     m.nome: m
     for m in [
+        Metrica("tempo_referencia_ms", -1, "eficiente", ruido_relativo=0.15),
         Metrica("tempo_p50_ms", -1, "eficiente", ruido_relativo=0.05),
         Metrica("tempo_p95_ms", -1, "eficiente", ruido_relativo=0.10),
         Metrica("pico_ram_mb", -1, "eficiente", ruido_relativo=0.03),
         Metrica("custo_usd", -1, "eficiente", ruido_relativo=0.0),
         Metrica("frac_execucoes_identicas", +1, "deterministico", eliminatoria=True),
         Metrica("cobertura_deterministica", +1, "deterministico"),
-        Metrica("sloc", -1, "enxuto"),
+        # SLOC bruto cresce com toda funcionalidade nova: é informativo. O julgamento de
+        # "enxuto" usa a densidade (SLOC por função), a complexidade e as dependências.
+        Metrica("sloc", 0, "enxuto"),
+        Metrica("n_funcoes", 0, "enxuto"),
+        Metrica("sloc_por_funcao", -1, "enxuto", ruido_relativo=0.02),
         Metrica("complexidade_media", -1, "enxuto", ruido_relativo=0.01),
         Metrica("n_dependencias", -1, "enxuto"),
+        Metrica("testes_total", 0, "robusto"),
+        Metrica("tempo_testes_s", 0, "eficiente"),
         Metrica("testes_falhando", -1, "robusto", eliminatoria=True),
+        Metrica("arquivos_com_erro", -1, "robusto"),
         Metrica("cobertura_testes", +1, "robusto", ruido_relativo=0.005),
         Metrica("mutation_score", +1, "robusto", ruido_relativo=0.01),
         Metrica("alertas_seguranca", -1, "robusto", eliminatoria=True),
@@ -79,7 +87,9 @@ def balanco(
     variacao = (d - a) / escala
     melhora = variacao * sentido
     veredito = np.select(
-        [melhora > ruido, melhora < -ruido], ["melhorou", "piorou"], default="igual"
+        [sentido == 0, melhora > ruido, melhora < -ruido],
+        ["info", "melhorou", "piorou"],
+        default="igual",
     )
 
     return pd.DataFrame(
@@ -121,7 +131,8 @@ def respostas(tabela: pd.DataFrame) -> pd.Series:
             return "não"
         return "igual"
 
-    return tabela.groupby("pergunta", sort=False)["veredito"].agg(resumo)
+    julgadas = tabela[tabela["veredito"] != "info"]
+    return julgadas.groupby("pergunta", sort=False)["veredito"].agg(resumo)
 
 
 def convergiu(historico_melhora: pd.Series, janela: int = 3, limiar: float = 0.0) -> bool:

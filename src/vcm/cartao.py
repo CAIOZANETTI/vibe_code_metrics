@@ -27,7 +27,12 @@ EXPLICACAO_DECISAO = {
     Decisao.DECISAO_HUMANA: "Houve troca: algo melhorou e algo piorou. Cabe ao humano decidir.",
 }
 
-ICONE = {"melhorou": "▲ melhorou", "piorou": "▼ piorou", "igual": "= igual"}
+ICONE = {
+    "melhorou": "▲ melhorou",
+    "piorou": "▼ piorou",
+    "igual": "= igual",
+    "info": "· informativa",
+}
 
 
 def _linhas(tabela: pd.DataFrame) -> list[dict]:

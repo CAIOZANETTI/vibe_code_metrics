@@ -9,9 +9,9 @@ def _s(**kw):
 
 
 def test_melhora_sem_perda_mantem():
-    t = balanco(_s(tempo_p50_ms=100, sloc=500), _s(tempo_p50_ms=80, sloc=500))
+    t = balanco(_s(tempo_p50_ms=100, sloc_por_funcao=12), _s(tempo_p50_ms=80, sloc_por_funcao=12))
     assert t.loc["tempo_p50_ms", "veredito"] == "melhorou"
-    assert t.loc["sloc", "veredito"] == "igual"
+    assert t.loc["sloc_por_funcao", "veredito"] == "igual"
     assert decidir(t) is Decisao.MANTER
 
 
@@ -48,8 +48,8 @@ def test_antes_zero_usa_variacao_absoluta():
 
 
 def test_metricas_desconhecidas_sao_ignoradas_e_sem_comum_falha():
-    t = balanco(_s(sloc=10, xyz=1), _s(sloc=9, xyz=2))
-    assert list(t.index) == ["sloc"]
+    t = balanco(_s(sloc_por_funcao=10, xyz=1), _s(sloc_por_funcao=9, xyz=2))
+    assert list(t.index) == ["sloc_por_funcao"]
     with pytest.raises(ValueError):
         balanco(_s(xyz=1), _s(xyz=2))
 
@@ -58,3 +58,10 @@ def test_convergencia():
     assert not convergiu(pd.Series([3, 0]))
     assert convergiu(pd.Series([3, 2, 0, 0, -1]))
     assert not convergiu(pd.Series([0, 0, 1]))
+
+
+def test_metrica_informativa_nao_e_julgada():
+    t = balanco(_s(sloc=100, sloc_por_funcao=10), _s(sloc=300, sloc_por_funcao=9))
+    assert t.loc["sloc", "veredito"] == "info"
+    assert decidir(t) is Decisao.MANTER
+    assert respostas(t)["enxuto"] == "sim"
