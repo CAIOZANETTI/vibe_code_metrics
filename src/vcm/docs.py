@@ -109,7 +109,12 @@ def renderizar_documento(caminho: Path, md: MarkdownIt, prefixo: str) -> Documen
     return Documento(prefixo, caminho.name, titulo, corpo, secoes)
 
 
-def construir(pasta: Path, arquivos: tuple[str, ...] = DOCS_PADRAO) -> str:
+def construir(
+    pasta: Path,
+    arquivos: tuple[str, ...] = DOCS_PADRAO,
+    titulo_pagina: str | None = None,
+    rotulos: dict | None = None,
+) -> str:
     md = _md()
     ids = {a: f"doc-{Path(a).stem}" for a in arquivos}
     docs = [renderizar_documento(pasta / a, md, ids[a]) for a in arquivos]
@@ -124,7 +129,31 @@ def construir(pasta: Path, arquivos: tuple[str, ...] = DOCS_PADRAO) -> str:
     return env.get_template("docs.html.j2").render(
         docs=docs,
         hash_fonte=hashlib.sha256(fonte).hexdigest()[:12],
+        **({"titulo_pagina": titulo_pagina} if titulo_pagina else {}),
+        **(rotulos or {}),
     )
+
+
+def gerar_avulso(markdown: Path, saida: Path | None = None) -> Path:
+    """Um Markdown qualquer (relatório, diagnóstico) -> HTML no estilo da documentação.
+
+    O título da página é o primeiro `# título` do arquivo.
+    """
+    saida = saida or markdown.with_suffix(".html")
+    primeira = next(
+        (
+            linha[2:].strip()
+            for linha in markdown.read_text(encoding="utf-8").splitlines()
+            if linha.startswith("# ")
+        ),
+        markdown.stem,
+    )
+    rotulos = {"pasta_rotulo": "", "comando_rotulo": f"vcm html {markdown.name}"}
+    saida.write_text(
+        construir(markdown.parent, (markdown.name,), titulo_pagina=primeira, rotulos=rotulos),
+        encoding="utf-8",
+    )
+    return saida
 
 
 def gerar(pasta: Path, saida: Path | None = None, check: bool = False) -> bool:

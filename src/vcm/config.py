@@ -21,6 +21,7 @@ class Config:
     comando_referencia: tuple[str, ...] | None
     repeticoes: int
     limites: dict
+    dependencias_extras: tuple[str, ...] = ()
 
 
 def _detectar_pastas_fonte(raiz: Path) -> tuple[str, ...]:
@@ -87,6 +88,14 @@ def carregar_config(raiz: Path) -> Config:
     if not isinstance(limites, dict):
         raise ValueError("vcm.yaml: 'limites' deve ser um mapeamento")  # noqa: TRY004
 
+    extras = dados.get("dependencias_extras")
+    if extras is None:
+        dependencias_extras: tuple[str, ...] = ()
+    elif isinstance(extras, list) and all(isinstance(e, str) and e for e in extras):
+        dependencias_extras = tuple(extras)
+    else:
+        raise ValueError("vcm.yaml: 'dependencias_extras' deve ser uma lista de textos")
+
     return Config(
         projeto=projeto,
         pastas_fonte=pastas_fonte,
@@ -94,4 +103,5 @@ def carregar_config(raiz: Path) -> Config:
         comando_referencia=comando_referencia,
         repeticoes=repeticoes,
         limites=dict(limites),
+        dependencias_extras=dependencias_extras,
     )

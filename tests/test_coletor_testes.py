@@ -32,3 +32,19 @@ def test_conta_testes_e_falhas(tmp_path):
     assert 0.0 <= metricas["cobertura_testes"] <= 1.0
     assert metricas["tempo_testes_s"] >= 0.0
     assert not (tmp_path / ".coverage").exists()
+
+
+@pytest.mark.lento
+def test_projeto_so_com_requirements(tmp_path):
+    (tmp_path / "requirements.txt").write_text("numpy\n")
+    (tmp_path / "pacote").mkdir()
+    (tmp_path / "pacote" / "__init__.py").write_text("def f():\n    return 1\n")
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests" / "test_a.py").write_text(
+        "import numpy as np\nfrom pacote import f\n\n"
+        "def test_numpy():\n    assert np.sum([f(), 1]) == 2\n"
+    )
+    metricas = medir_testes(tmp_path)
+    assert metricas["testes_total"] == 1
+    assert metricas["testes_falhando"] == 0
+    assert metricas["cobertura_testes"] > 0

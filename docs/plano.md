@@ -89,6 +89,15 @@ proposital em teste resulta em `REVERTER`. **Atingido** no teste ponta a ponta (
 - [x] Guia rápido (`docs/guia.md`) e cartões de exemplo em `docs/exemplos/` (Opus)
 - [x] Teste ponta a ponta num protótipo novo: iteração boa → `MANTER`; iteração sem semente → `REVERTER` com código de saída 2 (Opus)
 
+### Fase 1c — Primeiro projeto real (projetos_em_camadas)
+
+- [x] Diagnóstico de linha de base, só leitura (`results/diagnosticos/projetos_em_camadas_2026-10-31.html`)
+- [x] Projeto sem `pyproject.toml`: `requirements.txt` + `dependencias_extras` no `vcm.yaml` (Sonnet)
+- [x] `vcm iniciar` com pacote na raiz e integração com `pdca/` existente (Sonnet)
+- [x] `vcm html`: relatórios Markdown → HTML (Opus)
+- [ ] `vcm agentes` lendo `pdca/agentes.jsonl` do projeto
+- [ ] Adoção no `projetos_em_camadas` (PRs 1–4 do diagnóstico), depois das decisões do mantenedor
+
 ### Lições da Fase 1 (registradas pelo próprio método)
 
 - **O balanço pegou um problema real.** O primeiro cartão (`18b6b59 → 8fe6d37`) propôs
@@ -126,6 +135,10 @@ proposital em teste resulta em `REVERTER`. **Atingido** no teste ponta a ponta (
 - **Portabilidade revisada antes da operação.** O `referencia.py` gerado usava o módulo
   `resource`, que não existe no Windows, e no macOS a unidade de memória é outra. Agora a medição
   é portável (`vcm.medicao`), e a memória fica "sem medição" quando não há como medir, sem quebrar.
+- **Projeto real ≠ projeto de exemplo.** O primeiro projeto real não tinha `pyproject.toml`, tinha o
+  pacote na raiz, dependências opcionais usadas pelos testes e um PDCA próprio com outra definição de
+  "determinismo". Nenhum desses casos aparecia nos testes ponta a ponta com projetos criados do zero.
+  Regra: diagnóstico só leitura antes de toda adoção.
 - **Worktrees de agentes nasceram da `main`.** (Resolvido: com o trabalho na `main`, as worktrees
   já nascem com o projeto.) Os executores precisaram trazer a branch de
   trabalho. Até a branch ir para a `main`, a especificação de cada tarefa precisa dizer a base.

@@ -45,3 +45,15 @@ def test_slug_remove_acentos():
 def test_docs_do_repositorio_estao_em_dia():
     raiz = Path(__file__).resolve().parents[1]
     assert docs.gerar(raiz / "docs", check=True), "rode: uv run vcm docs"
+
+
+def test_markdown_avulso_vira_html_com_titulo(tmp_path):
+    md = tmp_path / "diagnostico.md"
+    md.write_text(
+        "# Diagnóstico X\n\n## Achados\n\n| a | b |\n|---|---|\n| 1 | 2 |\n", encoding="utf-8"
+    )
+    saida = docs.gerar_avulso(md)
+    h = saida.read_text(encoding="utf-8")
+    assert saida.name == "diagnostico.html"
+    assert "<title>Diagnóstico X</title>" in h and "<table>" in h
+    assert "docs/diagnostico.md" not in h and "vcm html diagnostico.md" in h

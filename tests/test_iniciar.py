@@ -71,6 +71,7 @@ def test_vcm_yaml_segue_o_esquema(tmp_path):
         "pasta_testes": "tests",
         "referencia": {"comando": ["python", "-m", "calculo.referencia"], "repeticoes": 5},
         "limites": {},
+        "dependencias_extras": [],
     }
 
 
@@ -133,3 +134,63 @@ def test_referencia_gerada_funciona_sem_resource(tmp_path):
     )
     dado = json.loads(saida)
     assert dado["pico_ram_mb"] is None and len(dado["hash"]) == 64
+
+
+def _projeto_raiz(tmp_path):
+    (tmp_path / "camadas").mkdir()
+    (tmp_path / "camadas" / "__init__.py").write_text("# meu código\n", encoding="utf-8")
+    return tmp_path
+
+
+def test_layout_raiz_coloca_referencia_no_pacote(tmp_path):
+    destino = _projeto_raiz(tmp_path)
+    modulo_iniciar.iniciar(destino, "camadas")
+    assert modulo_iniciar.detectar_layout(destino, "camadas") == "raiz"
+    assert (destino / "camadas" / "referencia.py").is_file()
+    assert (destino / "camadas" / "__init__.py").read_text() == "# meu código\n"
+    assert not (destino / "src").exists()
+    config = yaml.safe_load((destino / "vcm.yaml").read_text(encoding="utf-8"))
+    assert config["pastas_fonte"] == ["camadas"]
+    assert config["dependencias_extras"] == []
+    assert "camadas" in (destino / "CLAUDE.md").read_text()
+    assert not (destino / "pyproject.toml").exists()
+
+
+def test_layout_src_quando_pacote_novo_ou_em_src(tmp_path):
+    assert modulo_iniciar.detectar_layout(tmp_path, "calculo") == "src"
+    (tmp_path / "src" / "calculo").mkdir(parents=True)
+    (tmp_path / "calculo").mkdir()
+    (tmp_path / "calculo" / "__init__.py").write_text("")
+    assert modulo_iniciar.detectar_layout(tmp_path, "calculo") == "src"
+
+
+def test_tem_pdca_liga_a_secao(tmp_path):
+    modulo_iniciar.iniciar(tmp_path / "a", "calculo")
+    assert "Integração com o PDCA" not in (tmp_path / "a" / "CLAUDE.md").read_text()
+    (tmp_path / "b" / "pdca").mkdir(parents=True)
+    modulo_iniciar.iniciar(tmp_path / "b", "calculo")
+    texto = (tmp_path / "b" / "CLAUDE.md").read_text()
+    assert "Integração com o PDCA" in texto and "reprodutibilidade" in texto
+
+
+def test_gitignore_existente_recebe_so_o_que_falta(tmp_path):
+    (tmp_path / ".gitignore").write_text("dados/\n__pycache__/\n", encoding="utf-8")
+    modulo_iniciar.iniciar(tmp_path, "calculo")
+    linhas = (tmp_path / ".gitignore").read_text().splitlines()
+    assert linhas == ["dados/", "__pycache__/", ".venv/", ".claude/worktrees/"]
+
+
+def test_claude_md_existente_nao_e_tocado_no_layout_raiz(tmp_path):
+    destino = _projeto_raiz(tmp_path)
+    (destino / "CLAUDE.md").write_text("convenções do projeto", encoding="utf-8")
+    itens = modulo_iniciar.iniciar(destino, "camadas")
+    assert (destino / "CLAUDE.md").read_text() == "convenções do projeto"
+    assert _status(itens)["CLAUDE.md"] == "mantido (já existia)"
+
+
+def test_cli_layout_raiz_nao_sugere_uv_init(tmp_path, capsys):
+    destino = _projeto_raiz(tmp_path)
+    assert main(["iniciar", str(destino), "--pacote", "camadas"]) == 0
+    saida = capsys.readouterr().out
+    assert "uv init" not in saida
+    assert "camadas/referencia.py" in saida and "vcm balanco HEAD~1 HEAD" in saida

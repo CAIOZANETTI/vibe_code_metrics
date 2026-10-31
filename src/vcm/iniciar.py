@@ -20,6 +20,7 @@ def _ambiente() -> Environment:
         comment_start_string="[#",
         comment_end_string="#]",
         undefined=StrictUndefined,
+        trim_blocks=True,
         keep_trailing_newline=True,
         # Os modelos geram Python, YAML e Markdown: escapar como HTML os corromperia.
         # A política fica explícita: só modelos .html seriam escapados.
@@ -46,6 +47,16 @@ def _atualizar_gitignore(caminho: Path) -> tuple[Path, str]:
     return caminho, "atualizado" if existia else "criado"
 
 
+def detectar_layout(destino: Path, pacote: str) -> str:
+    """Devolve "raiz" se o pacote existente está na raiz (sem `src/`); senão "src"."""
+    destino = Path(destino)
+    if (destino / "src" / pacote).is_dir():
+        return "src"
+    if (destino / pacote / "__init__.py").is_file():
+        return "raiz"
+    return "src"
+
+
 def iniciar(destino: Path, pacote: str, forcar: bool = False) -> list[tuple[Path, str]]:
     """Cria os arquivos do método em `destino`; devolve (arquivo, status) de cada um.
 
@@ -57,7 +68,14 @@ def iniciar(destino: Path, pacote: str, forcar: bool = False) -> list[tuple[Path
     destino = Path(destino)
     destino.mkdir(parents=True, exist_ok=True)
     ambiente = _ambiente()
-    contexto = {"pacote": pacote, "projeto": destino.resolve().name}
+    layout = detectar_layout(destino, pacote)
+    contexto = {
+        "pacote": pacote,
+        "projeto": destino.resolve().name,
+        "pastas_fonte": pacote if layout == "raiz" else "src",
+        "caminho_pacote": pacote if layout == "raiz" else f"src/{pacote}",
+        "tem_pdca": (destino / "pdca").is_dir(),
+    }
 
     def renderizar(modelo: str) -> str:
         return ambiente.get_template(modelo).render(**contexto)
@@ -65,7 +83,7 @@ def iniciar(destino: Path, pacote: str, forcar: bool = False) -> list[tuple[Path
     def copiar(modelo: str) -> str:
         return (PASTA_MODELOS / modelo).read_text(encoding="utf-8")
 
-    pacote_src = destino / "src" / pacote
+    pacote_src = destino / pacote if layout == "raiz" else destino / "src" / pacote
     agentes = destino / ".claude" / "agents"
     plano = [
         (destino / "vcm.yaml", renderizar("vcm.yaml.j2")),
