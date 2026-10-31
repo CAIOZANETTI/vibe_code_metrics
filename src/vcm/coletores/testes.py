@@ -6,8 +6,9 @@ import json
 import os
 import subprocess
 import tempfile
-import xml.etree.ElementTree as ET
 from pathlib import Path
+
+import defusedxml.ElementTree as ET
 
 
 def _executar(comando: list[str], timeout_s: float, ambiente: dict[str, str]) -> None:
