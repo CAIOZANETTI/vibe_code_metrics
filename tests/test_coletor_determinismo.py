@@ -96,3 +96,11 @@ def test_modulo_inexistente_retorna_vazio(tmp_path):
         tmp_path, repeticoes=1, comando=["python", "-m", "pacote_que_nao_existe.ref"]
     )
     assert resultado == {}
+
+
+def test_protocolo_json_com_memoria_nula(tmp_path):
+    """Plataforma sem medição de memória: pico_ram_mb null não quebra o coletor."""
+    from vcm.coletores.determinismo import _interpretar_saida
+
+    hash_, extras = _interpretar_saida('{"hash": "h", "tempo_ms": 3.0, "pico_ram_mb": null}\n')
+    assert hash_ == "h" and extras["pico_ram_mb"] is None

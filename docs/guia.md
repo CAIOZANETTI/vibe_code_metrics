@@ -132,4 +132,5 @@ O balanço passa a usar `results/ruido.parquet` automaticamente.
 | "Ficou mais determinístico?" = sem medição | `referencia.comando` ausente no `vcm.yaml` ou o módulo não imprime o JSON |
 | Determinismo < 1,0 com NumPy | Número de threads do BLAS variando; fixe `OPENBLAS_NUM_THREADS` (ver repertório do NumPy) |
 | Balanço lento | A suíte de testes roda dentro da medição; use `--sem-testes` para uma leitura rápida |
+| "Pico de RAM" sem medição no Windows | O conjunto de referência mede memória com `psutil`; instale com `uv add --dev psutil` |
 | `REVERTER` inesperado | Veja a linha vermelha do cartão: teste falhando, alerta de segurança ou hash instável |

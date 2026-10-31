@@ -7,12 +7,12 @@ from __future__ import annotations
 
 import hashlib
 import json
-import resource
 import time
 
 import numpy as np
 import pandas as pd
 
+from vcm import medicao
 from vcm.balanco import balanco, decidir
 
 
@@ -90,13 +90,12 @@ def medir_referencia() -> dict[str, float | str]:
     """Roda `casos()` uma vez e devolve hash, tempo (ms) e pico de RAM (MiB).
 
     `tempo_ms`: duração de `casos()` com `time.perf_counter` dentro do processo.
-    `pico_ram_mb`: `ru_maxrss` do processo (KiB no Linux) dividido por 1024 -> MiB.
-    Só vale no Linux; no macOS `ru_maxrss` vem em bytes.
+    `pico_ram_mb`: pico de memória do processo (MiB), portável via `vcm.medicao`.
     """
     inicio_s = time.perf_counter()
     conteudos = casos()
     tempo_ms = (time.perf_counter() - inicio_s) * 1000.0
-    pico_ram_mb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
+    pico_ram_mb = medicao.pico_ram_mb()
     return {
         "hash": _hash_dos_casos(conteudos),
         "tempo_ms": tempo_ms,

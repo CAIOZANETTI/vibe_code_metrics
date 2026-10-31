@@ -123,7 +123,11 @@ proposital em teste resulta em `REVERTER`. **Atingido** no teste ponta a ponta (
   oscilou +23%. Correção com lógica de engenharia: piso absoluto de ruído (5 ms; 2 MB) e ruído
   automático = 2 × oscilação observada nas repetições do próprio snapshot. A mesma mudança agora
   dá `SEM_GANHO`, e a iteração sem semente continua `REVERTER`.
-- **Worktrees de agentes nasceram da `main`.** Os executores precisaram trazer a branch de
+- **Portabilidade revisada antes da operação.** O `referencia.py` gerado usava o módulo
+  `resource`, que não existe no Windows, e no macOS a unidade de memória é outra. Agora a medição
+  é portável (`vcm.medicao`), e a memória fica "sem medição" quando não há como medir, sem quebrar.
+- **Worktrees de agentes nasceram da `main`.** (Resolvido: com o trabalho na `main`, as worktrees
+  já nascem com o projeto.) Os executores precisaram trazer a branch de
   trabalho. Até a branch ir para a `main`, a especificação de cada tarefa precisa dizer a base.
 
 ## Fase 2 — Telemetria de agentes
