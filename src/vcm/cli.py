@@ -66,7 +66,14 @@ def _cmd_balanco(args: argparse.Namespace) -> int:
 def _cmd_agentes(args: argparse.Namespace) -> int:
     from vcm import agentes
 
-    print(agentes.resumo_por_modelo(agentes.ler()).to_string())
+    if args.pdca and args.arquivo:
+        print("erro: use --pdca ou --arquivo, não os dois", file=sys.stderr)
+        return 1
+    if args.pdca:
+        tabela = agentes.ler_pdca(Path(args.pdca))
+    else:
+        tabela = agentes.ler(Path(args.arquivo) if args.arquivo else agentes.ARQUIVO_PADRAO)
+    print(agentes.resumo_por_modelo(tabela).to_string())
     return 0
 
 
@@ -143,6 +150,14 @@ def main(argv: list[str] | None = None) -> int:
     b.set_defaults(func=_cmd_balanco)
 
     a = sub.add_parser("agentes", help="resumo das execuções de agentes por modelo")
+    a.add_argument(
+        "--pdca", metavar="CAMINHO", help="lê um pdca/agentes.jsonl (projetos_em_camadas)"
+    )
+    a.add_argument(
+        "--arquivo",
+        metavar="CAMINHO",
+        help="lê um CSV de execuções (padrão: results/agentes/execucoes.csv)",
+    )
     a.set_defaults(func=_cmd_agentes)
 
     i = sub.add_parser("iniciar", help="adota o método num projeto (novo ou existente)")
