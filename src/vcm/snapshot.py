@@ -111,12 +111,19 @@ def obter_snapshot(
     refazer: bool = False,
     **opcoes,
 ) -> pd.Series:
-    """Usa o cache se o commit já foi medido; senão mede e grava."""
+    """Usa o cache se o commit já foi medido; senão mede e grava.
+
+    Uma medição feita com `--sem-testes` não serve quando agora os testes foram pedidos:
+    nesse caso o commit é medido de novo.
+    """
     commit = resolver_commit(repo, ref)
     tabela = ler_snapshots(arquivo)
     achado = tabela[tabela["commit"] == commit]
     if not refazer and not achado.empty:
-        return achado.iloc[-1].dropna()
+        guardado = achado.iloc[-1].dropna()
+        faltam_testes = opcoes.get("com_testes", True) and "testes_total" not in guardado.index
+        if not faltam_testes:
+            return guardado
     linha = snapshot(repo, ref, **opcoes)
     gravar_snapshot(linha, arquivo)
     return linha

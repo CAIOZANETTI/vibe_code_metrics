@@ -29,7 +29,7 @@ def _repo(tmp_path: Path) -> Path:
 
 def _medidor_falso(raiz: Path, **_):
     linhas = len((raiz / "a.py").read_text().splitlines())
-    return {"sloc_por_funcao": float(linhas), "testes_falhando": 0.0}
+    return {"sloc_por_funcao": float(linhas), "testes_total": 1.0, "testes_falhando": 0.0}
 
 
 def test_snapshot_em_worktree_e_cache(tmp_path):
@@ -138,3 +138,20 @@ def test_ruido_automatico_pelas_repeticoes_do_snapshot():
     # oscilação de 20% nas repetições -> faixa de 40%: +30% é ruído
     r = snap.retrospectiva(antes, depois)
     assert r["tabela"].loc["tempo_referencia_ms", "veredito"] == "igual"
+
+
+def test_cache_sem_testes_e_remedido_quando_testes_sao_pedidos(tmp_path):
+    repo = _repo(tmp_path)
+    arquivo = tmp_path / "snap.parquet"
+    chamadas = []
+
+    def medidor(raiz, com_testes=True, **_):
+        chamadas.append(com_testes)
+        return {"sloc_por_funcao": 1.0, **({"testes_total": 3.0} if com_testes else {})}
+
+    snap.obter_snapshot(repo, "HEAD", arquivo=arquivo, medidor=medidor, com_testes=False)
+    s = snap.obter_snapshot(repo, "HEAD", arquivo=arquivo, medidor=medidor, com_testes=True)
+    assert chamadas == [False, True] and s["testes_total"] == 3
+    # agora o cache tem testes: serve também para quem pede sem testes
+    snap.obter_snapshot(repo, "HEAD", arquivo=arquivo, medidor=medidor, com_testes=False)
+    assert chamadas == [False, True]
