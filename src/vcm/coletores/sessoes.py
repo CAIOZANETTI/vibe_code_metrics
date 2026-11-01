@@ -11,6 +11,7 @@ import json
 from collections.abc import Iterator
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import yaml
 
@@ -117,6 +118,10 @@ def ler_chamadas(pasta: Path = PASTA_PADRAO, filtro_projeto: str | None = None) 
     git_branch, tokens_entrada, tokens_saida, tokens_cache_leitura, tokens_cache_criacao_5m,
     tokens_cache_criacao_1h, tokens_raciocinio (int64; ausente = 0).
     Linhas que não parseiam são ignoradas; o total fica em `df.attrs["linhas_invalidas"]`.
+
+    Atenção: uma mesma sessão grava em mais de uma pasta de projeto quando o diretório de
+    trabalho muda. Para o custo de uma sessão, prefira filtrar por `sessao_id` no resultado a
+    filtrar por projeto (o filtro por projeto pode deixar chamadas de fora).
     """
     pasta = Path(pasta)
     registros: list[dict] = []
@@ -148,6 +153,11 @@ def ler_chamadas(pasta: Path = PASTA_PADRAO, filtro_projeto: str | None = None) 
     # Primeiro instante visto da resposta; os demais campos vêm da última linha (uso final).
     df["inicio"] = df.groupby(["arquivo", "mensagem_id"])["inicio"].transform("min")
     df = df.drop_duplicates(["arquivo", "mensagem_id"], keep="last")
+    # A mesma chamada também pode estar em DOIS arquivos: ao retomar a sessão noutro diretório
+    # de trabalho, o histórico é copiado para a pasta do novo projeto com os mesmos message.id.
+    # O id vem da API e é único: vale a primeira ocorrência no tempo.
+    df = df.sort_values(["inicio", "projeto"], kind="stable")
+    df = df.drop_duplicates("mensagem_id", keep="first")
     df = df.astype(dict.fromkeys(COLUNAS_TOKENS, "int64"))
     df = df.sort_values(["inicio", "mensagem_id"], kind="stable").reset_index(drop=True)
     df = df[COLUNAS].astype({"agente_id": object, "descricao": object})
@@ -187,6 +197,9 @@ def carregar_precos(arquivo: Path) -> dict[str, dict[str, float]]:
     """Preços em USD por milhão de tokens, por id de modelo, lidos de `modelos.yaml`.
 
     Modelos com algum preço ausente (None) ficam de fora: custo desconhecido, nunca zero.
+    Se o modelo tem preço de prompt longo (`preco_prompt_longo_usd_por_mtok` acima de
+    `limite_prompt_longo_tok`), as chaves vêm com o prefixo `longo_` e o limite em
+    `limite_prompt_longo_tok`; sem isso, o limite é infinito.
     """
     dado = yaml.safe_load(Path(arquivo).read_text(encoding="utf-8")) or {}
     precos: dict[str, dict[str, float]] = {}
@@ -195,15 +208,75 @@ def carregar_precos(arquivo: Path) -> dict[str, dict[str, float]]:
         valores = [bruto.get(chave) for chave in PRECOS_CHAVES]
         if any(v is None for v in valores):
             continue
-        precos[modelo["id"]] = {c: float(v) for c, v in zip(PRECOS_CHAVES, valores, strict=True)}
+        linha = {c: float(v) for c, v in zip(PRECOS_CHAVES, valores, strict=True)}
+        longo = modelo.get("preco_prompt_longo_usd_por_mtok") or {}
+        limite = modelo.get("limite_prompt_longo_tok")
+        tem_longo = limite is not None and all(longo.get(c) is not None for c in PRECOS_CHAVES)
+        linha["limite_prompt_longo_tok"] = float(limite) if tem_longo else float("inf")
+        for chave in PRECOS_CHAVES:
+            linha[f"longo_{chave}"] = float(longo[chave]) if tem_longo else linha[chave]
+        precos[modelo["id"]] = linha
     return precos
 
 
 def custo_usd(chamadas: pd.DataFrame, precos: dict) -> pd.Series:
-    """Custo equivalente de API por chamada (USD); NaN para modelo sem preço."""
+    """Custo equivalente de API por chamada (USD); NaN para modelo sem preço.
+
+    Prompt longo (ex.: Haiku 5.5 acima de 100 mil tokens): cada requisição é cobrada por si;
+    o tamanho do prompt soma entrada, leitura e escrita de cache.
+    """
+    colunas_preco = list(COLUNA_TOKENS_POR_PRECO.values())
+    colunas_longo = [f"longo_{c}" for c in colunas_preco]
     tabela = pd.DataFrame.from_dict(precos, orient="index", dtype="float64")
-    tabela = tabela.reindex(columns=PRECOS_CHAVES).reindex(chamadas["modelo"].to_numpy())
+    tabela = tabela.reindex(
+        columns=[*colunas_preco, *colunas_longo, "limite_prompt_longo_tok"]
+    ).reindex(chamadas["modelo"].to_numpy())
     tokens = chamadas[list(COLUNA_TOKENS_POR_PRECO)].to_numpy(dtype="float64")
-    precos_alinhados = tabela[list(COLUNA_TOKENS_POR_PRECO.values())].to_numpy()
+    prompt_tok = (
+        chamadas[
+            [
+                "tokens_entrada",
+                "tokens_cache_leitura",
+                "tokens_cache_criacao_5m",
+                "tokens_cache_criacao_1h",
+            ]
+        ]
+        .to_numpy(dtype="float64")
+        .sum(axis=1)
+    )
+    limite = tabela["limite_prompt_longo_tok"].to_numpy().copy()
+    limite[np.isnan(limite)] = np.inf
+    longo = (prompt_tok > limite)[:, None]
+    precos_alinhados = np.where(
+        longo, tabela[colunas_longo].to_numpy(), tabela[colunas_preco].to_numpy()
+    )
     custo = (tokens * precos_alinhados).sum(axis=1) / 1e6
     return pd.Series(custo, index=chamadas.index, name="custo_usd", dtype="float64")
+
+
+def custo_da_iteracao(
+    chamadas: pd.DataFrame,
+    raiz_repo: Path,
+    inicio: pd.Timestamp,
+    fim: pd.Timestamp,
+    precos: dict | None = None,
+) -> pd.DataFrame:
+    """Gasto dos agentes entre dois commits, por modelo.
+
+    Entram as chamadas com `inicio` em (inicio, fim] cujo diretório de trabalho é o repositório
+    ou uma pasta dentro dele (inclusive as worktrees dos agentes em `.claude/worktrees/`).
+    Colunas: chamadas, tokens_total, tokens_saida, custo_usd (NaN se o modelo não tem preço).
+    """
+    raiz = str(Path(raiz_repo).resolve())
+    cwd = chamadas["cwd"].fillna("").astype(str)
+    dentro = (cwd == raiz) | cwd.str.startswith(raiz + "/")
+    janela = (chamadas["inicio"] > inicio) & (chamadas["inicio"] <= fim)
+    sel = chamadas[dentro & janela].copy()
+    sel["tokens_total"] = sel[COLUNAS_TOTAL].sum(axis=1)
+    sel["custo_usd"] = custo_usd(sel, precos) if precos else float("nan")
+    return sel.groupby("modelo").agg(
+        chamadas=("mensagem_id", "size"),
+        tokens_total=("tokens_total", "sum"),
+        tokens_saida=("tokens_saida", "sum"),
+        custo_usd=("custo_usd", lambda c: c.sum(min_count=1)),
+    )

@@ -55,12 +55,32 @@ def _cmd_balanco(args: argparse.Namespace) -> int:
 
     config = carregar_config(repo)
     resultado = snap.retrospectiva(antes, depois, ruido_medido=ruido.carregar())
+    if not args.sem_sessoes:
+        resultado["custo_iteracao"] = _custo_iteracao(repo, antes, depois)
     caminhos = cartao.gravar(resultado, snap.PASTA_ITERACOES, limites=config.limites)
     print(cartao.markdown(resultado, limites=config.limites))
     print(f"Cartão HTML: {caminhos['html']}")
     if args.falhar_se_reverter and resultado["decisao"].value == "REVERTER":
         return 2
     return 0
+
+
+def _custo_iteracao(repo: Path, antes, depois):
+    """Gasto dos agentes entre os dois commits, a partir dos logs locais (None se não houver)."""
+    import pandas as pd
+
+    from vcm.coletores import sessoes
+
+    if not sessoes.PASTA_PADRAO.is_dir():
+        return None
+    precos_arq = repo / "repertorio" / "modelos.yaml"
+    if not precos_arq.exists():  # outro projeto: usa a cópia empacotada no vcm
+        precos_arq = Path(__file__).with_name("modelos_precos.yaml")
+    precos = sessoes.carregar_precos(precos_arq)
+    chamadas = sessoes.ler_chamadas()
+    inicio = pd.Timestamp(antes["data_commit"]).tz_convert("UTC")
+    fim = pd.Timestamp(depois["data_commit"]).tz_convert("UTC")
+    return sessoes.custo_da_iteracao(chamadas, repo, inicio, fim, precos)
 
 
 def _cmd_agentes(args: argparse.Namespace) -> int:
@@ -203,6 +223,9 @@ def main(argv: list[str] | None = None) -> int:
     b.add_argument("base")
     b.add_argument("alvo", nargs="?", default="HEAD")
     b.add_argument("--falhar-se-reverter", action="store_true", help="código 2 se REVERTER")
+    b.add_argument(
+        "--sem-sessoes", action="store_true", help="não lê os logs locais de sessão (gasto)"
+    )
     opcoes_medicao(b)
     b.set_defaults(func=_cmd_balanco)
 

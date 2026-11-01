@@ -147,3 +147,86 @@ def test_cli_sessoes(tmp_path, monkeypatch, capsys):
     assert pd.read_parquet(saida / "chamadas.parquet").shape[0] == 4
     assert pd.read_parquet(saida / "por_agente.parquet").shape[0] == 2
     assert "executor-haiku" in capsys.readouterr().out
+
+
+def test_prompt_longo_do_haiku_cobra_tabela_maior(tmp_path):
+    import pandas as pd
+    import pytest
+
+    from vcm.coletores.sessoes import carregar_precos, custo_usd
+
+    yaml_ = tmp_path / "modelos.yaml"
+    yaml_.write_text(
+        "modelos:\n"
+        "  - id: h\n"
+        "    preco_usd_por_mtok: {entrada: 0.10, saida: 0.50, cache_leitura: 0.01,"
+        " cache_criacao_5m: 0.125, cache_criacao_1h: 0.20}\n"
+        "    limite_prompt_longo_tok: 100000\n"
+        "    preco_prompt_longo_usd_por_mtok: {entrada: 0.50, saida: 2.50, cache_leitura: 0.05,"
+        " cache_criacao_5m: 0.625, cache_criacao_1h: 1.0}\n",
+        encoding="utf-8",
+    )
+    precos = carregar_precos(yaml_)
+    base = {"tokens_cache_criacao_5m": 0, "tokens_cache_criacao_1h": 0, "tokens_saida": 1_000_000}
+    chamadas = pd.DataFrame(
+        [
+            # prompt = 10 mil (entrada) + 50 mil (leitura) = 60 mil: tabela normal
+            {"modelo": "h", "tokens_entrada": 10_000, "tokens_cache_leitura": 50_000, **base},
+            # prompt = 10 mil + 95 mil = 105 mil > 100 mil: tabela de prompt longo
+            {"modelo": "h", "tokens_entrada": 10_000, "tokens_cache_leitura": 95_000, **base},
+        ]
+    )
+    custo = custo_usd(chamadas, precos)
+    assert custo[0] == pytest.approx(0.01 * 0.10 + 0.05 * 0.01 + 1.0 * 0.50)  # 0,5015
+    assert custo[1] == pytest.approx(0.01 * 0.50 + 0.095 * 0.05 + 1.0 * 2.50)  # 2,50975
+
+
+def test_mesma_chamada_copiada_para_outra_pasta_de_projeto_conta_uma_vez(tmp_path):
+    import json
+
+    from vcm.coletores.sessoes import ler_chamadas
+
+    def linha(id_, ts):
+        return json.dumps(
+            {"type": "assistant", "timestamp": ts, "sessionId": "s1",
+             "message": {"id": id_, "model": "m", "usage": {"input_tokens": 1, "output_tokens": 10}}}
+        )  # fmt: skip
+
+    for projeto, ids in (("-a", ["x", "y"]), ("-a-b", ["x", "y", "z"])):  # retomada copia x e y
+        pasta = tmp_path / projeto
+        pasta.mkdir()
+        (pasta / "s1.jsonl").write_text(
+            "\n".join(linha(i, f"2026-11-01T10:00:0{n}Z") for n, i in enumerate(ids)) + "\n",
+            encoding="utf-8",
+        )
+    ch = ler_chamadas(tmp_path)
+    assert sorted(ch["mensagem_id"]) == ["x", "y", "z"]
+    assert ch["tokens_saida"].sum() == 30
+
+
+def test_custo_da_iteracao_filtra_janela_e_repositorio(tmp_path):
+    import pandas as pd
+    import pytest
+
+    from vcm.coletores.sessoes import custo_da_iteracao
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    zero = {"tokens_cache_leitura": 0, "tokens_cache_criacao_5m": 0, "tokens_cache_criacao_1h": 0}
+    chamadas = pd.DataFrame(
+        [
+            {"modelo": "m", "mensagem_id": "a", "cwd": str(repo), "inicio": "2026-11-01T10:30Z"},
+            {"modelo": "m", "mensagem_id": "b", "cwd": f"{repo}/.claude/worktrees/x",
+             "inicio": "2026-11-01T10:40Z"},
+            {"modelo": "m", "mensagem_id": "c", "cwd": "/outro", "inicio": "2026-11-01T10:45Z"},
+            {"modelo": "m", "mensagem_id": "d", "cwd": str(repo), "inicio": "2026-11-01T12:00Z"},
+        ]
+    ).assign(tokens_entrada=0, tokens_saida=1_000_000, **zero)  # fmt: skip
+    chamadas["inicio"] = pd.to_datetime(chamadas["inicio"], utc=True)
+    precos = {"m": {"entrada": 1.0, "saida": 2.0, "cache_leitura": 0.1, "cache_criacao_5m": 1.0,
+                    "cache_criacao_1h": 1.0}}  # fmt: skip
+    r = custo_da_iteracao(
+        chamadas, repo, pd.Timestamp("2026-11-01T10:00Z"), pd.Timestamp("2026-11-01T11:00Z"), precos
+    )
+    assert r.loc["m", "chamadas"] == 2  # 'c' fora do repo, 'd' fora da janela
+    assert r.loc["m", "custo_usd"] == pytest.approx(4.0)
