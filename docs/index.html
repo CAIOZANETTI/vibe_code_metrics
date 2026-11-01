@@ -68,7 +68,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash 0d25bbc5e56a</div>
+  <div class="sub">fonte: docs/*.md · hash b28445c8268c</div>
   
   <h4>Guia rápido: usar o vcm num protótipo</h4>
   <a href="#doc-guia">Início</a>
@@ -151,9 +151,10 @@ vcm --help
 </code></pre>
 <p>Para atualizar: <code>uv tool upgrade vibe-code-metrics</code>.</p>
 <h2 id="doc-guia-2-preparar-o-prototipo">2. Preparar o protótipo</h2>
+<p>O <code>uv init</code> cria o <code>pyproject.toml</code> e a pasta <code>src/calculo/</code>:</p>
 <pre><code class="language-bash">mkdir meu-prototipo &amp;&amp; cd meu-prototipo
 git init
-uv init --package --name calculo        # cria pyproject.toml e src/calculo/
+uv init --package --name calculo
 uv add numpy pandas
 uv add --dev pytest
 vcm iniciar . --pacote calculo
@@ -218,11 +219,12 @@ O modelo gerado já faz isso.</p>
     D --&gt;|MANTER| M[&quot;seguir&quot;]
     D --&gt;|DECISAO_HUMANA| H[&quot;você decide e registra&quot;]
 </pre>
-<pre><code class="language-bash"># depois de cada commit (ou par de commits) de uma tarefa:
-vcm balanco HEAD~1 HEAD
-# abre o cartão com radar e semáforo:
-#   results/iteracoes/&lt;base&gt;_&lt;alvo&gt;.html
+<p>Depois de cada commit (ou par de commits) de uma tarefa, meça e abra o cartão com radar e
+semáforo (<code>results/iteracoes/&lt;base&gt;_&lt;alvo&gt;.html</code>):</p>
+<pre><code class="language-bash">vcm balanco HEAD~1 HEAD
+open results/iteracoes/*.html
 </code></pre>
+<p>No Linux, troque <code>open</code> por <code>xdg-open</code>; no Windows, por <code>start</code>.</p>
 <p>O cartão responde, com números:</p>
 <ul>
 <li>ficou mais <strong>eficiente</strong>?</li>
@@ -268,15 +270,17 @@ mostra o estado atual de cada dimensão:</p>
 </tbody>
 </table>
 <p>Cada execução pode ser registrada para comparar custo e qualidade entre modelos:</p>
+<p>Registrar uma execução e ver os tokens por tarefa aprovada, por modelo:</p>
 <pre><code class="language-bash">uv run python -c &quot;from vcm import agentes; agentes.registrar(modelo='claude-sonnet-5-5', tarefa='...', tokens=..., duracao_s=..., aprovado=True)&quot;
-vcm agentes      # tokens por tarefa aprovada, por modelo
+vcm agentes
 </code></pre>
 <h3 id="doc-guia-gasto-dos-agentes-automatico">Gasto dos agentes (automático)</h3>
 <p>O <code>vcm balanco</code> lê os logs locais do Claude Code (<code>~/.claude/projects</code>) e mostra no cartão quanto
 os agentes gastaram entre os dois commits, por modelo, em tokens e em custo equivalente de API.
-Para ver tudo de uma sessão:</p>
-<pre><code class="language-bash">vcm sessoes --saida results/sessoes      # por agente (tipo, tarefa, modelo, tokens, duração, custo)
-vcm agentes --pdca pdca/agentes.jsonl    # registro próprio do projeto, quando existir
+Para ver tudo de uma sessão, por agente (tipo, tarefa, modelo, tokens, duração, custo), e o
+registro próprio do projeto, quando existir:</p>
+<pre><code class="language-bash">vcm sessoes --saida results/sessoes
+vcm agentes --pdca pdca/agentes.jsonl
 </code></pre>
 <p>Em plano de assinatura o custo é &quot;equivalente de API&quot;, não o gasto real.</p>
 <h2 id="doc-guia-6-comparar-alternativas-teses">6. Comparar alternativas (teses)</h2>
@@ -313,6 +317,14 @@ dados sintéticos, gabarito independente, runner com repetições e relatório H
 <tr>
 <td>&quot;Pico de RAM&quot; sem medição no Windows</td>
 <td>O conjunto de referência mede memória com <code>psutil</code>; instale com <code>uv add --dev psutil</code></td>
+</tr>
+<tr>
+<td><code>unrecognized arguments: # ...</code> no Mac</td>
+<td>O zsh não aceita comentário na mesma linha do comando; rode <code>setopt interactivecomments</code> (ou ponha no <code>~/.zshrc</code>)</td>
+</tr>
+<tr>
+<td>Balanço com <code>--sem-testes</code> e depois sem a opção</td>
+<td>Desde a versão atual o <code>vcm</code> remede o commit quando faltam os testes; em versões antigas, use <code>--refazer</code></td>
 </tr>
 <tr>
 <td><code>REVERTER</code> inesperado</td>
@@ -1250,7 +1262,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte 0d25bbc5e56a). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte b28445c8268c). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";

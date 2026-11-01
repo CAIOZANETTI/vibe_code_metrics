@@ -17,10 +17,12 @@ Para atualizar: `uv tool upgrade vibe-code-metrics`.
 
 ## 2. Preparar o protótipo
 
+O `uv init` cria o `pyproject.toml` e a pasta `src/calculo/`:
+
 ```bash
 mkdir meu-prototipo && cd meu-prototipo
 git init
-uv init --package --name calculo        # cria pyproject.toml e src/calculo/
+uv init --package --name calculo
 uv add numpy pandas
 uv add --dev pytest
 vcm iniciar . --pacote calculo
@@ -64,12 +66,15 @@ flowchart LR
     D -->|DECISAO_HUMANA| H["você decide e registra"]
 ```
 
+Depois de cada commit (ou par de commits) de uma tarefa, meça e abra o cartão com radar e
+semáforo (`results/iteracoes/<base>_<alvo>.html`):
+
 ```bash
-# depois de cada commit (ou par de commits) de uma tarefa:
 vcm balanco HEAD~1 HEAD
-# abre o cartão com radar e semáforo:
-#   results/iteracoes/<base>_<alvo>.html
+open results/iteracoes/*.html
 ```
+
+No Linux, troque `open` por `xdg-open`; no Windows, por `start`.
 
 O cartão responde, com números:
 
@@ -103,20 +108,23 @@ Na sessão do Claude Code, o Opus é o gerente. Peça explicitamente:
 
 Cada execução pode ser registrada para comparar custo e qualidade entre modelos:
 
+Registrar uma execução e ver os tokens por tarefa aprovada, por modelo:
+
 ```bash
 uv run python -c "from vcm import agentes; agentes.registrar(modelo='claude-sonnet-5-5', tarefa='...', tokens=..., duracao_s=..., aprovado=True)"
-vcm agentes      # tokens por tarefa aprovada, por modelo
+vcm agentes
 ```
 
 ### Gasto dos agentes (automático)
 
 O `vcm balanco` lê os logs locais do Claude Code (`~/.claude/projects`) e mostra no cartão quanto
 os agentes gastaram entre os dois commits, por modelo, em tokens e em custo equivalente de API.
-Para ver tudo de uma sessão:
+Para ver tudo de uma sessão, por agente (tipo, tarefa, modelo, tokens, duração, custo), e o
+registro próprio do projeto, quando existir:
 
 ```bash
-vcm sessoes --saida results/sessoes      # por agente (tipo, tarefa, modelo, tokens, duração, custo)
-vcm agentes --pdca pdca/agentes.jsonl    # registro próprio do projeto, quando existir
+vcm sessoes --saida results/sessoes
+vcm agentes --pdca pdca/agentes.jsonl
 ```
 
 Em plano de assinatura o custo é "equivalente de API", não o gasto real.
@@ -146,4 +154,6 @@ O balanço passa a usar `results/ruido.parquet` automaticamente.
 | Determinismo < 1,0 com NumPy | Número de threads do BLAS variando; fixe `OPENBLAS_NUM_THREADS` (ver repertório do NumPy) |
 | Balanço lento | A suíte de testes roda dentro da medição; use `--sem-testes` para uma leitura rápida |
 | "Pico de RAM" sem medição no Windows | O conjunto de referência mede memória com `psutil`; instale com `uv add --dev psutil` |
+| `unrecognized arguments: # ...` no Mac | O zsh não aceita comentário na mesma linha do comando; rode `setopt interactivecomments` (ou ponha no `~/.zshrc`) |
+| Balanço com `--sem-testes` e depois sem a opção | Desde a versão atual o `vcm` remede o commit quando faltam os testes; em versões antigas, use `--refazer` |
 | `REVERTER` inesperado | Veja a linha vermelha do cartão: teste falhando, alerta de segurança ou hash instável |
