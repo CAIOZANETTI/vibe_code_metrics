@@ -77,6 +77,63 @@ def _cmd_agentes(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_sessoes(args: argparse.Namespace) -> int:
+    import pandas as pd
+
+    from vcm import formatacao
+    from vcm.coletores import sessoes
+
+    chamadas = sessoes.ler_chamadas(Path(args.pasta), args.projeto)
+    if chamadas.empty:
+        print("Nenhuma chamada encontrada.")
+        return 0
+    invalidas = chamadas.attrs.get("linhas_invalidas", 0)
+    por_agente = sessoes.resumo_por_agente(chamadas)
+    arquivo_precos = Path("repertorio/modelos.yaml")
+    com_custo = arquivo_precos.exists()
+    if com_custo:
+        precos = sessoes.carregar_precos(arquivo_precos)
+        chamadas["custo_usd"] = sessoes.custo_usd(chamadas, precos)
+        custo_por_agente = chamadas.groupby(
+            [chamadas["sessao_id"], chamadas["agente_id"].fillna("")]
+        )["custo_usd"].sum(min_count=1)
+        chaves = pd.MultiIndex.from_arrays(
+            [por_agente["sessao_id"], por_agente["agente_id"].fillna("")]
+        )
+        por_agente["custo_usd"] = custo_por_agente.reindex(chaves).to_numpy()
+    saida = Path(args.saida)
+    saida.mkdir(parents=True, exist_ok=True)
+    chamadas.to_parquet(saida / "chamadas.parquet", index=False)
+    por_agente.to_parquet(saida / "por_agente.parquet", index=False)
+
+    tabela = pd.DataFrame(
+        {
+            "tipo": por_agente["tipo_agente"],
+            "descricao": por_agente["descricao"].fillna("").str.slice(0, 40),
+            "modelo": por_agente["modelo"],
+            "chamadas": por_agente["chamadas"],
+            "tokens_total": por_agente["tokens_total"],
+            "duracao_s": por_agente["duracao_s"].round(1),
+        }
+    )
+    por_modelo = por_agente.groupby("modelo")[["chamadas", "tokens_total"]].sum()
+    if com_custo:
+        tabela["custo_usd"] = por_agente["custo_usd"].round(2)
+        por_modelo["custo_usd"] = (
+            por_agente.groupby("modelo")["custo_usd"].sum(min_count=1).round(2)
+        )
+    print(tabela.to_string(index=False))
+    print()
+    print(por_modelo.to_string())
+    print(f"\nChamadas únicas: {formatacao.numero(len(chamadas), 0)}")
+    if invalidas:
+        print(f"Linhas inválidas ignoradas: {invalidas}")
+    if com_custo:
+        print("Aviso: custo equivalente de API; em plano de assinatura não é o gasto real.")
+    print(f"Gravado em {saida}")
+    return 0
+
+
 def _cmd_iniciar(args: argparse.Namespace) -> int:
     from vcm import iniciar
 
@@ -159,6 +216,12 @@ def main(argv: list[str] | None = None) -> int:
         help="lê um CSV de execuções (padrão: results/agentes/execucoes.csv)",
     )
     a.set_defaults(func=_cmd_agentes)
+
+    se = sub.add_parser("sessoes", help="telemetria dos logs de sessão do Claude Code")
+    se.add_argument("--pasta", default=str(Path.home() / ".claude" / "projects"))
+    se.add_argument("--projeto", default=None, help="filtro (substring) do nome do projeto")
+    se.add_argument("--saida", default="results/sessoes")
+    se.set_defaults(func=_cmd_sessoes)
 
     i = sub.add_parser("iniciar", help="adota o método num projeto (novo ou existente)")
     i.add_argument("destino", nargs="?", default=".")
