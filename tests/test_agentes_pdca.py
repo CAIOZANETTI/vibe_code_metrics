@@ -88,7 +88,7 @@ def test_resumo_com_aprovado_ausente_e_tokens_nan(tmp_path: Path) -> None:
     assert resumo.loc["fable", "execucoes_sem_tokens"] == 0
     assert resumo.loc["fable", "tokens_total"] == 99429
     assert resumo["tokens_por_aprovacao"].isna().all()
-    assert (resumo["taxa_aprovacao"] == 0).all()
+    assert resumo["taxa_aprovacao"].isna().all()  # sem dado de aprovação: NaN, não 0
 
 
 def test_resumo_csv_continua_contando_tokens_sem_valor(tmp_path: Path) -> None:
@@ -123,3 +123,15 @@ def test_cli_agentes_recusa_pdca_e_arquivo_juntos(tmp_path: Path, capsys) -> Non
 
     assert main(["agentes", "--pdca", str(arquivo), "--arquivo", str(arquivo)]) == 1
     assert "não os dois" in capsys.readouterr().err
+
+
+def test_aprovacao_desconhecida_e_nan_nao_zero():
+    import pandas as pd
+
+    from vcm.agentes import COLUNAS, resumo_por_modelo
+
+    tabela = pd.DataFrame(
+        [{**dict.fromkeys(COLUNAS), "modelo": "fable", "tokens": 10.0, "duracao_s": 1.0}]
+    )
+    r = resumo_por_modelo(tabela)
+    assert pd.isna(r.loc["fable", "taxa_aprovacao"])

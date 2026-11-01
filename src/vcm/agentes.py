@@ -82,11 +82,14 @@ def ler_pdca(arquivo: Path) -> pd.DataFrame:
 def resumo_por_modelo(tabela: pd.DataFrame) -> pd.DataFrame:
     """Custo em tokens por tarefa aprovada, por modelo.
 
-    `aprovado` ausente (formato pdca) conta como não aprovado. Tokens ausentes (NaN) não
-    entram na soma e são contados em `execucoes_sem_tokens`.
+    `aprovado` ausente (formato pdca) é "sem dado": não conta como aprovado nem como reprovado,
+    e a taxa de aprovação fica NaN quando nenhuma execução do modelo tem essa informação.
+    Tokens ausentes (NaN) não entram na soma e são contados em `execucoes_sem_tokens`.
     """
+    conhecido = tabela["aprovado"].notna()
     t = tabela.assign(
-        aprovado=tabela["aprovado"].fillna(False).astype(bool),
+        aprovado=tabela["aprovado"].where(conhecido, False).astype(bool),
+        com_avaliacao=conhecido,
         sem_tokens=tabela["tokens"].isna(),
     )
     g = t.groupby("modelo")
@@ -100,6 +103,7 @@ def resumo_por_modelo(tabela: pd.DataFrame) -> pd.DataFrame:
     )
     aprovadas = resumo["aprovadas"].where(resumo["aprovadas"] > 0)
     resumo["tokens_por_aprovacao"] = resumo["tokens_total"] / aprovadas
-    resumo["taxa_aprovacao"] = resumo["aprovadas"] / resumo["execucoes"]
+    avaliadas = g["com_avaliacao"].sum()
+    resumo["taxa_aprovacao"] = resumo["aprovadas"] / avaliadas.where(avaliadas > 0)
     resumo["execucoes_sem_tokens"] = g["sem_tokens"].sum()
     return resumo
