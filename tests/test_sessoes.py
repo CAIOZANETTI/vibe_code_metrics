@@ -230,3 +230,33 @@ def test_custo_da_iteracao_filtra_janela_e_repositorio(tmp_path):
     )
     assert r.loc["m", "chamadas"] == 2  # 'c' fora do repo, 'd' fora da janela
     assert r.loc["m", "custo_usd"] == pytest.approx(4.0)
+
+
+def test_custo_iteracao_do_cli_usa_logs_e_precos_empacotados(tmp_path, monkeypatch):
+    import json
+
+    import pandas as pd
+
+    from vcm import cli
+    from vcm.coletores import sessoes
+
+    repo = tmp_path / "repo"
+    repo.mkdir()  # sem repertorio/: usa os preços empacotados no vcm
+    logs = tmp_path / "logs" / "-repo"
+    logs.mkdir(parents=True)
+    uso = {"input_tokens": 0, "output_tokens": 1_000_000}
+    (logs / "s.jsonl").write_text(
+        json.dumps({"type": "assistant", "timestamp": "2026-11-01T10:30:00Z", "sessionId": "s",
+                    "cwd": str(repo), "message": {"id": "a", "model": "claude-sonnet-5-5",
+                                                  "usage": uso}}) + "\n",
+        encoding="utf-8",
+    )  # fmt: skip
+    monkeypatch.setattr(sessoes, "PASTA_PADRAO", tmp_path / "logs")
+    monkeypatch.setattr(sessoes.ler_chamadas, "__defaults__", (tmp_path / "logs", None))
+    antes = pd.Series({"data_commit": "2026-11-01T10:00:00+00:00"})
+    depois = pd.Series({"data_commit": "2026-11-01T11:00:00+00:00"})
+    gasto = cli._custo_iteracao(repo, antes, depois)
+    assert gasto.loc["claude-sonnet-5-5", "chamadas"] == 1
+    assert gasto.loc["claude-sonnet-5-5", "custo_usd"] == 10.0  # 1 MTok de saída × US$ 10
+    monkeypatch.setattr(sessoes, "PASTA_PADRAO", tmp_path / "nao_existe")
+    assert cli._custo_iteracao(repo, antes, depois) is None

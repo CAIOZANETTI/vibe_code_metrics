@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retrospectiva 1fb2ea3 → c4349d1</title>
+<!-- Gerado por `uv run vcm balanco`. Valores calculados e formatados em Python. -->
+<style>
+:root {
+  --bg: #fbfbfa; --fg: #1f2328; --muted: #5d6470; --line: #e3e5e8; --card: #ffffff;
+  --accent: #1f6feb; --accent-soft: #e8f0fe; --code: #f3f4f6; --side: #f4f5f6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111418; --fg: #e6e8eb; --muted: #9aa3ad; --line: #2b3138; --card: #171b20;
+    --accent: #58a6ff; --accent-soft: #15243a; --code: #1d2228; --side: #14181d;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: 100vh;
+}
+nav {
+  position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 24px 18px;
+  background: var(--side); border-right: 1px solid var(--line); font-size: 14px;
+}
+nav .marca { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+nav .sub { color: var(--muted); font-size: 12px; margin-bottom: 20px; }
+nav h4 { margin: 18px 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+nav a { display: block; color: var(--fg); text-decoration: none; padding: 3px 8px; border-radius: 6px; }
+nav a:hover { background: var(--accent-soft); color: var(--accent); }
+nav a.n3 { padding-left: 22px; color: var(--muted); font-size: 13px; }
+main { padding: 32px 48px 80px; max-width: 1040px; }
+article { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 40px 32px; margin-bottom: 40px; }
+.fonte { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  font-size: 13px; color: var(--muted); border-bottom: 1px solid var(--line); padding: 14px 0 10px; margin-bottom: 8px; }
+.fonte a { color: var(--accent); }
+h1 { font-size: 30px; line-height: 1.25; margin: 22px 0 8px; }
+h2 { font-size: 22px; margin: 40px 0 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+h3 { font-size: 18px; margin: 28px 0 8px; }
+h1, h2, h3 { scroll-margin-top: 16px; }
+a { color: var(--accent); }
+p, li { max-width: 78ch; }
+blockquote { margin: 16px 0; padding: 10px 16px; border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 0 8px 8px 0; }
+blockquote p { margin: 4px 0; }
+code { font: 13.5px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--code); padding: 1px 5px; border-radius: 4px; }
+pre { background: var(--code); padding: 14px 16px; border-radius: 8px; overflow-x: auto; }
+pre code { padding: 0; background: none; }
+pre.mermaid { background: transparent; text-align: center; border: 1px solid var(--line); }
+table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14.5px; display: block; overflow-x: auto; }
+th, td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; vertical-align: top; }
+th { background: var(--side); font-weight: 600; }
+tr:nth-child(even) td { background: color-mix(in srgb, var(--side) 45%, transparent); }
+li.tarefa { list-style: none; margin-left: -1.3em; }
+li input[type=checkbox] { margin-right: 6px; accent-color: var(--accent); }
+footer { color: var(--muted); font-size: 12px; }
+@media (max-width: 860px) {
+  body { grid-template-columns: 1fr; }
+  nav { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+  main { padding: 16px; }
+  article { padding: 4px 18px 20px; }
+}
+body { display: block; }
+main { margin: 0 auto; }
+.decisao { font-size: 20px; font-weight: 700; padding: 14px 18px; border-radius: 10px; margin: 16px 0; }
+.REVERTER { background: #fde8e8; color: #9b1c1c; }
+.MANTER { background: #e6f4ea; color: #1e6b34; }
+.SEM_GANHO { background: #eef1f4; color: #3c4650; }
+.DECISAO_HUMANA { background: #fff4e0; color: #8a5300; }
+td.melhorou { color: #1e6b34; font-weight: 600; }
+td.piorou { color: #b42318; font-weight: 600; }
+td.verde, td.amarelo, td.vermelho, td.cinza { font-weight: 600; }
+.bolinha { display: inline-block; width: 14px; height: 14px; border-radius: 50%; vertical-align: middle; margin-right: 6px; border: 1px solid rgba(0,0,0,.25); }
+.bolinha.verde { background: #2da44e; } .bolinha.amarelo { background: #e3b341; }
+.bolinha.vermelho { background: #d1242f; } .bolinha.cinza { background: #b6bdc6; }
+.dimensoes { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
+.dimensao { border: 1px solid #d0d7de; border-radius: 10px; padding: 10px 16px; min-width: 150px; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<main>
+<article>
+  <h1>Retrospectiva da iteração <code>1fb2ea3</code> → <code>c4349d1</code></h1>
+  <p><em>Fase 2: telemetria pelos logs de sessão e gasto dos agentes no cartão</em></p>
+  <div class="decisao DECISAO_HUMANA">Decisão proposta: DECISAO_HUMANA</div>
+  <p>Houve troca: algo melhorou e algo piorou. Cabe ao humano decidir.</p>
+  
+
+  <h2>Radar da iteração</h2>
+  <p><small>Índice por dimensão: antes = 1,0 (tracejado); acima de 1,0 é melhor. O rótulo traz a cor do semáforo de estado.</small></p>
+  <div style="height:380px; width:100%;">                        <script>window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-4.1.1.min.js" integrity="sha256-O24V1F27f8pb0glCkelh3cVHLNiHAJ5gCaVtq2aNch8=" crossorigin="anonymous"></script>                <div id="1f60a6ef-3cbb-43c0-a573-e453c0638192" class="plotly-graph-div" style="height:100%; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("1f60a6ef-3cbb-43c0-a573-e453c0638192")) {                    Plotly.newPlot(                        "1f60a6ef-3cbb-43c0-a573-e453c0638192",                        [{"line":{"color":"#8a94a0","dash":"dash"},"mode":"lines","name":"antes (1,0)","r":[1.0,1.0,1.0,1.0,1.0],"theta":["eficiente \u26aa","deterministico \ud83d\udfe2","enxuto \ud83d\udfe2","robusto \ud83d\udfe2","eficiente \u26aa"],"type":"scatterpolar"},{"fill":"toself","hovertemplate":"%{theta}: \u00edndice %{text}\u003cextra\u003e\u003c\u002fextra\u003e","line":{"color":"#1f6feb"},"mode":"lines+markers","name":"depois","r":[1.0768756676148923,1.0,0.9620341851121187,0.9982666885269563,1.0768756676148923],"text":["1,08","1,00","0,96","1,00","1,08"],"theta":["eficiente \u26aa","deterministico \ud83d\udfe2","enxuto \ud83d\udfe2","robusto \ud83d\udfe2","eficiente \u26aa"],"type":"scatterpolar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05}}},"polar":{"radialaxis":{"range":[0,1.5],"tickvals":[0.5,1.0,1.5]}},"margin":{"l":60,"r":60,"t":30,"b":30},"showlegend":true,"height":380},                        {"responsive": true}                    )                };            </script>        </div>
+
+  <h2>Semáforo por dimensão</h2>
+  <div class="dimensoes">
+    <div class="dimensao"><span class="bolinha cinza"></span><strong>eficiente</strong> (cinza)<br><small>índice 1,08</small></div>
+    <div class="dimensao"><span class="bolinha verde"></span><strong>deterministico</strong> (verde)<br><small>índice 1,00</small></div>
+    <div class="dimensao"><span class="bolinha verde"></span><strong>enxuto</strong> (verde)<br><small>índice 0,96</small></div>
+    <div class="dimensao"><span class="bolinha verde"></span><strong>robusto</strong> (verde)<br><small>índice 1,00</small></div>
+    
+  </div>
+
+  <h2>Perguntas da retrospectiva</h2>
+  <table>
+    <tr><th>Pergunta</th><th>Resposta (medida)</th></tr>
+    <tr><td>Ficou mais eficiente?</td><td>igual</td></tr>
+    <tr><td>Ficou mais determinístico?</td><td>igual</td></tr>
+    <tr><td>Ficou mais enxuto?</td><td>não</td></tr>
+    <tr><td>Ficou mais robusto?</td><td>não</td></tr>
+    <tr><td>Perdeu algo?</td><td>sim: sloc_por_funcao, complexidade_media, cobertura_testes</td></tr>
+    <tr><td>Vale continuar nessa linha?</td><td>decisão humana, com base no histórico</td></tr>
+  </table>
+
+  
+  <h2>Gasto dos agentes nesta iteração</h2>
+  <table>
+    <tr><th>Modelo</th><th>Chamadas</th><th>Tokens</th><th>Custo (US$)</th></tr>
+    <tr><td><code>claude-opus-5-5</code></td><td class="num">37</td><td class="num">20.423.205</td><td class="num">5,01</td></tr>
+    <tr><td><code>claude-haiku-5-5</code></td><td class="num">11</td><td class="num">699.054</td><td class="num">0,02</td></tr>
+    <tr><td><code>claude-sonnet-5-5</code></td><td class="num">9</td><td class="num">592.221</td><td class="num">0,33</td></tr>
+    <tr><th>Total</th><th></th><th class="num">21.714.480</th><th class="num">5,36</th></tr>
+  </table>
+  <p><small>Custo equivalente de API (preços de repertorio/modelos.yaml); em plano de assinatura não é o gasto real. Entram as chamadas entre os dois commits, feitas no repositório ou nas worktrees dos agentes.</small></p>
+  
+
+  <h2>Métricas antes × depois</h2>
+  <table>
+    <tr><th>Métrica</th><th>Pergunta</th><th>Eliminatória</th><th>Antes</th><th>Depois</th><th>Variação</th><th>Veredito</th></tr>
+    <tr>
+      <td><code>tempo_referencia_ms</code></td><td>eficiente</td><td></td>
+      <td class="num">64,245</td><td class="num">55,359</td><td class="num">-13,8%</td>
+      <td class="igual">= igual</td>
+    </tr>
+    <tr>
+      <td><code>pico_ram_mb</code></td><td>eficiente</td><td></td>
+      <td class="num">137,559</td><td class="num">137,660</td><td class="num">+0,1%</td>
+      <td class="igual">= igual</td>
+    </tr>
+    <tr>
+      <td><code>frac_execucoes_identicas</code></td><td>deterministico</td><td>sim</td>
+      <td class="num">1</td><td class="num">1</td><td class="num">0,0%</td>
+      <td class="igual">= igual</td>
+    </tr>
+    <tr>
+      <td><code>sloc</code></td><td>enxuto</td><td></td>
+      <td class="num">1.839</td><td class="num">2.215</td><td class="num">+20,4%</td>
+      <td class="info">· informativa</td>
+    </tr>
+    <tr>
+      <td><code>n_funcoes</code></td><td>enxuto</td><td></td>
+      <td class="num">106</td><td class="num">121</td><td class="num">+14,2%</td>
+      <td class="info">· informativa</td>
+    </tr>
+    <tr>
+      <td><code>sloc_por_funcao</code></td><td>enxuto</td><td></td>
+      <td class="num">17,349</td><td class="num">18,306</td><td class="num">+5,5%</td>
+      <td class="piorou">▼ piorou</td>
+    </tr>
+    <tr>
+      <td><code>complexidade_media</code></td><td>enxuto</td><td></td>
+      <td class="num">3,509</td><td class="num">3,736</td><td class="num">+6,4%</td>
+      <td class="piorou">▼ piorou</td>
+    </tr>
+    <tr>
+      <td><code>n_dependencias</code></td><td>enxuto</td><td></td>
+      <td class="num">12</td><td class="num">12</td><td class="num">0,0%</td>
+      <td class="igual">= igual</td>
+    </tr>
+    <tr>
+      <td><code>testes_total</code></td><td>robusto</td><td></td>
+      <td class="num">116</td><td class="num">133</td><td class="num">+14,7%</td>
+      <td class="info">· informativa</td>
+    </tr>
+    <tr>
+      <td><code>tempo_testes_s</code></td><td>eficiente</td><td></td>
+      <td class="num">13,990</td><td class="num">14,777</td><td class="num">+5,6%</td>
+      <td class="info">· informativa</td>
+    </tr>
+    <tr>
+      <td><code>testes_falhando</code></td><td>robusto</td><td>sim</td>
+      <td class="num">0</td><td class="num">0</td><td class="num">0,0%</td>
+      <td class="igual">= igual</td>
+    </tr>
+    <tr>
+      <td><code>arquivos_com_erro</code></td><td>robusto</td><td></td>
+      <td class="num">0</td><td class="num">0</td><td class="num">0,0%</td>
+      <td class="igual">= igual</td>
+    </tr>
+    <tr>
+      <td><code>cobertura_testes</code></td><td>robusto</td><td></td>
+      <td class="num">0,898</td><td class="num">0,892</td><td class="num">-0,7%</td>
+      <td class="piorou">▼ piorou</td>
+    </tr>
+    <tr>
+      <td><code>alertas_seguranca</code></td><td>robusto</td><td>sim</td>
+      <td class="num">0</td><td class="num">0</td><td class="num">0,0%</td>
+      <td class="igual">= igual</td>
+    </tr>
+    
+  </table>
+  <h2>Semáforo por métrica (estado depois)</h2>
+  <table>
+    <tr><th>Métrica</th><th>Dimensão</th><th>Valor</th><th>Cor</th><th>Regra</th></tr>
+    <tr>
+      <td><code>tempo_referencia_ms</code></td><td>eficiente</td><td class="num">55,359</td>
+      <td class="cinza"><span class="bolinha cinza"></span>cinza</td><td>sem limite definido</td>
+    </tr>
+    <tr>
+      <td><code>pico_ram_mb</code></td><td>eficiente</td><td class="num">137,660</td>
+      <td class="cinza"><span class="bolinha cinza"></span>cinza</td><td>sem limite definido</td>
+    </tr>
+    <tr>
+      <td><code>frac_execucoes_identicas</code></td><td>deterministico</td><td class="num">1</td>
+      <td class="verde"><span class="bolinha verde"></span>verde</td><td>verde ≥ 1,00; amarelo ≥ 0,80; senão vermelho</td>
+    </tr>
+    <tr>
+      <td><code>sloc</code></td><td>enxuto</td><td class="num">2.215</td>
+      <td class="cinza"><span class="bolinha cinza"></span>cinza</td><td>sem limite definido</td>
+    </tr>
+    <tr>
+      <td><code>n_funcoes</code></td><td>enxuto</td><td class="num">121</td>
+      <td class="cinza"><span class="bolinha cinza"></span>cinza</td><td>sem limite definido</td>
+    </tr>
+    <tr>
+      <td><code>sloc_por_funcao</code></td><td>enxuto</td><td class="num">18,306</td>
+      <td class="verde"><span class="bolinha verde"></span>verde</td><td>verde ≤ 25,00; amarelo ≤ 50,00; senão vermelho</td>
+    </tr>
+    <tr>
+      <td><code>complexidade_media</code></td><td>enxuto</td><td class="num">3,736</td>
+      <td class="verde"><span class="bolinha verde"></span>verde</td><td>verde ≤ 5,00; amarelo ≤ 10,00; senão vermelho</td>
+    </tr>
+    <tr>
+      <td><code>n_dependencias</code></td><td>enxuto</td><td class="num">12</td>
+      <td class="verde"><span class="bolinha verde"></span>verde</td><td>verde ≤ 15,00; amarelo ≤ 30,00; senão vermelho</td>
+    </tr>
+    <tr>
+      <td><code>testes_total</code></td><td>robusto</td><td class="num">133</td>
+      <td class="cinza"><span class="bolinha cinza"></span>cinza</td><td>sem limite definido</td>
+    </tr>
+    <tr>
+      <td><code>tempo_testes_s</code></td><td>eficiente</td><td class="num">14,777</td>
+      <td class="cinza"><span class="bolinha cinza"></span>cinza</td><td>sem limite definido</td>
+    </tr>
+    <tr>
+      <td><code>testes_falhando</code></td><td>robusto</td><td class="num">0</td>
+      <td class="verde"><span class="bolinha verde"></span>verde</td><td>verde ≤ 0,00; senão vermelho</td>
+    </tr>
+    <tr>
+      <td><code>arquivos_com_erro</code></td><td>robusto</td><td class="num">0</td>
+      <td class="verde"><span class="bolinha verde"></span>verde</td><td>verde ≤ 0,00; senão vermelho</td>
+    </tr>
+    <tr>
+      <td><code>cobertura_testes</code></td><td>robusto</td><td class="num">0,892</td>
+      <td class="verde"><span class="bolinha verde"></span>verde</td><td>verde ≥ 0,80; amarelo ≥ 0,60; senão vermelho</td>
+    </tr>
+    <tr>
+      <td><code>alertas_seguranca</code></td><td>robusto</td><td class="num">0</td>
+      <td class="verde"><span class="bolinha verde"></span>verde</td><td>verde ≤ 0,00; senão vermelho</td>
+    </tr>
+    
+  </table>
+  <p><small>Variações dentro do ruído de cada métrica são declaradas "igual". Regra de decisão: <code>vcm.balanco.decidir</code>.</small></p>
+</article>
+</main>
+</body>
+</html>

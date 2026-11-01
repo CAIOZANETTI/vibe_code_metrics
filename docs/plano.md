@@ -12,7 +12,7 @@ Legenda: `[x]` feito · `[ ]` a fazer · **Aceite** = critério objetivo para fe
 |---|---|---|---|
 | 0 | Fundação: pacote, documentação viva, balanço, CI, T000 | — | concluída |
 | 1 | Retrospectiva automática por iteração, radar de semáforo, `vcm iniciar` | 0 | concluída (3 itens menores em aberto) |
-| 2 | Telemetria de agentes e custo por iteração | 1 | próxima |
+| 2 | Telemetria de agentes e custo por iteração | 1 | concluída pelos logs de sessão (OpenTelemetry adiado) |
 | 3 | Repertório, schema de tese e runner; primeira tese técnica (T005) | 1 | a fazer |
 | 4 | Relatórios HTML com Plotly e painel histórico | 1, 3 | a fazer |
 | 5 | Orquestração multiagente com avaliador trancado | 2, 3 | a fazer |
@@ -95,7 +95,7 @@ proposital em teste resulta em `REVERTER`. **Atingido** no teste ponta a ponta (
 - [x] Projeto sem `pyproject.toml`: `requirements.txt` + `dependencias_extras` no `vcm.yaml` (Sonnet)
 - [x] `vcm iniciar` com pacote na raiz e integração com `pdca/` existente (Sonnet)
 - [x] `vcm html`: relatórios Markdown → HTML (Opus)
-- [ ] `vcm agentes` lendo `pdca/agentes.jsonl` do projeto
+- [x] `vcm agentes --pdca` lendo `pdca/agentes.jsonl` do projeto; aprovação desconhecida é NaN, não 0 (Haiku)
 - [x] Adoção no `projetos_em_camadas`, passos 1–3 do diagnóstico (PR #25 lá, aguardando aprovação; balanço total MANTER)
 - [ ] Passo 4: testes de caracterização do pipeline `obra.py`
 - [ ] Conferência JS × Python da medição interativa do visualizador
@@ -148,6 +148,13 @@ proposital em teste resulta em `REVERTER`. **Atingido** no teste ponta a ponta (
 - **A régua do projeto de destino também pega o gerente.** O `determinismo.py` do projeto em camadas
   reprovou uma lição registrada pelo Opus com formato errado. Respeitar e rodar as réguas
   existentes é parte da adoção.
+- **Os logs de sessão mentem duas vezes se não forem lidos com cuidado.** A mesma resposta aparece
+  em várias linhas (até 7×), e a retomada da sessão noutro diretório copia o histórico para outra
+  pasta de projeto. Somando tudo, o custo saiu US$ 64,55; filtrando por pasta, US$ 29,87;
+  deduplicando globalmente pelo `message.id`, US$ 43,01, contra US$ 42,39 da plataforma. Regra:
+  conferir toda telemetria contra uma fonte independente antes de confiar nela.
+- **O gerente é o maior custo.** Na rodada da Fase 2, Opus US$ 5,01 × Sonnet US$ 0,33 × Haiku US$ 0,02.
+  O contexto longo da sessão principal (leitura de cache) domina. Isso é dado para a T003.
 - **Worktrees de agentes nasceram da `main`.** (Resolvido: com o trabalho na `main`, as worktrees
   já nascem com o projeto.) Os executores precisaram trazer a branch de
   trabalho. Até a branch ir para a `main`, a especificação de cada tarefa precisa dizer a base.
@@ -156,15 +163,18 @@ proposital em teste resulta em `REVERTER`. **Atingido** no teste ponta a ponta (
 
 Objetivo: custo, tokens e tempo de cada iteração, ligados à tese e à tarefa.
 
-- [ ] Documentar a ativação: `CLAUDE_CODE_ENABLE_TELEMETRY=1`, exportador OTLP e `OTEL_RESOURCE_ATTRIBUTES=tese=...,tarefa=...`
-- [ ] Receptor local mínimo (coletor OpenTelemetry com exportador de arquivo, ou receptor OTLP em Python) → JSONL → Parquet
-- [ ] Alternativa sem coletor: parser dos logs de sessão locais do Claude Code → Parquet (validar o caminho e o formato atuais antes)
-- [ ] `repertorio/modelos.yaml`: modelo, fornecedor, preço por milhão de tokens (entrada, saída, cache), **data e fonte da verificação**
-- [ ] Custo da iteração no balanço: tokens, custo equivalente de API, nº de chamadas, edições rejeitadas
+- [ ] Documentar a ativação do OpenTelemetry (`CLAUDE_CODE_ENABLE_TELEMETRY=1`, OTLP, `OTEL_RESOURCE_ATTRIBUTES=tese=...,tarefa=...`) — adiado: os logs de sessão já dão tokens e custo sem coletor
+- [ ] Receptor OTLP local — adiado pelo mesmo motivo
+- [x] Parser dos logs de sessão locais (`vcm sessoes`): chamadas únicas, por agente (tipo e descrição do `meta.json`), por modelo, em Parquet (Sonnet)
+- [x] `repertorio/modelos.yaml` com preços oficiais (entrada, saída, leitura e escrita de cache 5m/1h, prompt longo do Haiku), fonte e data (Opus)
+- [x] Gasto dos agentes no cartão: chamadas, tokens e custo por modelo entre os dois commits (Opus)
+- [ ] Edições rejeitadas e intervenções humanas (exigem os eventos `tool_decision`; ver OpenTelemetry)
 - [ ] Indicadores: `tokens_por_aprovacao`, `custo_por_aprovacao` (incluindo tempo humano), `taxa_de_retrabalho`
 
 **Aceite:** uma sessão real de Claude Code numa tarefa da T000 aparece no balanço com custo e
-tokens; a soma confere com o painel do fornecedor dentro de 5%.
+tokens; a soma confere com o painel do fornecedor dentro de 5%. **Atingido:** custo desta sessão
+pelos logs US$ 43,01 × plataforma US$ 42,39 (diferença de 1,5%, explicada pelas chamadas feitas
+depois da leitura da plataforma).
 
 ## Fase 3 — Repertório, tese e runner
 

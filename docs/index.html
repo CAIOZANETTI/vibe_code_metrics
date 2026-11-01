@@ -68,7 +68,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash bc459fd5c1eb</div>
+  <div class="sub">fonte: docs/*.md · hash 0d25bbc5e56a</div>
   
   <h4>Guia rápido: usar o vcm num protótipo</h4>
   <a href="#doc-guia">Início</a>
@@ -77,6 +77,7 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n2" href="#doc-guia-3-o-conjunto-de-referencia">3. O conjunto de referência</a>
   <a class="n2" href="#doc-guia-4-o-ciclo-de-cada-iteracao">4. O ciclo de cada iteração</a>
   <a class="n2" href="#doc-guia-5-usar-os-agentes">5. Usar os agentes</a>
+  <a class="n3" href="#doc-guia-gasto-dos-agentes-automatico">Gasto dos agentes (automático)</a>
   <a class="n2" href="#doc-guia-6-comparar-alternativas-teses">6. Comparar alternativas (teses)</a>
   <a class="n2" href="#doc-guia-7-calibrar-o-ruido">7. Calibrar o ruído</a>
   <a class="n2" href="#doc-guia-8-problemas-comuns">8. Problemas comuns</a>
@@ -270,6 +271,14 @@ mostra o estado atual de cada dimensão:</p>
 <pre><code class="language-bash">uv run python -c &quot;from vcm import agentes; agentes.registrar(modelo='claude-sonnet-5-5', tarefa='...', tokens=..., duracao_s=..., aprovado=True)&quot;
 vcm agentes      # tokens por tarefa aprovada, por modelo
 </code></pre>
+<h3 id="doc-guia-gasto-dos-agentes-automatico">Gasto dos agentes (automático)</h3>
+<p>O <code>vcm balanco</code> lê os logs locais do Claude Code (<code>~/.claude/projects</code>) e mostra no cartão quanto
+os agentes gastaram entre os dois commits, por modelo, em tokens e em custo equivalente de API.
+Para ver tudo de uma sessão:</p>
+<pre><code class="language-bash">vcm sessoes --saida results/sessoes      # por agente (tipo, tarefa, modelo, tokens, duração, custo)
+vcm agentes --pdca pdca/agentes.jsonl    # registro próprio do projeto, quando existir
+</code></pre>
+<p>Em plano de assinatura o custo é &quot;equivalente de API&quot;, não o gasto real.</p>
 <h2 id="doc-guia-6-comparar-alternativas-teses">6. Comparar alternativas (teses)</h2>
 <p>Quando houver dúvida entre duas formas de fazer, por exemplo NumPy × Polars, não escolha por
 gosto: implemente as duas atrás da mesma interface, meça e registre. O exemplo completo está na
@@ -806,7 +815,7 @@ de iteração. Arquitetura de referência: <a href="#doc-arquitetura">arquitetur
 <td>2</td>
 <td>Telemetria de agentes e custo por iteração</td>
 <td>1</td>
-<td>próxima</td>
+<td>concluída pelos logs de sessão (OpenTelemetry adiado)</td>
 </tr>
 <tr>
 <td>3</td>
@@ -916,7 +925,7 @@ proposital em teste resulta em <code>REVERTER</code>. <strong>Atingido</strong> 
 <li class="tarefa"><input type="checkbox" disabled checked> Projeto sem <code>pyproject.toml</code>: <code>requirements.txt</code> + <code>dependencias_extras</code> no <code>vcm.yaml</code> (Sonnet)</li>
 <li class="tarefa"><input type="checkbox" disabled checked> <code>vcm iniciar</code> com pacote na raiz e integração com <code>pdca/</code> existente (Sonnet)</li>
 <li class="tarefa"><input type="checkbox" disabled checked> <code>vcm html</code>: relatórios Markdown → HTML (Opus)</li>
-<li class="tarefa"><input type="checkbox" disabled> <code>vcm agentes</code> lendo <code>pdca/agentes.jsonl</code> do projeto</li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm agentes --pdca</code> lendo <code>pdca/agentes.jsonl</code> do projeto; aprovação desconhecida é NaN, não 0 (Haiku)</li>
 <li class="tarefa"><input type="checkbox" disabled checked> Adoção no <code>projetos_em_camadas</code>, passos 1–3 do diagnóstico (PR #25 lá, aguardando aprovação; balanço total MANTER)</li>
 <li class="tarefa"><input type="checkbox" disabled> Passo 4: testes de caracterização do pipeline <code>obra.py</code></li>
 <li class="tarefa"><input type="checkbox" disabled> Conferência JS × Python da medição interativa do visualizador</li>
@@ -969,6 +978,13 @@ estável. Regra: paralelo só com worktree; na mesma pasta, em sequência.</li>
 <li><strong>A régua do projeto de destino também pega o gerente.</strong> O <code>determinismo.py</code> do projeto em camadas
 reprovou uma lição registrada pelo Opus com formato errado. Respeitar e rodar as réguas
 existentes é parte da adoção.</li>
+<li><strong>Os logs de sessão mentem duas vezes se não forem lidos com cuidado.</strong> A mesma resposta aparece
+em várias linhas (até 7×), e a retomada da sessão noutro diretório copia o histórico para outra
+pasta de projeto. Somando tudo, o custo saiu US$ 64,55; filtrando por pasta, US$ 29,87;
+deduplicando globalmente pelo <code>message.id</code>, US$ 43,01, contra US$ 42,39 da plataforma. Regra:
+conferir toda telemetria contra uma fonte independente antes de confiar nela.</li>
+<li><strong>O gerente é o maior custo.</strong> Na rodada da Fase 2, Opus US$ 5,01 × Sonnet US$ 0,33 × Haiku US$ 0,02.
+O contexto longo da sessão principal (leitura de cache) domina. Isso é dado para a T003.</li>
 <li><strong>Worktrees de agentes nasceram da <code>main</code>.</strong> (Resolvido: com o trabalho na <code>main</code>, as worktrees
 já nascem com o projeto.) Os executores precisaram trazer a branch de
 trabalho. Até a branch ir para a <code>main</code>, a especificação de cada tarefa precisa dizer a base.</li>
@@ -976,15 +992,18 @@ trabalho. Até a branch ir para a <code>main</code>, a especificação de cada t
 <h2 id="doc-plano-fase-2-telemetria-de-agentes">Fase 2 — Telemetria de agentes</h2>
 <p>Objetivo: custo, tokens e tempo de cada iteração, ligados à tese e à tarefa.</p>
 <ul>
-<li class="tarefa"><input type="checkbox" disabled> Documentar a ativação: <code>CLAUDE_CODE_ENABLE_TELEMETRY=1</code>, exportador OTLP e <code>OTEL_RESOURCE_ATTRIBUTES=tese=...,tarefa=...</code></li>
-<li class="tarefa"><input type="checkbox" disabled> Receptor local mínimo (coletor OpenTelemetry com exportador de arquivo, ou receptor OTLP em Python) → JSONL → Parquet</li>
-<li class="tarefa"><input type="checkbox" disabled> Alternativa sem coletor: parser dos logs de sessão locais do Claude Code → Parquet (validar o caminho e o formato atuais antes)</li>
-<li class="tarefa"><input type="checkbox" disabled> <code>repertorio/modelos.yaml</code>: modelo, fornecedor, preço por milhão de tokens (entrada, saída, cache), <strong>data e fonte da verificação</strong></li>
-<li class="tarefa"><input type="checkbox" disabled> Custo da iteração no balanço: tokens, custo equivalente de API, nº de chamadas, edições rejeitadas</li>
+<li class="tarefa"><input type="checkbox" disabled> Documentar a ativação do OpenTelemetry (<code>CLAUDE_CODE_ENABLE_TELEMETRY=1</code>, OTLP, <code>OTEL_RESOURCE_ATTRIBUTES=tese=...,tarefa=...</code>) — adiado: os logs de sessão já dão tokens e custo sem coletor</li>
+<li class="tarefa"><input type="checkbox" disabled> Receptor OTLP local — adiado pelo mesmo motivo</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Parser dos logs de sessão locais (<code>vcm sessoes</code>): chamadas únicas, por agente (tipo e descrição do <code>meta.json</code>), por modelo, em Parquet (Sonnet)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>repertorio/modelos.yaml</code> com preços oficiais (entrada, saída, leitura e escrita de cache 5m/1h, prompt longo do Haiku), fonte e data (Opus)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Gasto dos agentes no cartão: chamadas, tokens e custo por modelo entre os dois commits (Opus)</li>
+<li class="tarefa"><input type="checkbox" disabled> Edições rejeitadas e intervenções humanas (exigem os eventos <code>tool_decision</code>; ver OpenTelemetry)</li>
 <li class="tarefa"><input type="checkbox" disabled> Indicadores: <code>tokens_por_aprovacao</code>, <code>custo_por_aprovacao</code> (incluindo tempo humano), <code>taxa_de_retrabalho</code></li>
 </ul>
 <p><strong>Aceite:</strong> uma sessão real de Claude Code numa tarefa da T000 aparece no balanço com custo e
-tokens; a soma confere com o painel do fornecedor dentro de 5%.</p>
+tokens; a soma confere com o painel do fornecedor dentro de 5%. <strong>Atingido:</strong> custo desta sessão
+pelos logs US$ 43,01 × plataforma US$ 42,39 (diferença de 1,5%, explicada pelas chamadas feitas
+depois da leitura da plataforma).</p>
 <h2 id="doc-plano-fase-3-repertorio-tese-e-runner">Fase 3 — Repertório, tese e runner</h2>
 <ul>
 <li class="tarefa"><input type="checkbox" disabled> Schemas pydantic: entrada de repertório, <code>protocol.yaml</code>, registro de run (campos da seção 10 do README, mais git commit, lockfile, seed, versões do gabarito e do protocolo)</li>
@@ -1231,7 +1250,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte bc459fd5c1eb). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte 0d25bbc5e56a). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
