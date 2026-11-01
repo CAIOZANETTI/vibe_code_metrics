@@ -51,6 +51,16 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
     {% endfor %}<tr><td>Vale continuar nessa linha?</td><td>decisão humana, com base no histórico</td></tr>
   </table>
 
+  {% if gasto %}
+  <h2>Gasto dos agentes nesta iteração</h2>
+  <table>
+    <tr><th>Modelo</th><th>Chamadas</th><th>Tokens</th><th>Custo (US$)</th></tr>
+    {% for r in gasto.linhas %}<tr><td><code>{{ r.modelo }}</code></td><td class="num">{{ r.chamadas }}</td><td class="num">{{ r.tokens }}</td><td class="num">{{ r.custo }}</td></tr>
+    {% endfor %}<tr><th>Total</th><th></th><th class="num">{{ gasto.total_tokens }}</th><th class="num">{{ gasto.total_custo }}</th></tr>
+  </table>
+  <p><small>{{ gasto.aviso }}</small></p>
+  {% endif %}
+
   <h2>Métricas antes × depois</h2>
   <table>
     <tr><th>Métrica</th><th>Pergunta</th><th>Eliminatória</th><th>Antes</th><th>Depois</th><th>Variação</th><th>Veredito</th></tr>

@@ -127,8 +127,37 @@ def contexto(resultado: dict, limites: dict | None = None) -> dict:
             }
         ],
         "linhas": _linhas(tabela),
+        "gasto": _gasto(resultado.get("custo_iteracao")),
         "semaforo": semaforo,
         "radar_html": radar_html,
+    }
+
+
+AVISO_CUSTO = (
+    "Custo equivalente de API (preços de repertorio/modelos.yaml); em plano de assinatura não "
+    "é o gasto real. Entram as chamadas entre os dois commits, feitas no repositório ou nas "
+    "worktrees dos agentes."
+)
+
+
+def _gasto(custo: pd.DataFrame | None) -> dict | None:
+    """Gasto dos agentes na iteração, já formatado em pt-BR (None se não houver logs)."""
+    if custo is None or custo.empty:
+        return None
+    linhas = [
+        {
+            "modelo": modelo,
+            "chamadas": fmt.numero(r["chamadas"], 0),
+            "tokens": fmt.numero(r["tokens_total"], 0),
+            "custo": fmt.numero(r["custo_usd"], 2),
+        }
+        for modelo, r in custo.sort_values("tokens_total", ascending=False).iterrows()
+    ]
+    return {
+        "linhas": linhas,
+        "total_tokens": fmt.numero(custo["tokens_total"].sum(), 0),
+        "total_custo": fmt.numero(custo["custo_usd"].sum(min_count=1), 2),
+        "aviso": AVISO_CUSTO,
     }
 
 
@@ -173,6 +202,22 @@ def markdown(resultado: dict, limites: dict | None = None) -> str:
         ],
         "",
     ]
+    if c["gasto"]:
+        g = c["gasto"]
+        partes += [
+            "### Gasto dos agentes nesta iteração",
+            "",
+            "| Modelo | Chamadas | Tokens | Custo (US$) |",
+            "|---|---:|---:|---:|",
+            *[
+                f"| {r['modelo']} | {r['chamadas']} | {r['tokens']} | {r['custo']} |"
+                for r in g["linhas"]
+            ],
+            f"| **Total** | | **{g['total_tokens']}** | **{g['total_custo']}** |",
+            "",
+            f"_{g['aviso']}_",
+            "",
+        ]
     return "\n".join(partes)
 
 

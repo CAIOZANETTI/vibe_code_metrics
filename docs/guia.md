@@ -108,6 +108,19 @@ uv run python -c "from vcm import agentes; agentes.registrar(modelo='claude-sonn
 vcm agentes      # tokens por tarefa aprovada, por modelo
 ```
 
+### Gasto dos agentes (automático)
+
+O `vcm balanco` lê os logs locais do Claude Code (`~/.claude/projects`) e mostra no cartão quanto
+os agentes gastaram entre os dois commits, por modelo, em tokens e em custo equivalente de API.
+Para ver tudo de uma sessão:
+
+```bash
+vcm sessoes --saida results/sessoes      # por agente (tipo, tarefa, modelo, tokens, duração, custo)
+vcm agentes --pdca pdca/agentes.jsonl    # registro próprio do projeto, quando existir
+```
+
+Em plano de assinatura o custo é "equivalente de API", não o gasto real.
+
 ## 6. Comparar alternativas (teses)
 
 Quando houver dúvida entre duas formas de fazer, por exemplo NumPy × Polars, não escolha por

@@ -1,34 +1,53 @@
-# Catálogo de modelos de IA. Preços: preencher a partir da página oficial, com data e fonte.
+# Catálogo de modelos de IA. Preços: copiados da página oficial, com data e fonte.
+# Preços em USD por milhão de tokens (MTok), roteamento global (padrão). Inferência só nos EUA
+# (`inference_geo`) multiplica todos os preços por 1,1. Em plano de assinatura, o custo calculado
+# com estes preços é "equivalente de API", não o gasto real.
+#
+# Campos de preco_usd_por_mtok:
+#   entrada            tokens de entrada sem cache
+#   saida              tokens de saída (inclui raciocínio)
+#   cache_leitura      leitura (acerto) de cache, que também renova o cache
+#   cache_criacao_5m   escrita no cache de 5 minutos
+#   cache_criacao_1h   escrita no cache de 1 hora
+# preco_prompt_longo_usd_por_mtok: preços para requisições cujo prompt (entrada + leitura +
+#   escrita de cache) passa de limite_prompt_longo_tok. Cada requisição é cobrada por si.
 modelos:
   - id: claude-opus-5-5
     fornecedor: anthropic
     familia: opus
     papel_atual: gerente
     status: em_uso
-    preco_usd_por_mtok: {entrada: null, saida: null, cache_leitura: null}
-    verificado_em: null
-    fonte: null
+    preco_usd_por_mtok:
+      {entrada: 4.0, saida: 20.0, cache_leitura: 0.20, cache_criacao_5m: 5.0, cache_criacao_1h: 8.0}
+    verificado_em: "2026-11-01"
+    fonte: https://platform.claude.com/docs/en/about-claude/pricing
   - id: claude-sonnet-5-5
     fornecedor: anthropic
     familia: sonnet
     papel_atual: executor_padrao
     status: em_uso
-    preco_usd_por_mtok: {entrada: null, saida: null, cache_leitura: null}
-    verificado_em: null
-    fonte: null
+    preco_usd_por_mtok:
+      {entrada: 2.0, saida: 10.0, cache_leitura: 0.10, cache_criacao_5m: 2.50, cache_criacao_1h: 4.0}
+    verificado_em: "2026-11-01"
+    fonte: https://platform.claude.com/docs/en/about-claude/pricing
   - id: claude-haiku-5-5
     fornecedor: anthropic
     familia: haiku
     papel_atual: executor_mecanico
     status: em_uso
-    preco_usd_por_mtok: {entrada: null, saida: null, cache_leitura: null}
-    verificado_em: null
-    fonte: null
+    preco_usd_por_mtok:
+      {entrada: 0.10, saida: 0.50, cache_leitura: 0.01, cache_criacao_5m: 0.125, cache_criacao_1h: 0.20}
+    limite_prompt_longo_tok: 100000
+    preco_prompt_longo_usd_por_mtok:
+      {entrada: 0.50, saida: 2.50, cache_leitura: 0.05, cache_criacao_5m: 0.625, cache_criacao_1h: 1.0}
+    verificado_em: "2026-11-01"
+    fonte: https://platform.claude.com/docs/en/about-claude/pricing
   - id: claude-fable-5-1
     fornecedor: anthropic
     familia: fable
     papel_atual: null
     status: nao_usado  # não usado por decisão do mantenedor
-    preco_usd_por_mtok: {entrada: null, saida: null, cache_leitura: null}
-    verificado_em: null
-    fonte: null
+    preco_usd_por_mtok:
+      {entrada: 10.0, saida: 50.0, cache_leitura: 0.25, cache_criacao_5m: 12.50, cache_criacao_1h: 20.0}
+    verificado_em: "2026-11-01"
+    fonte: https://platform.claude.com/docs/en/about-claude/pricing

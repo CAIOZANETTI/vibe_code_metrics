@@ -43,3 +43,11 @@ def test_catalogo_de_modelos_sem_preco_inventado():
     for m in modelos:
         if any(v is not None for v in m["preco_usd_por_mtok"].values()):
             assert m["verificado_em"] and m["fonte"], f"{m['id']}: preço sem data/fonte"
+
+
+def test_precos_empacotados_iguais_ao_catalogo():
+    """O vcm instalado em outro projeto usa a cópia empacotada; ela não pode divergir."""
+    empacotado = Path(__file__).resolve().parents[1] / "src" / "vcm" / "modelos_precos.yaml"
+    assert empacotado.read_bytes() == (RAIZ / "modelos.yaml").read_bytes(), (
+        "copie repertorio/modelos.yaml para src/vcm/modelos_precos.yaml"
+    )
