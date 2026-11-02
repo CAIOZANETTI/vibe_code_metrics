@@ -1,0 +1,18 @@
+id: ext-doc-coauthoring
+nome: Coautoria de documentos (Anthropic)
+origem: externa
+onde: https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring
+para_que: Fluxo em três etapas (contexto, refinamento por seção, teste com leitor sem contexto) para escrever propostas, especificações e documentos de decisão.
+quando_usar:
+  - Redigir especificação, proposta técnica ou nota de decisão com revisão estruturada.
+quando_evitar:
+  - Textos curtos ou documentos que o método gera automaticamente.
+cuidados:
+  - Só SKILL.md (sem scripts nem dependências).
+  - A pasta não tem LICENSE.txt nem campo license; licença do repositório raiz não conferida, por isso licenca null.
+  - Em inglês; sobrepõe-se a skills embutidas de documentos.
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

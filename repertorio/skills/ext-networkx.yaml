@@ -1,0 +1,19 @@
+id: ext-networkx
+nome: NetworkX (K-Dense, comunitária)
+origem: externa
+onde: https://github.com/K-Dense-AI/scientific-agent-skills/tree/main/skills/networkx
+para_que: Construir, analisar e desenhar grafos com NetworkX (caminhos mínimos, centralidade, comunidades, leitura e escrita).
+quando_usar:
+  - Redes de tubulação, conectividade de trechos ou dependências entre tarefas.
+quando_evitar:
+  - Grafos muito grandes (considerar rustworkx ou igraph).
+cuidados:
+  - Skill de terceiros; ler SKILL.md e referências antes de instalar.
+  - O campo license da skill diz BSD de 3 cláusulas (provavelmente a do NetworkX); o repositório é MIT.
+  - Pasta tem SKILL.md e references/, sem scripts.
+  - Data do último commit não confirmada.
+agente_sugerido: null
+ferramentas_relacionadas: [networkx]
+licenca: BSD-3-Clause
+verificado_em: "2026-11-02"
+status: candidato

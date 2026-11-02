@@ -1,0 +1,21 @@
+id: ext-pdf
+nome: PDF (Anthropic)
+origem: externa
+onde: https://github.com/anthropics/skills/tree/main/skills/pdf
+para_que: Ler/extrair texto e tabelas de PDF, juntar, dividir, girar, criar PDF, preencher formulários e fazer OCR.
+quando_usar:
+  - Extração de tabelas e texto de memoriais e listas em PDF para pandas/planilha.
+  - Mesclar, dividir ou girar PDFs de projeto; PDF escaneado que precisa de OCR.
+quando_evitar:
+  - Pranchas vetoriais em camadas CAD ou georreferenciamento; usar as skills internas do projeto (ler-prancha, georef-pranchas).
+  - Redistribuir ou adaptar a skill (licença proprietária).
+cuidados:
+  - Licença proprietária (LICENSE.txt, 2025 Anthropic) que proíbe extrair, copiar fora dos serviços e criar derivados; uso conforme o contrato com a Anthropic.
+  - Traz scripts/, forms.md e reference.md; ler antes de instalar.
+  - Depende de pypdf, pdfplumber, reportlab, pytesseract, pdf2image e ferramentas de sistema (poppler, tesseract).
+  - Sobrepõe-se à skill embutida pdf (por isso o prefixo ext-).
+agente_sugerido: null
+ferramentas_relacionadas: [pdfplumber, pymupdf, pytesseract]
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato
