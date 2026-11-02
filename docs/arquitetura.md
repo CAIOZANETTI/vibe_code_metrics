@@ -87,6 +87,7 @@ Consequências:
 | Componente | O que é | Formato | Pasta |
 |---|---|---|---|
 | **Repertório** | Alternativas classificadas por **papel** (extração, cálculo, armazenamento, intercâmbio, apresentação, orquestração de IA). Só se compara o que cumpre o mesmo papel. | YAML | `repertorio/` |
+| **Catálogo de skills** | Habilidades de agente (pasta com `SKILL.md`): do projeto, da plataforma, de plugins e externas. Dizem **como** conduzir uma tarefa e quais ferramentas do repertório usam. Página: [skills.md](skills.md). | YAML | `repertorio/skills/` |
 | **Catálogo de modelos** | Modelos de IA disponíveis, preço, data de verificação e papéis sugeridos. Atualizado quando um fornecedor lança modelo novo, o que dispara regressão. | YAML | `repertorio/modelos.yaml` |
 | **Tese** | Hipótese falsificável + protocolo (métricas, tolerâncias, orçamento, repetições) + gabarito congelado + decisão. | Markdown + YAML | `theses/Txxx-*/` |
 | **Runner** | Executa alternativas sobre os mesmos casos, com repetições, isolamento em subprocesso, pico de RAM, hash de saída. | Python | `src/vcm/runners/` |
@@ -219,6 +220,21 @@ dados da tese **T003 (roteamento)**: a tabela acima é hipótese e passa a ser c
 por tarefa aprovada de cada modelo.
 
 Nenhum nome de modelo fica fixo no código: tudo vem de `repertorio/modelos.yaml`.
+
+### Modelo × skill × ferramenta
+
+Três escolhas independentes compõem cada tarefa:
+
+| Escolha | Pergunta | Onde está |
+|---|---|---|
+| **Modelo** | quem executa (custo × capacidade) | `repertorio/modelos.yaml`, tabela acima |
+| **Skill** | como conduzir (passo a passo, cuidados, quando parar) | [skills.md](skills.md) |
+| **Ferramenta** | com o que calcular (biblioteca Python) | [repertorio.md](repertorio.md) |
+
+Uma tarefa repetível de domínio (ler uma prancha, quantificar uma vala) vira **skill do projeto**,
+com o cálculo em código determinístico; a skill orienta o agente e aponta o código. Skills
+externas entram como **candidatas**: lidas antes de instalar, porque podem trazer scripts que
+rodam na máquina.
 
 ## 7. Repertório: uma entrada
 

@@ -229,6 +229,12 @@ registrado e pelo menos uma decisão humana pedida e registrada.
 
 **Aceite:** a mesma tarefa roda em três fornecedores, com custo e qualidade comparáveis no mesmo relatório.
 
+## Repertório de skills (02/11/2026)
+
+- [x] Catálogo de skills em `repertorio/skills/` (projeto, plataforma, plugins, externas) e página `skills.md` gerada (Haiku + Sonnet + Opus)
+- [ ] Skills próprias do método, instaladas pelo `vcm iniciar`: `vcm-iteracao` (especificar → executor → balanço → decidir → registrar) e `vcm-diagnostico` (linha de base de um projeto existente)
+- [ ] Tese: medir o efeito de uma skill (mesma tarefa com e sem a skill: custo, retrabalho, aprovação)
+
 ## Fase 8 — Primeiro programa experimental
 
 Teses T001 (extração de pranchas), T002 (armazenamento espacial), T003 (roteamento) e T004
