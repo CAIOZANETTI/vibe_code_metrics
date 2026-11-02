@@ -1,0 +1,13 @@
+id: run
+nome: "Rodar a aplicação"
+origem: embutida
+onde: "sessão do Claude Code (skill run)"
+para_que: "Subir e dirigir a aplicação do projeto para ver a mudança funcionando, além dos testes."
+quando_usar: ["pedido para rodar, iniciar ou fotografar a aplicação", "confirmar que a mudança funciona no uso real"]
+quando_evitar: ["mudança que só toca testes ou documentação"]
+cuidados: ["se o projeto já tiver skill própria de execução, ela tem prioridade", "registrar o que foi visto na execução, não só que subiu sem erro"]
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

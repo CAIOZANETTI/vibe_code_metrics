@@ -1,0 +1,13 @@
+id: dataviz
+nome: "Visualização de dados"
+origem: embutida
+onde: "sessão do Claude Code (skill dataviz)"
+para_que: "Orientar o desenho de gráficos e dashboards (cores, escalas, acessibilidade), para qualquer biblioteca, inclusive Plotly."
+quando_usar: ["gráfico de etapa, curva ou indicador do projeto", "gráfico Plotly ou matplotlib de relatório", "paleta de cores para camadas ou disciplinas"]
+quando_evitar: ["cálculo do gráfico: o número vem do Python, nunca de conta feita no navegador"]
+cuidados: ["regra do mantenedor: Python calcula, HTML/JS só apresenta", "cores do projeto (civil, hidromecânica, elétrica, geral) seguem a convenção existente", "checar contraste no modo escuro"]
+agente_sugerido: null
+ferramentas_relacionadas: ["plotly", "matplotlib"]
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

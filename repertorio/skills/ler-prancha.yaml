@@ -1,0 +1,13 @@
+id: ler-prancha
+nome: "Ler prancha"
+origem: projeto
+onde: projetos_em_camadas/.claude/skills/ler-prancha
+para_que: "Ler prancha de projeto em PDF vetorial em camadas de entendimento: identidade, vistas, tabelas por OCR, elementos, vínculos e serviços."
+quando_usar: ["saber o que uma prancha contém", "ligar elementos do desenho a itens de tabela ou serviços", "georreferenciar estrutura sem malha", "criar ou ajustar sinônimos de layer"]
+quando_evitar: ["PDF escaneado sem vetor: usar o fluxo raster (v1) de projeto-em-camadas"]
+cuidados: ["texto SHX é traço: get_text vem vazio, por isso OCR", "letra de 16 a 18 px lê bem; a 25 px o tesseract trocou 3 por 5", "célula numérica é relida com --psm 7 e lista de caracteres permitidos", "número de balão precisa de um dígito por glifo", "folha com várias vistas não tem afim única", "rótulo sem leitura não se deduz"]
+agente_sugerido: null
+ferramentas_relacionadas: ["pymupdf", "pytesseract"]
+licenca: null
+verificado_em: "2026-11-02"
+status: em_uso

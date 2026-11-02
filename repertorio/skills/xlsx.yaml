@@ -1,0 +1,13 @@
+id: xlsx
+nome: "Planilhas"
+origem: embutida
+onde: "sessão do Claude Code (skill xlsx)"
+para_que: "Abrir, editar, criar e limpar planilhas .xlsx e .csv, com fórmulas e gráficos."
+quando_usar: ["abrir ou editar planilha de orçamento ou de quantitativos", "criar planilha com fórmulas ou gráfico para o cliente"]
+quando_evitar: ["cálculo de engenharia que precisa ser reprodutível: calcular em Python (pandas ou Polars), não em fórmula de planilha"]
+cuidados: ["fórmula gravada na planilha não substitui o cálculo do projeto", "planilha de cliente pode ter abas ocultas: conferir antes de concluir"]
+agente_sugerido: null
+ferramentas_relacionadas: ["pandas", "polars"]
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

@@ -1,0 +1,13 @@
+id: architecture
+nome: "Arquitetura (ADR)"
+origem: plugin
+onde: "sessão do Claude Code (skill engineering:architecture)"
+para_que: "Criar ou avaliar um registro de decisão de arquitetura (ADR), com trade-offs e consequências."
+quando_usar: ["escolher entre tecnologias ou bibliotecas com trade-offs", "documentar uma decisão de desenho que outros vão precisar entender"]
+quando_evitar: ["mudança pequena sem decisão de desenho envolvida"]
+cuidados: ["registrar alternativas descartadas e o motivo", "registrar a data e o contexto da decisão", "decisão que afeta cálculo de engenharia precisa de tolerância declarada"]
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

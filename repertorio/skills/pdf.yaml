@@ -1,0 +1,13 @@
+id: pdf
+nome: "PDF"
+origem: embutida
+onde: "sessão do Claude Code (skill pdf)"
+para_que: "Ler, extrair texto e tabelas, juntar, dividir, preencher formulários e fazer OCR de PDFs."
+quando_usar: ["conferir rapidamente uma prancha ou documento em PDF", "extrair texto ou tabela de um PDF avulso", "juntar ou dividir PDFs"]
+quando_evitar: ["extração repetível de pranchas no pipeline: usar código do projeto (pymupdf) para ficar determinístico"]
+cuidados: ["leitura avulsa não é fonte de resultado de engenharia: conferir o valor contra a prancha", "OCR de texto SHX pode trocar dígitos"]
+agente_sugerido: null
+ferramentas_relacionadas: ["pymupdf", "pdfplumber", "pytesseract"]
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

@@ -1,0 +1,13 @@
+id: simplify
+nome: "Simplificar código"
+origem: embutida
+onde: "sessão do Claude Code (skill simplify)"
+para_que: "Revisar o código alterado para reuso, simplificação e eficiência, e aplicar as correções."
+quando_usar: ["limpar código recém-alterado antes do PR", "reduzir duplicação ou complexidade"]
+quando_evitar: ["procurar bugs: usar code-review (esta skill não caça bugs)"]
+cuidados: ["aplica mudanças: rodar uv run pytest e uv run ruff check . depois", "não mexer em avaliadores e gabaritos trancados sem pedido explícito"]
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

@@ -1,0 +1,13 @@
+id: skill-creator
+nome: "Criador de skills"
+origem: embutida
+onde: "sessão do Claude Code (skill skill-creator)"
+para_que: "Criar, ajustar e avaliar skills novas."
+quando_usar: ["criar uma skill nova para um fluxo repetido do projeto", "ajustar ou avaliar uma skill existente"]
+quando_evitar: ["mudança no código Python do projeto: não é uma skill"]
+cuidados: ["testar a skill com um caso real antes de dar por pronta", "skill nova do projeto fica em .claude/skills/ do repositório que a usa"]
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato
