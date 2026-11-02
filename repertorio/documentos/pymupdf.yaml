@@ -1,0 +1,30 @@
+id: pymupdf
+nome: PyMuPDF
+papel: documentos
+descricao: Leitura rápida de PDF vetorial e escaneado (textos com posição, traços, imagens, layers) sobre a biblioteca MuPDF.
+quando_considerar:
+  - prancha de projeto em PDF vetorial exportada de CAD, em que se quer textos com posição (get_text com blocos e spans), traços (get_drawings) e a camada (layer/OCG) de cada elemento
+  - carimbo e legendas em coordenadas conhecidas da página, recortando por retângulo para ler só a região do carimbo
+  - extrair imagens embutidas ou renderizar a página em pixmap com resolução controlada para entregar ao OCR
+  - páginas grandes (formatos A1/A0) em que a velocidade e o baixo uso de memória importam
+quando_evitar:
+  - distribuição de software fechado ou serviço em rede sem avaliar a licença AGPL ou contratar a licença comercial
+  - tabelas com bordas implícitas em que a reconstrução de linhas e colunas é o problema principal (pdfplumber ou docling tratam melhor)
+  - PDF escaneado sem camada de texto, em que só há imagem; é preciso OCR (pytesseract ou paddleocr) depois da renderização
+cuidados:
+  - LICENÇA: dupla, GNU AGPL 3.0 ou licença comercial da Artifex. Uso interno e pesquisa é simples; distribuir ou oferecer como serviço em rede exige abrir o código derivado ou comprar a licença comercial. Decisão de licenciamento é do mantenedor.
+  - o texto vetorial de CAD costuma vir quebrado em spans por fonte e por caractere; agrupar por proximidade em Python antes de interpretar
+  - as coordenadas são em pontos tipográficos (1/72 pol) com origem no canto superior esquerdo; converter para mm uma vez, na entrada, e carregar o sufixo no nome
+  - nome de layer só existe se o PDF preservou os grupos de conteúdo opcionais (OCG); conferir em cada exportação de CAD
+  - versão major 2.0 recente (2026-10) pode ter mudado API; fixar a versão no lockfile e rodar os testes de extração
+  - para o mesmo arquivo e a mesma versão a extração é determinística; registrar a versão junto do resultado
+coopera_com: [pdfplumber, pytesseract, paddleocr, docling, shapely, numpy, pandas, polars]
+compete_com: [pdfplumber, docling]
+pacote_python: pymupdf
+documentacao: https://pymupdf.readthedocs.io/
+repositorio: https://github.com/pymupdf/pymupdf
+licenca: AGPL-3.0-only
+ultima_versao: "2.0 (2026-10)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: em_uso

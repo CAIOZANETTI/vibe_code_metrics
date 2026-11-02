@@ -4,14 +4,23 @@ papel: apresentacao
 descricao: Motor de templates para gerar texto e HTML a partir de dados já calculados em Python.
 quando_considerar:
   - montar relatórios HTML com laços e blocos reutilizáveis
-  - separar apresentação do cálculo
+  - separar apresentação do cálculo: o template recebe valores prontos, já formatados com unidade
+  - herança de templates para manter o mesmo cabeçalho e estilo em vários relatórios
 quando_evitar:
   - lógica de negócio dentro do template
+  - cálculo, soma ou conversão de unidade no template, o que viola a regra de que o HTML só apresenta
 cuidados:
   - o autoescape vem desligado por padrão no Environment; ligá-lo para HTML
-coopera_com: [plotly]
+  - usar StrictUndefined para que variável ausente falhe em vez de sair vazia no relatório
+  - a formatação de número com vírgula decimal (padrão brasileiro) deve ser feita em Python, antes do template
+  - licença BSD-3-Clause segundo o repositório da Pallets; o PyPI traz só a classificação BSD, o identificador SPDX exato não foi verificado em 2026-11-02
+coopera_com: [plotly, matplotlib]
 compete_com: []
 pacote_python: jinja2
 documentacao: https://jinja.palletsprojects.com/
+repositorio: https://github.com/pallets/jinja
+licenca: BSD-3-Clause
+ultima_versao: "3.1.6 (2025-03)"
+verificado_em: "2026-11-02"
 evidencias: []
 status: em_uso

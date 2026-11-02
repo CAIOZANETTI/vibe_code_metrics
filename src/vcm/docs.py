@@ -18,7 +18,7 @@ from pathlib import Path
 from jinja2 import Environment, PackageLoader, select_autoescape
 from markdown_it import MarkdownIt
 
-DOCS_PADRAO = ("guia.md", "arquitetura.md", "plano.md", "estilo.md")
+DOCS_PADRAO = ("guia.md", "arquitetura.md", "repertorio.md", "plano.md", "estilo.md")
 SAIDA_PADRAO = "index.html"
 
 
@@ -114,6 +114,7 @@ def construir(
     arquivos: tuple[str, ...] = DOCS_PADRAO,
     titulo_pagina: str | None = None,
     rotulos: dict | None = None,
+    modelo: str = "docs.html.j2",
 ) -> str:
     md = _md()
     ids = {a: f"doc-{Path(a).stem}" for a in arquivos}
@@ -126,7 +127,7 @@ def construir(
         autoescape=select_autoescape(["html"]),
         keep_trailing_newline=True,
     )
-    return env.get_template("docs.html.j2").render(
+    return env.get_template(modelo).render(
         docs=docs,
         hash_fonte=hashlib.sha256(fonte).hexdigest()[:12],
         **({"titulo_pagina": titulo_pagina} if titulo_pagina else {}),
@@ -156,8 +157,42 @@ def gerar_avulso(markdown: Path, saida: Path | None = None) -> Path:
     return saida
 
 
+URL_FONTE_GITHUB = "https://github.com/CAIOZANETTI/vibe_code_metrics/blob/main/docs/"
+
+
+def gerar_artefato(pasta: Path, saida: Path) -> Path:
+    """Versão para publicar como página no claude.ai: sem esqueleto HTML próprio, sem script
+    externo (o claude.ai renderiza os diagramas Mermaid) e com os links de fonte no GitHub."""
+    rotulos = {"url_fonte": URL_FONTE_GITHUB, "comando_rotulo": "vcm docs --artefato"}
+    saida.write_text(
+        construir(pasta, rotulos=rotulos, modelo="docs_artefato.html.j2"), encoding="utf-8"
+    )
+    return saida
+
+
+def _repertorio_md(pasta: Path, check: bool) -> bool:
+    """Regenera `repertorio.md` a partir de `../repertorio/` (se existir). True se estava em dia."""
+    from vcm import repertorio
+
+    origem = pasta.parent / "repertorio"
+    if not origem.is_dir():
+        return True
+    destino = pasta / "repertorio.md"
+    novo = repertorio.markdown(origem)
+    atual = destino.read_text(encoding="utf-8") if destino.exists() else None
+    if not check and atual != novo:
+        destino.write_text(novo, encoding="utf-8")
+    return atual == novo
+
+
 def gerar(pasta: Path, saida: Path | None = None, check: bool = False) -> bool:
-    """Gera (ou verifica) o HTML. Retorna True se o arquivo está atualizado."""
+    """Gera (ou verifica) o HTML, regenerando antes a página do repertório.
+
+    Retorna True se tudo já estava atualizado.
+    """
+    repertorio_em_dia = _repertorio_md(pasta, check)
+    if check and not repertorio_em_dia:
+        return False
     saida = saida or pasta / SAIDA_PADRAO
     novo = construir(pasta)
     atual = saida.read_text(encoding="utf-8") if saida.exists() else None

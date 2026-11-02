@@ -1,0 +1,28 @@
+id: pandera
+nome: pandera
+papel: validacao
+descricao: Validação de DataFrames por esquemas declarados (tipos, faixas, nulos, unicidade e checagens estatísticas).
+quando_considerar:
+  - conferir tabelas de entrada e saída (colunas, dtype, faixas físicas, ausência de nulos, unicidade de chaves) antes e depois do cálculo
+  - detectar na leitura um Parquet ou CSV com coluna faltando ou dtype trocado
+  - coletar todas as falhas de uma tabela de uma vez com validate(lazy=True)
+  - esquema único para pandas e Polars, quando os dois estiverem em uso
+quando_evitar:
+  - validar um registro isolado ou um formulário (usar pydantic)
+  - tabelas muito pequenas e estáveis, em que um assert simples basta
+cuidados:
+  - a validação não é preguiçosa por padrão: sem lazy=True para no primeiro erro
+  - o suporte é dividido em extras (pandera[pandas], pandera[polars]); instalar o extra do motor usado
+  - desde a 0.29 importar de pandera.pandas; a importação pelo módulo raiz está obsoleta
+  - checagens de dados percorrem a tabela inteira e custam tempo em tabelas grandes; validar na fronteira, não a cada passo
+  - a API ainda é 0.x e muda entre versões; fixar a versão
+coopera_com: [pandas, polars, parquet]
+compete_com: [pydantic]
+pacote_python: pandera
+documentacao: https://pandera.readthedocs.io/
+repositorio: https://github.com/pandera-dev/pandera
+licenca: MIT
+ultima_versao: "0.35.0 (2026-10)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato

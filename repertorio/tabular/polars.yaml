@@ -6,15 +6,25 @@ quando_considerar:
   - tabelas grandes
   - agregações e junções em paralelo
   - execução preguiçosa com otimização de consulta
+  - expressões preguiçosas otimizam junções e filtros em tabelas grandes, lendo Parquet com seleção de colunas e filtro empurrados para a leitura
+  - tipos estritos e valores nulos explícitos, sem conversões silenciosas de inteiro para float
 quando_evitar:
   - código existente que depende fortemente da API do pandas
   - bibliotecas que aceitam apenas pandas
+  - código que depende do índice de linha do pandas (alinhamento por índice, reindex)
 cuidados:
   - a API difere do pandas, pois não há índice de linha
   - na execução preguiçosa, o resultado só existe após collect()
-coopera_com: [numpy, parquet, plotly]
+  - o paralelismo pode alterar a ordem das linhas em agregações e junções; ordenar explicitamente (ou usar maintain_order) quando a ordem importar
+  - a API ainda evolui entre versões; fixar a versão no projeto
+  - a conversão para pandas ou NumPy (to_pandas, to_numpy) pode copiar dados e exige pyarrow ou numpy instalados
+coopera_com: [numpy, parquet, plotly, duckdb, pandera]
 compete_com: [pandas, duckdb]
 pacote_python: polars
 documentacao: https://docs.pola.rs/
+repositorio: https://github.com/pola-rs/polars
+licenca: MIT
+ultima_versao: "2.1.0 (2026-10)"
+verificado_em: "2026-11-02"
 evidencias: []
 status: em_teste

@@ -1,0 +1,29 @@
+id: pydantic
+nome: Pydantic
+papel: validacao
+descricao: Validação de dados por esquemas declarados com anotações de tipo, com erros detalhados e exportação de JSON Schema.
+quando_considerar:
+  - validar parâmetros de entrada de um cálculo (formulário web, JSON, YAML) antes de executá-lo
+  - declarar faixas e restrições físicas dos campos (valor positivo, diâmetro mínimo) com mensagens de erro claras
+  - gerar o JSON Schema do contrato de dados entre o cálculo em Python e a interface
+  - registros e configurações com poucos campos, validados um a um
+quando_evitar:
+  - validar milhões de linhas de um DataFrame, em que um modelo por linha é lento (usar pandera)
+  - cálculo numérico; o Pydantic valida estrutura e tipos, não faz a conta
+  - quando uma dataclass simples e testes já bastam
+cuidados:
+  - o modo padrão é permissivo e converte tipos (a string "123" vira inteiro 123); usar strict=True quando uma conversão silenciosa for inaceitável
+  - float aceita NaN e infinito por padrão; restringir com allow_inf_nan=False quando o valor entrar em cálculo
+  - a versão 2 mudou a API em relação à 1 (validadores, model_validate, model_dump); código e tutoriais antigos podem não valer
+  - o núcleo de validação é compilado (Rust), com wheels nativas por plataforma
+  - a página da documentação oficial migrou de docs.pydantic.dev para pydantic.dev/docs
+coopera_com: [pint, sqlite, pandas]
+compete_com: [pandera]
+pacote_python: pydantic
+documentacao: https://pydantic.dev/docs/validation/latest/get-started/
+repositorio: https://github.com/pydantic/pydantic
+licenca: MIT
+ultima_versao: "2.14.2 (2026-10)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato

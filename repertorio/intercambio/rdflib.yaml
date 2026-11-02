@@ -1,0 +1,29 @@
+id: rdflib
+nome: RDFLib
+papel: intercambio
+descricao: Biblioteca Python para trabalhar com RDF, com leitura e escrita em vários formatos e consultas SPARQL.
+quando_considerar:
+  - montar um grafo de conhecimento do projeto (obra, camadas, pranchas, arquivos) e consultá-lo com SPARQL
+  - ler e gravar RDF em Turtle, N-Triples, RDF/XML e JSON-LD
+  - ligar elementos da obra a vocabulários externos (por exemplo, o ifcOWL para IFC)
+quando_evitar:
+  - dados tabulares ou numéricos; usar pandas, polars ou parquet
+  - troca interna simples, em que um JSON comum basta
+  - grafos de tamanho grande com alto desempenho, pois a biblioteca guarda os dados em memória
+cuidados:
+  - o armazenamento padrão é em memória; para volumes maiores é preciso um backend de armazenamento
+  - literais numéricos precisam de tipo explícito (XSD) e a unidade deve constar no vocabulário, senão o valor perde significado
+  - a ordem de serialização pode variar; para comparar bytes, usar a canonicalização (rdflib.compare) ou ordenar
+  - consultas SPARQL mal formadas retornam resultados vazios sem erro óbvio; testar com dados pequenos
+  - carregar contextos JSON-LD ou ontologias remotas pode acessar a rede; preferir cópias locais
+  - fixar a versão do pacote; a API de plugins de formato e de armazenamento muda entre versões principais
+coopera_com: [json-ld, pydantic, networkx]
+compete_com: []
+pacote_python: rdflib
+documentacao: https://rdflib.readthedocs.org/
+repositorio: https://github.com/RDFLib/rdflib
+licenca: BSD-3-Clause
+ultima_versao: "7.6.0 (2026-02)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato

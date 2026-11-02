@@ -1,0 +1,30 @@
+id: ezdxf
+nome: ezdxf
+papel: cad_3d
+descricao: Leitura, criação e edição de arquivos DXF (CAD 2D e 3D) em Python, sem depender do AutoCAD.
+quando_considerar:
+  - extrair linhas, polilinhas, blocos, textos e camadas (layers) de pranchas exportadas em DXF
+  - gerar um DXF com a rede projetada (polilinhas por camada) para abrir no CAD
+  - ler o desenho por nome de camada, para ligar elementos a conceitos (rede de esgoto, tubo, estaca)
+quando_evitar:
+  - arquivos DWG, formato proprietário; converter antes para DXF (por exemplo com o ODA File Converter, que o ezdxf pode chamar em ezdxf.addons.odafc)
+  - pranchas em PDF vetorial; usar pymupdf para extrair os caminhos
+  - modelo BIM com semântica de objetos; usar IFC
+cuidados:
+  - DWG não é lido diretamente; a conversão externa é uma etapa a mais e deve ser registrada na proveniência
+  - o DXF não guarda CRS de forma confiável; as coordenadas podem estar em UTM, em coordenadas locais ou em unidades de desenho; confirmar e registrar a unidade (INSUNITS)
+  - polilinhas com arco (bulge), splines e hatches precisam ser achatadas para virar geometria Shapely; declarar a tolerância do achatamento
+  - blocos (INSERT) trazem escala, rotação e ponto de inserção; expandir com virtual_entities em vez de tratar como ponto
+  - entidades extrudadas usam o OCS e o desenho pode usar UCS; aplicar a extrusão ao ler, senão o sentido do eixo pode ficar invertido
+  - arquivos corrompidos ou gerados por outros softwares podem exigir ezdxf.recover
+  - o DXF guarda coordenadas como texto em ponto flutuante; confirmar a precisão ao exportar coordenadas UTM de 6 a 7 dígitos
+coopera_com: [shapely, pymupdf, ifcopenshell, pyproj]
+compete_com: []
+pacote_python: ezdxf
+documentacao: https://ezdxf.readthedocs.io
+repositorio: https://github.com/mozman/ezdxf
+licenca: MIT
+ultima_versao: "1.4.5 (2026-10)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato

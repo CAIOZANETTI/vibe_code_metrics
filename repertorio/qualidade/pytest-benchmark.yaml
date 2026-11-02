@@ -1,0 +1,28 @@
+id: pytest-benchmark
+nome: pytest-benchmark
+papel: qualidade
+descricao: Plugin do pytest que mede o tempo de execução de trechos de código por teste, com estatísticas e comparação entre execuções.
+quando_considerar:
+  - medir o tempo por função crítica a cada iteração e comparar com a execução salva (--benchmark-compare), alimentando o balanço antes e depois
+  - decidir entre implementações (por exemplo laço contra NumPy vetorizado) com a mesma entrada
+  - detectar regressão de tempo no CI com limite declarado (--benchmark-compare-fail)
+quando_evitar:
+  - medir pipeline de ponta a ponta com disco e rede, em que a variação é grande
+  - máquinas compartilhadas e ruidosas sem repetição suficiente
+cuidados:
+  - licença BSD-2-Clause conforme o PyPI
+  - o tempo depende da máquina e da carga; comparar só resultados do mesmo ambiente e registrar o ambiente
+  - o plugin repete a função até estabilizar; funções com efeito colateral ou cache precisam de preparação a cada rodada (modo pedantic)
+  - salva resultados em .benchmarks; decidir se entram no repositório
+  - não mede memória
+  - em execução paralela de testes os tempos ficam instáveis; desligar o benchmark nesse modo
+coopera_com: [hypothesis, numpy, pandas, polars]
+compete_com: []
+pacote_python: pytest-benchmark
+documentacao: https://pytest-benchmark.readthedocs.io/
+repositorio: https://github.com/ionelmc/pytest-benchmark
+licenca: BSD-2-Clause
+ultima_versao: "5.3.1 (2026-11)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato

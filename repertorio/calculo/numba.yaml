@@ -1,0 +1,30 @@
+id: numba
+nome: Numba
+papel: calculo
+descricao: Compilador JIT que traduz funções Python e NumPy em código de máquina via LLVM.
+quando_considerar:
+  - laços numéricos escalares que não vetorizam bem em NumPy (marcha de cálculo trecho a trecho, iterações com dependência entre passos)
+  - funções chamadas muitas vezes sobre arrays grandes, em que o custo de compilação se paga
+  - paralelismo simples em laços independentes com prange
+  - manter o código Python legível em vez de reescrevê-lo em C ou Rust
+quando_evitar:
+  - funções curtas ou chamadas poucas vezes, em que a compilação custa mais que o ganho
+  - código que usa DataFrames, strings, objetos Python ou bibliotecas fora do subconjunto suportado
+  - cálculo que já se expressa em operações vetorizadas de NumPy
+cuidados:
+  - a primeira chamada compila e é lenta; cache=True guarda a compilação em disco
+  - fastmath=True permite reordenar operações de ponto flutuante e pode mudar o resultado; evitar quando o resultado precisar ser reprodutível
+  - com parallel=True a ordem das reduções pode variar entre execuções; medir determinismo antes de adotar
+  - o Numba aceita só algumas versões do NumPy e do Python; conferir a compatibilidade antes de atualizar o NumPy
+  - variáveis globais são tratadas como constantes no momento da compilação
+  - erros de tipagem são difíceis de ler; testar a função também com NUMBA_DISABLE_JIT para depurar
+coopera_com: [numpy, scipy, sympy]
+compete_com: []
+pacote_python: numba
+documentacao: https://numba.readthedocs.io/en/stable/
+repositorio: https://github.com/numba/numba
+licenca: BSD-2-Clause
+ultima_versao: "0.68.1 (2026-10)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato

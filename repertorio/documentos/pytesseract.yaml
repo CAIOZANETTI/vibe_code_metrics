@@ -1,0 +1,31 @@
+id: pytesseract
+nome: pytesseract
+papel: documentos
+descricao: Interface Python para o motor de OCR Tesseract, que lê texto de imagens e devolve também posição e confiança por palavra.
+quando_considerar:
+  - prancha escaneada ou texto rasterizado sem camada de texto, depois de renderizar a página em imagem (por exemplo com pymupdf)
+  - ler o carimbo e tabelas por região recortada, com image_to_data para obter caixa e confiança de cada palavra
+  - texto em português, com os dados de idioma (traineddata "por") instalados
+  - conferência cruzada de um valor lido do vetor contra o mesmo valor lido por OCR
+quando_evitar:
+  - texto vetorial do CAD, que se extrai exato direto do PDF sem OCR
+  - tabelas complexas ou texto girado sobre desenho denso, em que o Tesseract perde muito; avaliar paddleocr
+  - cotas pequenas em desenho, sem pré-processamento
+cuidados:
+  - o pytesseract é apenas o invólucro: o programa Tesseract precisa estar instalado no sistema (apt, brew ou instalador no Windows) e o idioma português baixado em separado
+  - licença Apache-2.0 do invólucro conforme o PyPI; a licença do Tesseract em si não foi verificada em 2026-11-02, conferir na distribuição usada
+  - última versão publicada 0.3.13 em 2024-08, ritmo de manutenção baixo; acompanhar o repositório
+  - o resultado depende da resolução, do contraste e do modo de segmentação (psm); fixar os parâmetros e a resolução de renderização no código
+  - para o mesmo binário, a mesma imagem e os mesmos parâmetros espera-se a mesma saída; registrar a versão do Tesseract
+  - confusões típicas entre 0/O, 1/l e vírgula/ponto em números exigem validação em Python (formato, faixa, soma)
+  - cada chamada abre um subprocesso, o que pesa em muitas regiões pequenas
+coopera_com: [pymupdf, pdfplumber, paddleocr, docling, numpy]
+compete_com: [paddleocr]
+pacote_python: pytesseract
+documentacao: https://github.com/madmaze/pytesseract#readme
+repositorio: https://github.com/madmaze/pytesseract
+licenca: Apache-2.0
+ultima_versao: "0.3.13 (2024-08)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: em_uso

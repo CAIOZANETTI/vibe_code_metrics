@@ -1,0 +1,29 @@
+id: pint
+nome: Pint
+papel: validacao
+descricao: Biblioteca de grandezas físicas com unidades, que converte e recusa operações dimensionalmente inconsistentes.
+quando_considerar:
+  - fronteiras do sistema (entrada de usuário, planilhas, arquivos de terceiros) em que as unidades chegam misturadas e precisam virar SI
+  - fórmulas de engenharia em que um erro de unidade (mm × m, L/s × m3/s) é um risco real
+  - testes que conferem consistência dimensional da fórmula, não só o valor numérico
+  - converter para SI na entrada e trabalhar com arrays NumPy puros no miolo do cálculo
+quando_evitar:
+  - laços internos de cálculo pesado, em que o objeto com unidade atrapalha o desempenho e a vetorização
+  - código que já segue a regra de unidade SI como sufixo do nome e não recebe dados em outras unidades
+  - quando as unidades só precisam constar como metadado (atributos do xarray ou nome da coluna)
+cuidados:
+  - unidades com deslocamento (graus Celsius) têm regras próprias; somar duas temperaturas absolutas gera erro e diferenças usam delta_degC
+  - usar um único registro de unidades (UnitRegistry) em todo o projeto; quantidades de registros diferentes não se misturam
+  - o resultado de Quantity.magnitude é um número ou array NumPy sem unidade; converter para a unidade SI esperada antes de extraí-lo
+  - nem toda função do NumPy e do pandas preserva as unidades; testar as operações usadas
+  - a versão atual exige Python 3.12 ou mais recente
+coopera_com: [numpy, pandas, xarray, sympy, pydantic]
+compete_com: []
+pacote_python: pint
+documentacao: https://pint.readthedocs.io/
+repositorio: https://github.com/hgrecco/pint
+licenca: BSD-3-Clause
+ultima_versao: "0.26.2 (2026-10)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato
