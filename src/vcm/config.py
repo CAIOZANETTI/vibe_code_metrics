@@ -44,58 +44,73 @@ def _lista_de_textos(valor: object, campo: str) -> tuple[str, ...]:
     return tuple(valor)
 
 
-def carregar_config(raiz: Path) -> Config:
-    """Lê `vcm.yaml` em `raiz`; campos ausentes recebem valores autodetectados ou padrão."""
-    raiz = Path(raiz)
-    arquivo = raiz / NOME_ARQUIVO
-    dados: dict = {}
-    if arquivo.is_file():
-        try:
-            lido = yaml.safe_load(arquivo.read_text(encoding="utf-8"))
-        except yaml.YAMLError as erro:
-            raise ValueError(f"vcm.yaml: YAML inválido: {erro}") from erro
-        if lido is None:
-            lido = {}
-        if not isinstance(lido, dict):
-            raise ValueError("vcm.yaml: o conteúdo deve ser um mapeamento (chave: valor)")
-        dados = lido
+def _texto_nao_vazio(valor: object, campo: str) -> str:
+    if not isinstance(valor, str) or not valor:
+        raise ValueError(f"vcm.yaml: '{campo}' deve ser um texto não vazio")
+    return valor
 
-    projeto = dados.get("projeto", raiz.resolve().name)
-    if not isinstance(projeto, str) or not projeto:
-        raise ValueError("vcm.yaml: 'projeto' deve ser um texto não vazio")
 
-    if dados.get("pastas_fonte") is None:
-        pastas_fonte = _detectar_pastas_fonte(raiz)
-    else:
-        pastas_fonte = _lista_de_textos(dados["pastas_fonte"], "pastas_fonte")
+def _mapeamento(valor: object, campo: str) -> dict:
+    if not isinstance(valor, dict):
+        raise ValueError(f"vcm.yaml: '{campo}' deve ser um mapeamento")  # noqa: TRY004
+    return valor
 
-    pasta_testes = dados.get("pasta_testes", "tests")
-    if not isinstance(pasta_testes, str) or not pasta_testes:
-        raise ValueError("vcm.yaml: 'pasta_testes' deve ser um texto não vazio")
 
-    referencia = dados.get("referencia") or {}
-    if not isinstance(referencia, dict):
-        raise ValueError("vcm.yaml: 'referencia' deve ser um mapeamento")  # noqa: TRY004
+def _inteiro_positivo(valor: object, campo: str) -> int:
+    if isinstance(valor, bool) or not isinstance(valor, int) or valor < 1:
+        raise ValueError(f"vcm.yaml: '{campo}' deve ser um inteiro >= 1")
+    return valor
+
+
+def _textos_nao_vazios_ou_nada(valor: object, campo: str) -> tuple[str, ...]:
+    if valor is None:
+        return ()
+    if isinstance(valor, list) and all(isinstance(e, str) and e for e in valor):
+        return tuple(valor)
+    raise ValueError(f"vcm.yaml: '{campo}' deve ser uma lista de textos")
+
+
+def _ler_dados(arquivo: Path) -> dict:
+    """Lê o YAML (se existir); vazio vira mapa vazio e a raiz precisa ser um mapa."""
+    if not arquivo.is_file():
+        return {}
+    try:
+        lido = yaml.safe_load(arquivo.read_text(encoding="utf-8"))
+    except yaml.YAMLError as erro:
+        raise ValueError(f"vcm.yaml: YAML inválido: {erro}") from erro
+    if lido is None:
+        return {}
+    if not isinstance(lido, dict):
+        raise ValueError("vcm.yaml: o conteúdo deve ser um mapeamento (chave: valor)")  # noqa: TRY004
+    return lido
+
+
+def _validar_referencia(dados: dict) -> tuple[tuple[str, ...] | None, int]:
+    """Valida o bloco `referencia` e devolve (comando, repeticoes)."""
+    referencia = _mapeamento(dados.get("referencia") or {}, "referencia")
     comando = referencia.get("comando")
     comando_referencia = (
         None if comando is None else _lista_de_textos(comando, "referencia.comando")
     )
-    repeticoes = referencia.get("repeticoes", 5)
-    if isinstance(repeticoes, bool) or not isinstance(repeticoes, int) or repeticoes < 1:
-        raise ValueError("vcm.yaml: 'referencia.repeticoes' deve ser um inteiro >= 1")
+    repeticoes = _inteiro_positivo(referencia.get("repeticoes", 5), "referencia.repeticoes")
+    return comando_referencia, repeticoes
 
-    limites = dados.get("limites") or {}
-    if not isinstance(limites, dict):
-        raise ValueError("vcm.yaml: 'limites' deve ser um mapeamento")  # noqa: TRY004
 
-    extras = dados.get("dependencias_extras")
-    if extras is None:
-        dependencias_extras: tuple[str, ...] = ()
-    elif isinstance(extras, list) and all(isinstance(e, str) and e for e in extras):
-        dependencias_extras = tuple(extras)
+def carregar_config(raiz: Path) -> Config:
+    """Lê `vcm.yaml` em `raiz`; campos ausentes recebem valores autodetectados ou padrão."""
+    raiz = Path(raiz)
+    dados = _ler_dados(raiz / NOME_ARQUIVO)
+    projeto = _texto_nao_vazio(dados.get("projeto", raiz.resolve().name), "projeto")
+    if dados.get("pastas_fonte") is None:
+        pastas_fonte = _detectar_pastas_fonte(raiz)
     else:
-        raise ValueError("vcm.yaml: 'dependencias_extras' deve ser uma lista de textos")
-
+        pastas_fonte = _lista_de_textos(dados["pastas_fonte"], "pastas_fonte")
+    pasta_testes = _texto_nao_vazio(dados.get("pasta_testes", "tests"), "pasta_testes")
+    comando_referencia, repeticoes = _validar_referencia(dados)
+    limites = _mapeamento(dados.get("limites") or {}, "limites")
+    dependencias_extras = _textos_nao_vazios_ou_nada(
+        dados.get("dependencias_extras"), "dependencias_extras"
+    )
     return Config(
         projeto=projeto,
         pastas_fonte=pastas_fonte,
