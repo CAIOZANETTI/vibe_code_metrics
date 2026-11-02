@@ -1,0 +1,31 @@
+id: ifcopenshell
+nome: IfcOpenShell
+papel: cad_3d
+descricao: Biblioteca para ler, criar e editar modelos IFC (BIM), com geometria e propriedades dos objetos.
+quando_considerar:
+  - ler modelo BIM em IFC (paredes, tubos, equipamentos) com propriedades e quantitativos
+  - extrair a geometria 3D dos elementos para cruzar com a nuvem de pontos ou com a rede
+  - gerar IFC de saída a partir de dados calculados (por exemplo trechos de rede com diâmetro e cota)
+  - consultar a posição georreferenciada do modelo (IfcMapConversion e IfcProjectedCRS, no IFC4)
+quando_evitar:
+  - desenho CAD 2D sem semântica; usar ezdxf
+  - quando só se precisa de nuvem de pontos ou malha; usar open3d
+  - distribuição de software fechado sem avaliar a obrigação da LGPL
+cuidados:
+  - licença LGPL-3.0-or-later nas bibliotecas principais; componentes como o Bonsai usam GPL-3.0-or-later; verificar a compatibilidade antes de distribuir
+  - o IFC costuma estar em coordenadas locais do projeto; a conversão para UTM depende de IfcMapConversion, que pode estar ausente ou errada
+  - coordenadas de 6 a 7 dígitos podem perder precisão na geometria processada; trabalhar com origem deslocada e somar o deslocamento depois
+  - as unidades do modelo (milímetro, metro) vêm de IfcUnitAssignment; converter para SI explicitamente
+  - esquemas suportados na leitura são IFC2x3, IFC4, IFC4x1, IFC4x2 e IFC4x3; a geometria cobre menos esquemas que a leitura (IFC2x3 e IFC4)
+  - o pacote tem dependência nativa (geometria) e restrição de versão do Python (de 3.10 a 3.15 na roda 0.9.0.post1)
+  - a API de alto nível (ifcopenshell.api) evolui entre versões; fixar a versão
+coopera_com: [ezdxf, open3d, shapely, pandas]
+compete_com: []
+pacote_python: ifcopenshell
+documentacao: https://docs.ifcopenshell.org
+repositorio: https://github.com/ifcopenshell/ifcopenshell
+licenca: LGPL-3.0-or-later
+ultima_versao: "0.9.0.post1 (2026-10)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato

@@ -1,0 +1,31 @@
+id: pycolmap
+nome: pycolmap
+papel: cad_3d
+descricao: Ligações Python do COLMAP para estrutura a partir de movimento (SfM) e estéreo multivista, a partir de fotos.
+quando_considerar:
+  - reconstruir poses de câmera e nuvem esparsa a partir de fotos de drone (nadirais e oblíquas)
+  - rodar extração de características, correspondência e mapeamento incremental em CPU
+  - obter o ajuste de feixes (bundle adjustment) e usar o resultado para gerar MDS e ortofoto
+  - reaproveitar o GPS do EXIF de fotos DJI como posição aproximada das câmeras
+quando_evitar:
+  - quando já há fluxo fotogramétrico fechado com pontos de controle de campo e exigência formal de precisão; usar software dedicado
+  - quando a densificação estéreo é essencial e não há GPU NVIDIA
+  - quando a reconstrução precisa ser idêntica bit a bit entre máquinas
+cuidados:
+  - o SfM entrega modelo com escala e orientação arbitrárias; georreferenciar com GPS do EXIF ou pontos de controle (transformação de similaridade) antes de usar em UTM
+  - o GPS do EXIF de drone tem erro de metros; sem pontos de controle, a precisão absoluta é limitada, mesmo que a relativa seja boa
+  - o repositório do COLMAP oferece o pacote separado pycolmap-cuda12 com rodas CUDA; o pacote pycolmap comum é o caminho para CPU, e passos que exigem CUDA (como a densificação) devem ser confirmados na documentação antes de planejar o fluxo
+  - threads e RANSAC podem variar entre execuções; fixar semente e número de threads, e comparar com tolerância em vez de bytes
+  - misturar fotos oblíquas e nadirais exige cuidado na correspondência; o modelo de câmera e a calibração afetam a deformação (prédio torto)
+  - a licença do COLMAP é BSD-3-Clause, mas dependências de terceiros têm licenças próprias
+  - memória e tempo crescem com o número de fotos e a resolução; reduzir o tamanho máximo da imagem em testes
+coopera_com: [open3d, rasterio, numpy, pyproj]
+compete_com: []
+pacote_python: pycolmap
+documentacao: https://colmap.github.io/
+repositorio: https://github.com/colmap/colmap
+licenca: BSD-3-Clause
+ultima_versao: "4.2.1 (2026-09)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: em_uso

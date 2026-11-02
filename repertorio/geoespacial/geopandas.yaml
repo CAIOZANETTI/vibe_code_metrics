@@ -1,0 +1,31 @@
+id: geopandas
+nome: GeoPandas
+papel: geoespacial
+descricao: Tabelas do pandas com coluna de geometria (Shapely) e CRS, com leitura e escrita de formatos vetoriais.
+quando_considerar:
+  - tabela de lotes, trechos de rede, sondagens ou pranchas com atributos e geometria juntos
+  - junção espacial (sjoin, sjoin_nearest) para ligar trecho de tubo à sondagem mais próxima
+  - reprojetar uma camada inteira com to_crs
+  - ler e gravar GeoPackage, GeoJSON, Shapefile e GeoParquet
+quando_evitar:
+  - quando só se precisa de poucas geometrias soltas; shapely basta
+  - ambientes em que a instalação de dependências nativas (GDAL ou Pyogrio) é um problema
+  - volumes grandes de dados tabulares sem geometria
+cuidados:
+  - to_crs reprojeta; set_crs apenas rotula. Trocar um pelo outro corrompe as coordenadas sem dar erro
+  - medir área e comprimento só em CRS métrico (UTM); em graus o resultado não é metro
+  - nas geometrias a ordem é x=leste/longitude, y=norte/latitude
+  - a leitura depende de Pyogrio ou Fiona (GDAL); registrar a versão da GDAL que veio na roda
+  - Shapefile trunca nomes de coluna para 10 caracteres e tem limites de tipos; preferir GeoPackage ou GeoParquet
+  - sjoin e overlay podem reordenar linhas; ordenar por chave explícita antes de gravar para ter resultado determinístico
+  - geometrias inválidas fazem overlay falhar; validar antes
+coopera_com: [shapely, pyproj, pandas, geoparquet, rasterio]
+compete_com: []
+pacote_python: geopandas
+documentacao: https://geopandas.org
+repositorio: https://github.com/geopandas/geopandas
+licenca: BSD-3-Clause
+ultima_versao: "1.2.0 (2026-09)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: em_uso

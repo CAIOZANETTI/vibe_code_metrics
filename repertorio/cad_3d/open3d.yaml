@@ -1,0 +1,31 @@
+id: open3d
+nome: Open3D
+papel: cad_3d
+descricao: Biblioteca de processamento 3D para nuvens de pontos, malhas, registro (ICP) e reconstrução de superfícies.
+quando_considerar:
+  - filtrar, reduzir (voxel downsample), remover ruído e estimar normais da nuvem de pontos do SfM
+  - alinhar duas nuvens, ou a nuvem a pontos de controle, com ICP
+  - reconstruir malha (Poisson, ball pivoting) a partir da nuvem densa
+  - visualizar nuvem e malha de forma interativa durante a depuração
+quando_evitar:
+  - cálculo de MDS raster; usar rasterio e numpy sobre a nuvem
+  - modelo BIM com semântica; usar IFC
+  - nuvens muito grandes sem tratamento por blocos
+cuidados:
+  - coordenadas UTM de 6 a 7 dígitos em float32 perdem precisão; subtrair uma origem local, trabalhar em float64 e somar a origem ao salvar
+  - o ICP depende da posição inicial e da distância máxima de correspondência; pode convergir para mínimo local; conferir o resultado contra pontos de controle
+  - voxel downsample e estimativa de normais mudam o resultado; registrar os parâmetros
+  - parte das operações tem versão em GPU (CUDA) que exige roda e hardware específicos; a CPU é mais previsível
+  - paralelismo e amostragem aleatória podem alterar o resultado entre execuções; fixar semente e checar determinismo
+  - o suporte a versões novas do Python costuma atrasar; conferir os requisitos da roda antes de atualizar
+  - a janela de visualização exige ambiente gráfico; em servidor, exportar ou renderizar fora da tela
+coopera_com: [numpy, pycolmap, rasterio, ifcopenshell, shapely]
+compete_com: []
+pacote_python: open3d
+documentacao: https://www.open3d.org/docs
+repositorio: https://github.com/isl-org/Open3D
+licenca: MIT
+ultima_versao: "0.20.0 (2026-09)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato

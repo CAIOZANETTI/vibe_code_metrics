@@ -1,0 +1,31 @@
+id: rasterio
+nome: rasterio
+papel: geoespacial
+descricao: Leitura e escrita de rasters georreferenciados (GeoTIFF e outros) sobre a GDAL, com arrays NumPy.
+quando_considerar:
+  - ler ortofoto e MDS em GeoTIFF como arrays NumPy, com a transformação afim (pixel para UTM) e o CRS
+  - amostrar o valor do MDS em pontos de uma rede ou de um perfil (sample)
+  - recortar a ortofoto por polígono (mask) ou por janela, sem carregar o arquivo inteiro
+  - reprojetar ou reamostrar um raster (warp)
+quando_evitar:
+  - imagens sem georreferenciamento; PIL ou OpenCV bastam
+  - rasters multidimensionais em NetCDF ou Zarr; considerar xarray
+  - quando não se pode depender da GDAL (embarcada nas rodas binárias, mas pesada)
+cuidados:
+  - a transformação afim (transform) leva (coluna, linha) para (x, y); a linha cresce para o sul, então a altura do pixel costuma ser negativa
+  - o valor nodata deve ser lido do arquivo e mascarado; tratá-lo como altitude real contamina volumes e perfis
+  - ler em janelas (Window) para ortofotos grandes; ler tudo de uma vez pode estourar a RAM
+  - o CRS do arquivo pode estar ausente ou errado; conferir contra o esperado (por exemplo UTM SIRGAS 2000) antes de usar
+  - bandas uint8 (RGB) e float32 (MDS) têm tratamento diferente; não misturar na média
+  - a reamostragem (nearest, bilinear, cubic) altera valores; escolher e registrar o método
+  - a GDAL embarcada na roda pode diferir da do sistema; registrar a versão para reprodutibilidade
+coopera_com: [numpy, pyproj, shapely, geopandas, xarray, pycolmap]
+compete_com: []
+pacote_python: rasterio
+documentacao: https://rasterio.readthedocs.io/
+repositorio: https://github.com/rasterio/rasterio
+licenca: BSD-3-Clause
+ultima_versao: "1.5.2 (2026-09)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: em_uso
