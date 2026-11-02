@@ -18,7 +18,8 @@ from vcm import formatacao as fmt
 from vcm.balanco import METRICAS_PADRAO
 from vcm.snapshot import COLUNAS_META, _git
 
-N_MINIMO_POR_LADO = 3
+# Abaixo de 5 commits de um lado, média e tendência não sustentam conclusão.
+N_MINIMO_POR_LADO = 5
 RUIDO_MINIMO = 0.02
 DECISOES = ("REVERTER", "MANTER", "SEM_GANHO", "DECISAO_HUMANA")
 METRICAS_GRAFICO = (
@@ -53,8 +54,22 @@ def _inclinacao(valores: pd.Series) -> float:
     return float(np.polyfit(x[ok], y[ok], 1)[0])
 
 
-def comparar(serie: pd.DataFrame, data_adocao) -> pd.DataFrame:
-    """Por métrica julgada: médias, tendências e veredito antes × depois da adoção."""
+def serie_util(serie: pd.DataFrame) -> tuple[pd.DataFrame, int]:
+    """Tira commits sem código (ex.: o commit inicial vazio), que distorcem a tendência "antes".
+
+    Devolve a série filtrada e quantos commits saíram.
+    """
+    if "n_funcoes" not in serie.columns:
+        return serie, 0
+    com_codigo = pd.to_numeric(serie["n_funcoes"], errors="coerce").fillna(0) > 0
+    return serie[com_codigo].reset_index(drop=True), int((~com_codigo).sum())
+
+
+def comparar(serie: pd.DataFrame, data_adocao, n_minimo: int = N_MINIMO_POR_LADO) -> pd.DataFrame:
+    """Por métrica julgada: médias, tendências e veredito antes × depois da adoção.
+
+    Com menos de `n_minimo` commits de um dos lados, o veredito é "insuficiente".
+    """
     instante = pd.to_datetime(serie["data_commit"], utc=True)
     lado_depois = (instante >= _em_utc(data_adocao)).to_numpy()
     nomes = [
@@ -73,7 +88,7 @@ def comparar(serie: pd.DataFrame, data_adocao) -> pd.DataFrame:
         variacao = (media_d - media_a) / escala
         metrica = METRICAS_PADRAO[nome]
         faixa = max(metrica.ruido_relativo, RUIDO_MINIMO)
-        if n_a < N_MINIMO_POR_LADO or n_d < N_MINIMO_POR_LADO:
+        if n_a < n_minimo or n_d < n_minimo:
             veredito = "insuficiente"
         else:
             melhora = variacao * metrica.sentido

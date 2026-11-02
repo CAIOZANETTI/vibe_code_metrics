@@ -77,7 +77,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash e8042f2d8736</div>
+  <div class="sub">fonte: docs/*.md · hash 5bf47e709d09</div>
   
   <h4>Guia rápido: usar o vcm num protótipo</h4>
   <a href="#doc-guia">Início</a>
@@ -102,6 +102,7 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n3" href="#doc-arquitetura-quem-faz-o-que">Quem faz o quê</a>
   <a class="n2" href="#doc-arquitetura-4-retrospectiva-de-iteracao">4. Retrospectiva de iteração</a>
   <a class="n3" href="#doc-arquitetura-radar-de-semaforo">Radar de semáforo</a>
+  <a class="n3" href="#doc-arquitetura-desempenho-do-metodo-o-vcm-melhora-os-projetos">Desempenho do método: o vcm melhora os projetos?</a>
   <a class="n2" href="#doc-arquitetura-5-o-que-e-medido-passivamente-e-o-que-exige-protocolo">5. O que é medido passivamente e o que exige protocolo</a>
   <a class="n2" href="#doc-arquitetura-6-multiagente-e-catalogo-de-modelos">6. Multiagente e catálogo de modelos</a>
   <a class="n3" href="#doc-arquitetura-modelo-skill-ferramenta">Modelo × skill × ferramenta</a>
@@ -230,6 +231,7 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n2" href="#doc-plano-fase-6-recomendador">Fase 6 — Recomendador</a>
   <a class="n2" href="#doc-plano-fase-7-multi-fornecedor-e-politica-de-dados">Fase 7 — Multi-fornecedor e política de dados</a>
   <a class="n2" href="#doc-plano-repertorio-de-skills-02-11-2026">Repertório de skills (02/11/2026)</a>
+  <a class="n2" href="#doc-plano-desempenho-do-metodo-02-11-2026">Desempenho do método (02/11/2026)</a>
   <a class="n2" href="#doc-plano-fase-8-primeiro-programa-experimental">Fase 8 — Primeiro programa experimental</a>
   <a class="n2" href="#doc-plano-regras-de-execucao-deste-plano">Regras de execução deste plano</a>
   <a class="n2" href="#doc-plano-decisoes-em-aberto-para-o-humano">Decisões em aberto (para o humano)</a>
@@ -801,6 +803,48 @@ métricas, e ⚪ indica sem medição.</li>
 enquanto SLOC não oscila nada. Uma variação dentro do ruído é declarada &quot;igual&quot;, nunca
 &quot;melhorou&quot;. O critério de parada funciona como num método iterativo: quando o resíduo para de
 cair, insistir só gasta tokens.</p>
+<h3 id="doc-arquitetura-desempenho-do-metodo-o-vcm-melhora-os-projetos">Desempenho do método: o vcm melhora os projetos?</h3>
+<p>A pergunta final do método é sobre ele mesmo. A resposta vem do histórico do git de cada projeto,
+comparando antes × depois da <strong>adoção</strong> (o commit que criou o <code>vcm.yaml</code>):</p>
+<pre><code class="language-bash">vcm historico --passo 5
+vcm efeito
+</code></pre>
+<ul>
+<li><code>vcm historico</code> mede commits passados (amostra a cada <code>passo</code>, sempre o primeiro e o último),
+reaproveitando o cache de snapshots.</li>
+<li><code>vcm efeito</code> compara, por métrica julgada, médias e tendências antes × depois, conta os cartões
+por decisão (REVERTER = problema pego antes de entrar) e gera <code>results/efeito.html</code> com a linha
+da adoção nos gráficos.</li>
+</ul>
+<p>Regras para não enganar a si mesmo:</p>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Por quê</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Veredito só com <strong>5 ou mais commits de cada lado</strong></td>
+<td>média e tendência de 3 pontos não sustentam conclusão</td>
+</tr>
+<tr>
+<td>Commits <strong>sem código</strong> ficam fora</td>
+<td>o commit inicial vazio inverteu a direção da complexidade no primeiro teste real</td>
+</tr>
+<tr>
+<td><strong>Ressalvas antes da tabela</strong></td>
+<td>estudo observacional de um projeto: crescimento de escopo também mexe nas métricas; correlação não é causa</td>
+</tr>
+<tr>
+<td>Métricas que só existem depois da adoção (tempo, RAM, reprodutibilidade)</td>
+<td>ficam &quot;insuficiente&quot;; servem para a comparação entre iterações, não antes × depois</td>
+</tr>
+</tbody>
+</table>
+<p>Com vários projetos adotando o método, o mesmo relatório por projeto permite comparar efeitos;
+com um só, ele é descritivo.</p>
 <h2 id="doc-arquitetura-5-o-que-e-medido-passivamente-e-o-que-exige-protocolo">5. O que é medido passivamente e o que exige protocolo</h2>
 <table>
 <thead>
@@ -3665,6 +3709,9 @@ deduplicando globalmente pelo <code>message.id</code>, US$ 43,01, contra US$ 42,
 conferir toda telemetria contra uma fonte independente antes de confiar nela.</li>
 <li><strong>O gerente é o maior custo.</strong> Na rodada da Fase 2, Opus US$ 5,01 × Sonnet US$ 0,33 × Haiku US$ 0,02.
 O contexto longo da sessão principal (leitura de cache) domina. Isso é dado para a T003.</li>
+<li><strong>Medir o próprio método exige as mesmas cautelas de uma tese.</strong> No primeiro relatório de efeito,
+o commit inicial vazio fazia a complexidade &quot;piorar&quot; 18% depois da adoção; sem ele, caiu 5%. Com 3
+commits depois da adoção, nenhum veredito se sustenta: o mínimo passou a 5 de cada lado.</li>
 <li><strong>Worktrees de agentes nasceram da <code>main</code>.</strong> (Resolvido: com o trabalho na <code>main</code>, as worktrees
 já nascem com o projeto.) Os executores precisaram trazer a branch de
 trabalho. Até a branch ir para a <code>main</code>, a especificação de cada tarefa precisa dizer a base.</li>
@@ -3740,6 +3787,14 @@ registrado e pelo menos uma decisão humana pedida e registrada.</p>
 <li class="tarefa"><input type="checkbox" disabled checked> Catálogo de skills em <code>repertorio/skills/</code> (projeto, plataforma, plugins, externas) e página <code>skills.md</code> gerada (Haiku + Sonnet + Opus)</li>
 <li class="tarefa"><input type="checkbox" disabled> Skills próprias do método, instaladas pelo <code>vcm iniciar</code>: <code>vcm-iteracao</code> (especificar → executor → balanço → decidir → registrar) e <code>vcm-diagnostico</code> (linha de base de um projeto existente)</li>
 <li class="tarefa"><input type="checkbox" disabled> Tese: medir o efeito de uma skill (mesma tarefa com e sem a skill: custo, retrabalho, aprovação)</li>
+</ul>
+<h2 id="doc-plano-desempenho-do-metodo-02-11-2026">Desempenho do método (02/11/2026)</h2>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm historico</code> e <code>vcm efeito</code>: antes × depois da adoção no histórico do git, com relatório HTML (Sonnet)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Mínimo de 5 commits de cada lado e exclusão de commits sem código (Opus, após o primeiro teste real)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Primeira leitura no <code>projetos_em_camadas</code>: inconclusiva (3 commits depois da adoção), como esperado</li>
+<li class="tarefa"><input type="checkbox" disabled> Repetir a leitura quando houver 5+ iterações depois da adoção, com <code>--com-testes</code></li>
+<li class="tarefa"><input type="checkbox" disabled> Juntar os relatórios de vários projetos numa comparação entre projetos</li>
 </ul>
 <h2 id="doc-plano-fase-8-primeiro-programa-experimental">Fase 8 — Primeiro programa experimental</h2>
 <p>Teses T001 (extração de pranchas), T002 (armazenamento espacial), T003 (roteamento) e T004
@@ -3936,7 +3991,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte e8042f2d8736). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte 5bf47e709d09). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";

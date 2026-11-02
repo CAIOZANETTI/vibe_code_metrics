@@ -222,10 +222,17 @@ def _cmd_efeito(args: argparse.Namespace) -> int:
         print("erro: sem snapshots do histórico; rode `vcm historico` antes", file=sys.stderr)
         return 1
     data = snap._git(repo, "log", "-1", "--format=%cI", commit)
+    serie, sem_codigo = efeito.serie_util(serie)
     comparacao = efeito.comparar(serie, data)
     processo = efeito.indicadores_processo(repo / snap.PASTA_ITERACOES)
     frases = efeito.ressalvas(comparacao)
-    adocao = {"projeto": repo.name, "commit": commit, "data": data}
+    if sem_codigo:
+        frases.append(
+            f"{sem_codigo} commit(s) sem código (ex.: o inicial) ficaram de fora da série"
+        )
+    from vcm.config import carregar_config
+
+    adocao = {"projeto": carregar_config(repo).projeto, "commit": commit, "data": data}
     saida = efeito.gerar_relatorio(serie, comparacao, processo, frases, Path(args.saida), adocao)
     print(f"Adoção: {commit[:7]} em {data}")
     print(comparacao[["n_antes", "n_depois", "variacao_pct", "veredito"]].to_string())

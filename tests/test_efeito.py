@@ -84,7 +84,7 @@ def test_serie_ordenada_e_progresso(serie, capsys):
 
 
 def test_vereditos_e_tendencia(serie):
-    comp = efeito.comparar(serie, serie.loc[3, "data_commit"])
+    comp = efeito.comparar(serie, serie.loc[3, "data_commit"], n_minimo=3)
     assert "sloc" not in comp.index  # informativa, não julgada
     c = comp.loc["complexidade_media"]
     assert (c.n_antes, c.n_depois) == (3, 5)
@@ -94,7 +94,7 @@ def test_vereditos_e_tendencia(serie):
     assert c.tendencia_depois == pytest.approx(-1.0)
     assert c.veredito == "melhorou"
     assert comp.loc["testes_falhando", "veredito"] == "igual"
-    tarde = efeito.comparar(serie, serie.loc[6, "data_commit"])
+    tarde = efeito.comparar(serie, serie.loc[6, "data_commit"], n_minimo=3)
     assert tarde.loc["complexidade_media", "veredito"] == "insuficiente"
     frases = efeito.ressalvas(tarde)
     assert any("Só 2 commits depois da adoção" in f for f in frases)
@@ -112,7 +112,7 @@ def test_indicadores_processo(tmp_path):
 
 def test_relatorio_html(serie, tmp_path):
     data = serie.loc[3, "data_commit"]
-    comp = efeito.comparar(serie, data)
+    comp = efeito.comparar(serie, data, n_minimo=3)
     saida = efeito.gerar_relatorio(
         serie,
         comp,
@@ -126,3 +126,17 @@ def test_relatorio_html(serie, tmp_path):
     assert "complexidade_media" in html and "Ressalvas" in html
     for corpo in re.findall(r"<script[^>]*>(.*?)</script>", html, flags=re.DOTALL):
         assert corpo == "" or "Plotly" in corpo
+
+
+def test_padrao_exige_cinco_commits_de_cada_lado_e_tira_commit_sem_codigo():
+    import pandas as pd
+
+    datas = pd.date_range("2026-01-01", periods=8, freq="D", tz="UTC").astype(str)
+    serie = pd.DataFrame(
+        {"commit": list("abcdefgh"), "data_commit": datas, "n_funcoes": [0, 5, 5, 5, 6, 6, 6, 6],
+         "complexidade_media": [0.0, 3, 3, 3, 2, 2, 2, 2]}
+    )  # fmt: skip
+    util, fora = efeito.serie_util(serie)
+    assert fora == 1 and len(util) == 7
+    comp = efeito.comparar(util, datas[4])  # 3 antes, 4 depois: abaixo de 5
+    assert (comp["veredito"] == "insuficiente").all()
