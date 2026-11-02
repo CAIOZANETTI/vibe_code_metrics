@@ -1,0 +1,13 @@
+id: deep-research
+nome: "Pesquisa aprofundada"
+origem: embutida
+onde: "sessão do Claude Code (skill deep-research)"
+para_que: "Pesquisar um tema em várias fontes, com subagentes, e entregar relatório com citações."
+quando_usar: ["comparar alternativas técnicas ou normas", "revisar literatura sobre um método de medição"]
+quando_evitar: ["dado que já está no repositório ou na documentação do projeto: ler direto"]
+cuidados: ["conferir cada citação antes de usar em documento técnico", "a pesquisa não substitui a norma vigente: citar a edição"]
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

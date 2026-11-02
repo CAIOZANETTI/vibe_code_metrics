@@ -1,0 +1,13 @@
+id: session-start-hook
+nome: "Hook de início de sessão"
+origem: embutida
+onde: "sessão do Claude Code (skill session-start-hook)"
+para_que: "Criar hooks de início de sessão versionados no repositório, para sessões na nuvem."
+quando_usar: ["pedido explícito de um SessionStart hook commitado no repositório"]
+quando_evitar: ["configurar ambiente ou repositório para sessões na nuvem: usar as ferramentas de ambiente"]
+cuidados: ["hook é executado pelo harness: preferências em memória não cumprem esse papel", "hook que instala dependências pode atrasar o início da sessão"]
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

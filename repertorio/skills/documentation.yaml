@@ -1,0 +1,13 @@
+id: documentation
+nome: "Documentação técnica"
+origem: plugin
+onde: "sessão do Claude Code (skill engineering:documentation)"
+para_que: "Escrever e manter documentação técnica: README, runbook, guia de uso e referência."
+quando_usar: ["escrever ou atualizar README ou runbook", "documentar um fluxo de uso do repositório"]
+quando_evitar: ["docs/index.html: é gerado por 'uv run vcm docs' e nunca se edita à mão"]
+cuidados: ["ao editar docs/*.md, rodar 'uv run vcm docs' e commitar docs/index.html junto", "o CI roda 'vcm docs --check'", "documentação de processo não substitui o plano em docs/plano.md"]
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

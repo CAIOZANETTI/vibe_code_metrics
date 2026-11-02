@@ -1,0 +1,13 @@
+id: projeto-em-camadas
+nome: "Projeto em camadas"
+origem: projeto
+onde: projetos_em_camadas/.claude/skills/projeto-em-camadas
+para_que: "Gerar o visualizador HTML único que sobrepõe mosaico de drone, satélite e pranchas de projeto (civil, hidromecânica, elétrica) em camadas, com medições em UTM e anotações."
+quando_usar: ["montar, atualizar ou estender o HTML de projeto em camadas de uma obra"]
+quando_evitar: ["obra com pranchas vetoriais e pipeline completo: usar obra-em-camadas (fluxo v2)"]
+cuidados: ["coordenadas sempre em UTM no Python; o navegador só converte para exibir", "com DXF ou DWG, preferir camadas vetoriais por layer (ezdxf)", "PDF chapado: renderizar, separar por cor e gravar webp sem perdas", "conferir no Chromium: sem erros de console e folha alinhada à foto em zoom alto", "para publicar como Artifact, usar a versão CDN sem documento"]
+agente_sugerido: null
+ferramentas_relacionadas: ["ezdxf"]
+licenca: null
+verificado_em: "2026-11-02"
+status: em_uso

@@ -1,0 +1,13 @@
+id: mosaico-drone
+nome: "Mosaico de drone"
+origem: projeto
+onde: projetos_em_camadas/.claude/skills/mosaico-drone
+para_que: "Montar mosaico georreferenciado (SIRGAS 2000 / UTM) a partir de fotos nadirais de drone DJI com GPS no EXIF."
+quando_usar: ["montar, refazer ou diagnosticar mosaico de fotos de drone de uma obra"]
+quando_evitar: ["fotos oblíquas ou prédios altos: preferir a ortofoto de modelo-3d-drone"]
+cuidados: ["GSD ajustado deve ficar a ±10 % do GSD do EXIF", "RMSE vs GPS em torno de 1 m é o normal para o GPS do drone", "costura mediana abaixo de ~15 cm (a 2 cm/px) é bom; pares com resíduo acima de 0,5 m merecem olhar", "não é ortofoto: há paralaxe de árvores e telhados", "posição absoluta depende do GPS (~1 m); precisão centimétrica exige controle em campo", "modelo fora de SENSOR_MM exige a largura do sensor para calcular o GSD"]
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: em_uso

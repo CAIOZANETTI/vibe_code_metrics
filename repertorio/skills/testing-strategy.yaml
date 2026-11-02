@@ -1,0 +1,13 @@
+id: testing-strategy
+nome: "Estratégia de testes"
+origem: plugin
+onde: "sessão do Claude Code (skill engineering:testing-strategy)"
+para_que: "Planejar a estratégia e o plano de testes de um componente ou de uma etapa."
+quando_usar: ["planejar testes de um módulo novo de cálculo", "definir o que testar e com que cobertura"]
+quando_evitar: ["escrever um teste pontual: fazer direto, sem plano"]
+cuidados: ["avaliadores e gabaritos são trancados: não alterar sem pedido explícito do humano", "cobertura é medida pelo balanço do vcm; o limite não pode cair"]
+agente_sugerido: null
+ferramentas_relacionadas: ["hypothesis", "pytest-benchmark", "mutmut"]
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

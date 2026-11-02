@@ -1,0 +1,13 @@
+id: docx
+nome: "Documentos Word"
+origem: embutida
+onde: "sessão do Claude Code (skill docx)"
+para_que: "Criar e editar documentos Word (.docx)."
+quando_usar: ["memorial, relatório ou carta que o cliente pede em Word", "editar um .docx existente"]
+quando_evitar: ["relatório interativo do projeto: o visualizador é HTML gerado pelo Python"]
+cuidados: ["números do documento devem vir da saída do Python, não ser digitados à mão", "conferir a versão final antes de enviar ao cliente"]
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

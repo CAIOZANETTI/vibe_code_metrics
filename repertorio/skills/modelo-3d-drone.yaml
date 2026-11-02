@@ -1,0 +1,13 @@
+id: modelo-3d-drone
+nome: "Modelo 3D do drone"
+origem: projeto
+onde: projetos_em_camadas/.claude/skills/modelo-3d-drone
+para_que: "Reconstruir o 3D por SfM com pycolmap em CPU e gerar ortofoto verdadeira e MDS a partir de fotos de drone DJI."
+quando_usar: ["fotos de fotogrametria ou em perspectiva", "pedido de 3D, nuvem de pontos, ortofoto ou MDS", "prédio torto ou costura na ortofoto"]
+quando_evitar: ["SfM falha por poucas fotos ou pouca sobreposição: usar mosaico-drone"]
+cuidados: ["usar fotos nadirais e oblíquas juntas", "Z da nuvem é altura sobre a decolagem: corrigir a cota com controle vertical", "reprojeção abaixo de 1 px e todas as fotos registradas indicam SfM bom", "pares estéreo com desvio acima de 1 m são descartados", "sem GPU não há MVS denso do COLMAP; fachadas ficam pobres", "prédio torto indica falta de dados no telhado: pedir mais pares"]
+agente_sugerido: null
+ferramentas_relacionadas: ["pycolmap"]
+licenca: null
+verificado_em: "2026-11-02"
+status: em_uso
