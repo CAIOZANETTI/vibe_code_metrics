@@ -77,10 +77,11 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash 18e3c9ff1c80</div>
+  <div class="sub">fonte: docs/*.md · hash e8042f2d8736</div>
   
   <h4>Guia rápido: usar o vcm num protótipo</h4>
   <a href="#doc-guia">Início</a>
+  <a class="n2" href="#doc-guia-como-usar-este-repositorio">Como usar este repositório</a>
   <a class="n2" href="#doc-guia-1-instalar">1. Instalar</a>
   <a class="n2" href="#doc-guia-2-preparar-o-prototipo">2. Preparar o protótipo</a>
   <a class="n2" href="#doc-guia-3-o-conjunto-de-referencia">3. O conjunto de referência</a>
@@ -103,6 +104,7 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n3" href="#doc-arquitetura-radar-de-semaforo">Radar de semáforo</a>
   <a class="n2" href="#doc-arquitetura-5-o-que-e-medido-passivamente-e-o-que-exige-protocolo">5. O que é medido passivamente e o que exige protocolo</a>
   <a class="n2" href="#doc-arquitetura-6-multiagente-e-catalogo-de-modelos">6. Multiagente e catálogo de modelos</a>
+  <a class="n3" href="#doc-arquitetura-modelo-skill-ferramenta">Modelo × skill × ferramenta</a>
   <a class="n2" href="#doc-arquitetura-7-repertorio-uma-entrada">7. Repertório: uma entrada</a>
   <a class="n2" href="#doc-arquitetura-8-dados-e-formatos">8. Dados e formatos</a>
   <a class="n2" href="#doc-arquitetura-9-estrutura-do-repositorio">9. Estrutura do repositório</a>
@@ -164,6 +166,55 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n3" href="#doc-repertorio-pytest-benchmark">pytest-benchmark</a>
   
   
+  <h4>Skills</h4>
+  <a href="#doc-skills">Início</a>
+  <a class="n2" href="#doc-skills-como-as-skills-funcionam">Como as skills funcionam</a>
+  <a class="n3" href="#doc-skills-o-que-e-uma-skill">O que é uma skill</a>
+  <a class="n3" href="#doc-skills-onde-ficam-claude-code">Onde ficam (Claude Code)</a>
+  <a class="n3" href="#doc-skills-instalar-skills-de-terceiros">Instalar skills de terceiros</a>
+  <a class="n3" href="#doc-skills-seguranca">Segurança</a>
+  <a class="n3" href="#doc-skills-boas-praticas-oficiais-de-escrita">Boas práticas oficiais de escrita</a>
+  <a class="n2" href="#doc-skills-do-projeto-versionadas-no-repositorio">Do projeto (versionadas no repositório)</a>
+  <a class="n3" href="#doc-skills-ingestao-do-google-drive">Ingestão do Google Drive</a>
+  <a class="n3" href="#doc-skills-escopo-por-etapa">Escopo por etapa</a>
+  <a class="n3" href="#doc-skills-georreferenciar-pranchas">Georreferenciar pranchas</a>
+  <a class="n3" href="#doc-skills-ler-prancha">Ler prancha</a>
+  <a class="n3" href="#doc-skills-modelo-3d-do-drone">Modelo 3D do drone</a>
+  <a class="n3" href="#doc-skills-mosaico-de-drone">Mosaico de drone</a>
+  <a class="n3" href="#doc-skills-obra-em-camadas">Obra em camadas</a>
+  <a class="n3" href="#doc-skills-obras-lineares">Obras lineares</a>
+  <a class="n3" href="#doc-skills-projeto-em-camadas">Projeto em camadas</a>
+  <a class="n2" href="#doc-skills-da-plataforma-disponiveis-nas-sessoes-do-claude">Da plataforma (disponíveis nas sessões do Claude)</a>
+  <a class="n3" href="#doc-skills-revisao-de-codigo">Revisão de código</a>
+  <a class="n3" href="#doc-skills-visualizacao-de-dados">Visualização de dados</a>
+  <a class="n3" href="#doc-skills-pesquisa-aprofundada">Pesquisa aprofundada</a>
+  <a class="n3" href="#doc-skills-documentos-word">Documentos Word</a>
+  <a class="n3" href="#doc-skills-pdf">PDF</a>
+  <a class="n3" href="#doc-skills-apresentacoes">Apresentações</a>
+  <a class="n3" href="#doc-skills-rodar-a-aplicacao">Rodar a aplicação</a>
+  <a class="n3" href="#doc-skills-hook-de-inicio-de-sessao">Hook de início de sessão</a>
+  <a class="n3" href="#doc-skills-simplificar-codigo">Simplificar código</a>
+  <a class="n3" href="#doc-skills-criador-de-skills">Criador de skills</a>
+  <a class="n3" href="#doc-skills-planilhas">Planilhas</a>
+  <a class="n2" href="#doc-skills-de-plugins-instalados">De plugins instalados</a>
+  <a class="n3" href="#doc-skills-arquitetura-adr">Arquitetura (ADR)</a>
+  <a class="n3" href="#doc-skills-depuracao">Depuração</a>
+  <a class="n3" href="#doc-skills-documentacao-tecnica">Documentação técnica</a>
+  <a class="n3" href="#doc-skills-divida-tecnica">Dívida técnica</a>
+  <a class="n3" href="#doc-skills-estrategia-de-testes">Estratégia de testes</a>
+  <a class="n2" href="#doc-skills-externas-repositorios-publicos">Externas (repositórios públicos)</a>
+  <a class="n3" href="#doc-skills-coautoria-de-documentos-anthropic">Coautoria de documentos (Anthropic)</a>
+  <a class="n3" href="#doc-skills-documentos-word-anthropic">Documentos Word (Anthropic)</a>
+  <a class="n3" href="#doc-skills-design-de-interface-anthropic">Design de interface (Anthropic)</a>
+  <a class="n3" href="#doc-skills-geopandas-k-dense-comunitaria">GeoPandas (K-Dense, comunitária)</a>
+  <a class="n3" href="#doc-skills-construtor-de-servidor-mcp-anthropic">Construtor de servidor MCP (Anthropic)</a>
+  <a class="n3" href="#doc-skills-networkx-k-dense-comunitaria">NetworkX (K-Dense, comunitária)</a>
+  <a class="n3" href="#doc-skills-pdf-anthropic">PDF (Anthropic)</a>
+  <a class="n3" href="#doc-skills-criador-de-skills-anthropic">Criador de skills (Anthropic)</a>
+  <a class="n3" href="#doc-skills-teste-de-aplicacao-web-anthropic">Teste de aplicação web (Anthropic)</a>
+  <a class="n3" href="#doc-skills-planilhas-excel-anthropic">Planilhas Excel (Anthropic)</a>
+  
+  
   <h4>Plano de implementação</h4>
   <a href="#doc-plano">Início</a>
   <a class="n2" href="#doc-plano-visao-geral-das-fases">Visão geral das fases</a>
@@ -178,6 +229,7 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n2" href="#doc-plano-fase-5-orquestracao-multiagente">Fase 5 — Orquestração multiagente</a>
   <a class="n2" href="#doc-plano-fase-6-recomendador">Fase 6 — Recomendador</a>
   <a class="n2" href="#doc-plano-fase-7-multi-fornecedor-e-politica-de-dados">Fase 7 — Multi-fornecedor e política de dados</a>
+  <a class="n2" href="#doc-plano-repertorio-de-skills-02-11-2026">Repertório de skills (02/11/2026)</a>
   <a class="n2" href="#doc-plano-fase-8-primeiro-programa-experimental">Fase 8 — Primeiro programa experimental</a>
   <a class="n2" href="#doc-plano-regras-de-execucao-deste-plano">Regras de execução deste plano</a>
   <a class="n2" href="#doc-plano-decisoes-em-aberto-para-o-humano">Decisões em aberto (para o humano)</a>
@@ -207,6 +259,49 @@ footer { color: var(--muted); font-size: 12px; }
 cartão de retrospectiva com radar de semáforo. Como funciona por dentro: <a href="#doc-arquitetura">arquitetura.md</a>.
 Regras de código: <a href="#doc-estilo">estilo.md</a>.</p>
 </blockquote>
+<h2 id="doc-guia-como-usar-este-repositorio">Como usar este repositório</h2>
+<p>O <code>vibe_code_metrics</code> tem dois usos. Escolha o seu:</p>
+<table>
+<thead>
+<tr>
+<th>Você quer…</th>
+<th>Onde trabalha</th>
+<th>O que faz</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Medir um projeto seu</strong> (ex.: <code>projetos_em_camadas</code>)</td>
+<td>na pasta do projeto</td>
+<td>instala o <code>vcm</code>, roda <code>vcm iniciar</code> uma vez e <code>vcm balanco</code> a cada iteração</td>
+</tr>
+<tr>
+<td><strong>Escolher ferramenta ou skill</strong> para uma tarefa</td>
+<td>nesta documentação</td>
+<td>consulta o <a href="#doc-repertorio">repertório</a> e as <a href="#doc-skills">skills</a></td>
+</tr>
+<tr>
+<td><strong>Saber se o método está ajudando</strong></td>
+<td>na pasta do projeto</td>
+<td><code>vcm historico</code> e <code>vcm efeito</code> (antes × depois da adoção)</td>
+</tr>
+<tr>
+<td><strong>Evoluir o próprio método</strong></td>
+<td>neste repositório</td>
+<td>segue o <a href="#doc-plano">plano</a>; cada mudança passa pelo mesmo balanço (tese T000)</td>
+</tr>
+</tbody>
+</table>
+<p>O dia a dia num projeto, com o Claude Code aberto na pasta dele:</p>
+<ol>
+<li>Você pede uma tarefa em linguagem natural.</li>
+<li>O Claude (gerente) consulta o <code>CLAUDE.md</code> do projeto, o repertório e as skills, divide a tarefa e
+chama os executores (Sonnet, Haiku).</li>
+<li>Depois do commit, <code>vcm balanco HEAD~1 HEAD</code> gera o cartão: radar, semáforo e gasto dos agentes.</li>
+<li><code>REVERTER</code> desfaz; <code>MANTER</code> segue; troca de métricas, você decide e registra.</li>
+<li>De tempos em tempos, <code>vcm efeito</code> mostra se o projeto está melhor do que antes da adoção.</li>
+</ol>
+<p>Para atualizar o instrumento: <code>uv tool install --force git+https://github.com/CAIOZANETTI/vibe_code_metrics</code>.</p>
 <h2 id="doc-guia-1-instalar">1. Instalar</h2>
 <p>O <code>vcm</code> é instalado como ferramenta do <code>uv</code>, direto do GitHub:</p>
 <pre><code class="language-bash">uv tool install git+https://github.com/CAIOZANETTI/vibe_code_metrics
@@ -516,6 +611,12 @@ noutra máquina ou na nuvem não aparece no cartão.</li>
 <td><code>repertorio/</code></td>
 </tr>
 <tr>
+<td><strong>Catálogo de skills</strong></td>
+<td>Habilidades de agente (pasta com <code>SKILL.md</code>): do projeto, da plataforma, de plugins e externas. Dizem <strong>como</strong> conduzir uma tarefa e quais ferramentas do repertório usam. Página: <a href="#doc-skills">skills.md</a>.</td>
+<td>YAML</td>
+<td><code>repertorio/skills/</code></td>
+</tr>
+<tr>
 <td><strong>Catálogo de modelos</strong></td>
 <td>Modelos de IA disponíveis, preço, data de verificação e papéis sugeridos. Atualizado quando um fornecedor lança modelo novo, o que dispara regressão.</td>
 <td>YAML</td>
@@ -796,6 +897,38 @@ chamadas de ferramenta, duração e se a entrega foi aprovada na integração. E
 dados da tese <strong>T003 (roteamento)</strong>: a tabela acima é hipótese e passa a ser corrigida pelo custo
 por tarefa aprovada de cada modelo.</p>
 <p>Nenhum nome de modelo fica fixo no código: tudo vem de <code>repertorio/modelos.yaml</code>.</p>
+<h3 id="doc-arquitetura-modelo-skill-ferramenta">Modelo × skill × ferramenta</h3>
+<p>Três escolhas independentes compõem cada tarefa:</p>
+<table>
+<thead>
+<tr>
+<th>Escolha</th>
+<th>Pergunta</th>
+<th>Onde está</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Modelo</strong></td>
+<td>quem executa (custo × capacidade)</td>
+<td><code>repertorio/modelos.yaml</code>, tabela acima</td>
+</tr>
+<tr>
+<td><strong>Skill</strong></td>
+<td>como conduzir (passo a passo, cuidados, quando parar)</td>
+<td><a href="#doc-skills">skills.md</a></td>
+</tr>
+<tr>
+<td><strong>Ferramenta</strong></td>
+<td>com o que calcular (biblioteca Python)</td>
+<td><a href="#doc-repertorio">repertorio.md</a></td>
+</tr>
+</tbody>
+</table>
+<p>Uma tarefa repetível de domínio (ler uma prancha, quantificar uma vala) vira <strong>skill do projeto</strong>,
+com o cálculo em código determinístico; a skill orienta o agente e aponta o código. Skills
+externas entram como <strong>candidatas</strong>: lidas antes de instalar, porque podem trazer scripts que
+rodam na máquina.</p>
 <h2 id="doc-arquitetura-7-repertorio-uma-entrada">7. Repertório: uma entrada</h2>
 <pre><code class="language-yaml"># repertorio/calculo/numpy.yaml
 id: numpy
@@ -2361,6 +2494,968 @@ Página gerada a partir de <code>repertorio/*/*.yaml</code> por <code>vcm docs</
 
 </article>
 
+<article id="doc-skills">
+  <div class="fonte">
+    <span>Fonte: <a href="skills.md">docs/skills.md</a></span>
+    <span>Gerado por <code>uv run vcm docs</code></span>
+  </div>
+  <h1 id="doc-skills-skills">Skills</h1>
+<blockquote>
+<p>As ferramentas dizem <strong>com o que</strong> calcular; as skills dizem <strong>como o agente conduz</strong>
+uma tarefa: o passo a passo, quem executa e os cuidados. Cada skill aponta as
+ferramentas do <a href="#doc-repertorio">repertório</a> que usa.
+Página gerada a partir de <code>repertorio/skills/</code> por <code>vcm docs</code>; edite os YAML.</p>
+</blockquote>
+<h2 id="doc-skills-como-as-skills-funcionam">Como as skills funcionam</h2>
+<p>Verificado em 2026-11-02 nas fontes citadas. O que não foi confirmado está marcado [não verificado].</p>
+<h3 id="doc-skills-o-que-e-uma-skill">O que é uma skill</h3>
+<ul>
+<li>Pasta com um <code>SKILL.md</code>: frontmatter YAML entre <code>---</code> + instruções em markdown. Pode ter arquivos de apoio (<code>reference.md</code>, <code>examples.md</code>, <code>scripts/</code>). Fonte: https://code.claude.com/docs/en/skills (2026-11-02).</li>
+<li>Frontmatter na plataforma: <code>name</code> (até 64 caracteres; só minúsculas, números e hífen; sem as palavras reservadas <code>anthropic</code> e <code>claude</code>) e <code>description</code> (não vazia, até 1.024 caracteres) são exigidos. Fonte: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview (2026-11-02).</li>
+<li>No Claude Code todos os campos são opcionais (só <code>description</code> é recomendado); <code>name</code> padrão é o nome da pasta. Outros campos: <code>when_to_use</code>, <code>disable-model-invocation</code>, <code>user-invocable</code>, <code>allowed-tools</code>, <code>context: fork</code>, <code>model</code>, <code>paths</code>, <code>license</code>. Campos desconhecidos são ignorados sem erro. Fonte: code.claude.com/docs/en/skills (2026-11-02).</li>
+<li>A descrição combinada (<code>description</code> + <code>when_to_use</code>) é truncada em 1.536 caracteres na listagem: colocar o caso de uso principal no começo. Fonte: idem.</li>
+<li>Carregamento progressivo: nível 1, só nome e descrição (cerca de 100 tokens por skill) ficam sempre no contexto; nível 2, o corpo do <code>SKILL.md</code> entra quando a descrição casa com o pedido; nível 3, arquivos de apoio são lidos só se necessários e scripts rodam via bash, entrando no contexto apenas a saída. Fonte: platform.claude.com/.../agent-skills/overview (2026-11-02).</li>
+<li>Depois de carregada, a skill permanece no contexto nos turnos seguintes; por isso, corpo curto (menos de 500 linhas). Também pode ser chamada direto com <code>/nome-da-skill</code>. Fonte: code.claude.com/docs/en/skills (2026-11-02).</li>
+</ul>
+<h3 id="doc-skills-onde-ficam-claude-code">Onde ficam (Claude Code)</h3>
+<ul>
+<li>Pessoal: <code>~/.claude/skills/&lt;skill&gt;/SKILL.md</code> (todos os projetos da máquina).</li>
+<li>Projeto: <code>.claude/skills/&lt;skill&gt;/SKILL.md</code> (versionado no repositório; vale para quem clonar).</li>
+<li>Também: corporativa (managed settings), aninhada em subpastas, <code>--add-dir</code> e plugins (<code>&lt;plugin&gt;/skills/...</code>, invocada como <code>/plugin:skill</code>).</li>
+<li>Precedência para o mesmo nome: corporativa &gt; pessoal &gt; projeto. Skill de plugin tem namespace e não colide. Skill do usuário substitui skill embutida de mesmo nome. Fonte: code.claude.com/docs/en/skills (2026-11-02).</li>
+<li>Skills não sincronizam entre superfícies: claude.ai (zip em Configurações), API (<code>/v1/skills</code>) e Claude Code (sistema de arquivos) são separados. As skills prontas de documentos (pptx, xlsx, docx, pdf) não vêm no Claude Code. Fonte: platform.claude.com/.../agent-skills/overview (2026-11-02).</li>
+<li>Sessões em nuvem não carregam plugins instalados na sua máquina nem os habilitados no <code>.claude/settings.json</code>. Fonte: https://code.claude.com/docs/en/discover-plugins (2026-11-02). Se skills de <code>.claude/skills/</code> do repositório valem na nuvem: [não verificado].</li>
+</ul>
+<h3 id="doc-skills-instalar-skills-de-terceiros">Instalar skills de terceiros</h3>
+<ul>
+<li>Marketplace de plugins: <code>/plugin marketplace add anthropics/skills</code>, depois <code>/plugin install document-skills@anthropic-agent-skills</code> ou <code>example-skills@anthropic-agent-skills</code>. Fonte: https://github.com/anthropics/skills (2026-11-02).</li>
+<li>Forma geral: <code>/plugin install &lt;plugin&gt;@&lt;marketplace&gt;</code>; no shell, <code>claude plugin install ...</code> (escopo user por padrão; <code>--scope project</code> para o repositório). Fonte: code.claude.com/docs/en/discover-plugins (2026-11-02).</li>
+<li>Cópia de pasta: colocar a pasta da skill em <code>~/.claude/skills/</code> ou <code>.claude/skills/</code>. Fonte: code.claude.com/docs/en/skills (2026-11-02).</li>
+<li>Seção específica sobre instalar skills soltas na página de skills: [não verificado] (os últimos ~18 mil caracteres da página não foram lidos).</li>
+</ul>
+<h3 id="doc-skills-seguranca">Segurança</h3>
+<ul>
+<li>Oficial: usar skills só de fontes confiáveis (criadas por você ou da Anthropic); uma skill maliciosa pode mandar o Claude chamar ferramentas ou rodar código fora do propósito declarado, com risco de vazamento de dados. Auditar todos os arquivos (SKILL.md, scripts, recursos), procurar chamadas de rede inesperadas; tratar como instalar software. Fonte: platform.claude.com/.../agent-skills/overview (2026-11-02).</li>
+<li><code>allowed-tools</code> pode pré-aprovar ferramentas e a confiança do workspace não barra isso: revisar o campo em skills versionadas antes de rodar. <code>!`comando`</code> no corpo executa shell antes de o Claude ver o texto; <code>disableSkillShellExecution</code> desliga. Fonte: code.claude.com/docs/en/skills (2026-11-02).</li>
+<li>Regra do projeto: ler <code>SKILL.md</code> e <code>scripts/</code> antes de instalar qualquer skill de terceiros.</li>
+</ul>
+<h3 id="doc-skills-boas-praticas-oficiais-de-escrita">Boas práticas oficiais de escrita</h3>
+<p>Fonte: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices (2026-11-02).</p>
+<ul>
+<li>Descrição em terceira pessoa, dizendo o que faz e quando usar, com termos-chave; evitar &quot;ajuda com documentos&quot;.</li>
+<li>Ser conciso: só o que o Claude ainda não sabe; dar um padrão-padrão em vez de lista de opções.</li>
+<li>Graus de liberdade: instruções livres para tarefas flexíveis; script exato e sem parâmetros para operações frágeis.</li>
+<li>Preferir scripts prontos para o que é repetível (mais confiáveis, economizam tokens); deixar claro se é para executar ou só ler; tratar erros no script.</li>
+<li>Divulgação progressiva: arquivos de apoio a um nível de profundidade do <code>SKILL.md</code>; índice em arquivos com mais de 100 linhas; caminhos com barra normal.</li>
+<li>Fluxos com checklist e laço validar-corrigir; plano intermediário validado por script em operações em lote.</li>
+<li>Criar avaliações antes (mínimo de três cenários), comparar com e sem a skill e testar com Haiku, Sonnet e Opus.</li>
+<li>Listar dependências; na API não há rede nem instalação de pacotes, no claude.ai depende da configuração, no Claude Code há rede total.</li>
+</ul>
+<h2 id="doc-skills-do-projeto-versionadas-no-repositorio">Do projeto (versionadas no repositório)</h2>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Para quê</th>
+<th>Agente sugerido</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>drive-ingestao</code></td>
+<td>Inventariar e baixar pastas de obra do Google Drive (metadados recursivos e download em lote) para dados/<obra>/.</td>
+<td>Haiku</td>
+<td>em uso</td>
+</tr>
+<tr>
+<td><code>escopo-etapas</code></td>
+<td>Extrair o escopo de materiais e serviços do contrato, com quantidades por etapa e sem preço, conferindo cada código no cadastro de materiais Sanepar.</td>
+<td>—</td>
+<td>em uso</td>
+</tr>
+<tr>
+<td><code>georef-pranchas</code></td>
+<td>Georreferenciar pranchas de projeto em PDF vetorial pela malha impressa, por afim absoluta, por prancha irmã (CAD × CAD) ou por pontos de controle com ICP.</td>
+<td>—</td>
+<td>em uso</td>
+</tr>
+<tr>
+<td><code>ler-prancha</code></td>
+<td>Ler prancha de projeto em PDF vetorial em camadas de entendimento: identidade, vistas, tabelas por OCR, elementos, vínculos e serviços.</td>
+<td>—</td>
+<td>em uso</td>
+</tr>
+<tr>
+<td><code>modelo-3d-drone</code></td>
+<td>Reconstruir o 3D por SfM com pycolmap em CPU e gerar ortofoto verdadeira e MDS a partir de fotos de drone DJI.</td>
+<td>—</td>
+<td>em uso</td>
+</tr>
+<tr>
+<td><code>mosaico-drone</code></td>
+<td>Montar mosaico georreferenciado (SIRGAS 2000 / UTM) a partir de fotos nadirais de drone DJI com GPS no EXIF.</td>
+<td>—</td>
+<td>em uso</td>
+</tr>
+<tr>
+<td><code>obra-em-camadas</code></td>
+<td>Orquestrar uma obra inteira do Drive ao HTML em camadas: fotos, 3D, pranchas vetoriais por layer CAD, etapas, escopo de materiais e sondagens.</td>
+<td>—</td>
+<td>em uso</td>
+</tr>
+<tr>
+<td><code>obras-lineares</code></td>
+<td>Calcular a vala de cada trecho de tubo pelo MOS Sanepar (largura, escoramento, escavação, reaterro, bota-fora, supressão e pavimento), com solo e NA da sondagem mais próxima.</td>
+<td>—</td>
+<td>em uso</td>
+</tr>
+<tr>
+<td><code>projeto-em-camadas</code></td>
+<td>Gerar o visualizador HTML único que sobrepõe mosaico de drone, satélite e pranchas de projeto (civil, hidromecânica, elétrica) em camadas, com medições em UTM e anotações.</td>
+<td>—</td>
+<td>em uso</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doc-skills-ingestao-do-google-drive">Ingestão do Google Drive</h3>
+<p><code>drive-ingestao</code> · projetos_em_camadas/.claude/skills/drive-ingestao</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>link de pasta do Drive com fotos de drone, PDFs de projeto ou planilhas</li>
+<li>baixar ou organizar arquivos do Drive de uma obra</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>conteúdo de PDF já baixado: usar ler-prancha</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>arquivo acima de 10 MB é recusado pelo conector; de 5,5 a 10 MB costuma derrubar a conexão: usar link direto (camadas/drive.py)</li>
+<li>só um processo varre tool-results/ por vez</li>
+<li>conferir %PDF e tamanho depois do download</li>
+<li>dados/ fica fora do git (material do cliente)</li>
+</ul>
+<h3 id="doc-skills-escopo-por-etapa">Escopo por etapa</h3>
+<p><code>escopo-etapas</code> · projetos_em_camadas/.claude/skills/escopo-etapas</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>etapas da obra, recorte de escopo ou quantitativos</li>
+<li>lista de materiais, cotação ou 'o que entra na 1ª etapa'</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>qualquer valor de preço: a skill não extrai preço (decisão de 28/10/2026)</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>itens sem etapa (equipamentos, válvulas, civil global) ficam como 'verificar'</li>
+<li>quantidade do orçamento diferente da 1ª etapa é divergência a listar</li>
+<li>código fora do cadastro Sanepar ou unidade diferente da cadastrada gera alerta</li>
+<li>tabela só da 2ª etapa fica fora do escopo até confirmar com o TR</li>
+<li>serviço sem quantidade: estimativa com premissa declarada, que nunca substitui a quantidade do contrato</li>
+</ul>
+<h3 id="doc-skills-georreferenciar-pranchas">Georreferenciar pranchas</h3>
+<p><code>georef-pranchas</code> · projetos_em_camadas/.claude/skills/georef-pranchas</p>
+<p><em>Ferramentas: PyMuPDF, pytesseract.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>sobrepor pranchas 'sem escala' ou sem malha de coordenadas</li>
+<li>diagnosticar prancha desalinhada, torta, espelhada ou com escala errada</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>prancha que já tem georreferência aceita no obra.json</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>a matriz final contém reflexão: não usar similaridade direta de pt para UTM</li>
+<li>conferir sempre visualmente sobre a ortofoto; número bom com imagem ruim é rejeitado</li>
+<li>escala medida na foto é pouco confiável: preferir prancha irmã ou malha</li>
+<li>folha de detalhe em outra escala não é irmã: conferir a escala do título</li>
+<li>rótulo errado pode existir no próprio desenho: decidir pela continuidade com a folha vizinha</li>
+<li>conferir contra testemunha independente (malha, GEOPLANTA, marcos E/N), não contra a própria foto</li>
+</ul>
+<h3 id="doc-skills-ler-prancha">Ler prancha</h3>
+<p><code>ler-prancha</code> · projetos_em_camadas/.claude/skills/ler-prancha</p>
+<p><em>Ferramentas: PyMuPDF, pytesseract.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>saber o que uma prancha contém</li>
+<li>ligar elementos do desenho a itens de tabela ou serviços</li>
+<li>georreferenciar estrutura sem malha</li>
+<li>criar ou ajustar sinônimos de layer</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>PDF escaneado sem vetor: usar o fluxo raster (v1) de projeto-em-camadas</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>texto SHX é traço: get_text vem vazio, por isso OCR</li>
+<li>letra de 16 a 18 px lê bem; a 25 px o tesseract trocou 3 por 5</li>
+<li>célula numérica é relida com --psm 7 e lista de caracteres permitidos</li>
+<li>número de balão precisa de um dígito por glifo</li>
+<li>folha com várias vistas não tem afim única</li>
+<li>rótulo sem leitura não se deduz</li>
+</ul>
+<h3 id="doc-skills-modelo-3d-do-drone">Modelo 3D do drone</h3>
+<p><code>modelo-3d-drone</code> · projetos_em_camadas/.claude/skills/modelo-3d-drone</p>
+<p><em>Ferramentas: pycolmap.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>fotos de fotogrametria ou em perspectiva</li>
+<li>pedido de 3D, nuvem de pontos, ortofoto ou MDS</li>
+<li>prédio torto ou costura na ortofoto</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>SfM falha por poucas fotos ou pouca sobreposição: usar mosaico-drone</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>usar fotos nadirais e oblíquas juntas</li>
+<li>Z da nuvem é altura sobre a decolagem: corrigir a cota com controle vertical</li>
+<li>reprojeção abaixo de 1 px e todas as fotos registradas indicam SfM bom</li>
+<li>pares estéreo com desvio acima de 1 m são descartados</li>
+<li>sem GPU não há MVS denso do COLMAP; fachadas ficam pobres</li>
+<li>prédio torto indica falta de dados no telhado: pedir mais pares</li>
+</ul>
+<h3 id="doc-skills-mosaico-de-drone">Mosaico de drone</h3>
+<p><code>mosaico-drone</code> · projetos_em_camadas/.claude/skills/mosaico-drone</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>montar, refazer ou diagnosticar mosaico de fotos de drone de uma obra</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>fotos oblíquas ou prédios altos: preferir a ortofoto de modelo-3d-drone</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>GSD ajustado deve ficar a ±10 % do GSD do EXIF</li>
+<li>RMSE vs GPS em torno de 1 m é o normal para o GPS do drone</li>
+<li>costura mediana abaixo de ~15 cm (a 2 cm/px) é bom; pares com resíduo acima de 0,5 m merecem olhar</li>
+<li>não é ortofoto: há paralaxe de árvores e telhados</li>
+<li>posição absoluta depende do GPS (~1 m); precisão centimétrica exige controle em campo</li>
+<li>modelo fora de SENSOR_MM exige a largura do sensor para calcular o GSD</li>
+</ul>
+<h3 id="doc-skills-obra-em-camadas">Obra em camadas</h3>
+<p><code>obra-em-camadas</code> · projetos_em_camadas/.claude/skills/obra-em-camadas</p>
+<p><em>Ferramentas: pycolmap, PyMuPDF, pytesseract.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>pedido 'faça o mesmo para a obra X'</li>
+<li>pasta do Drive de obra nova</li>
+<li>pedido de HTML em camadas completo</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>tarefa de uma etapa só: usar a skill específica da etapa</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>inventário primeiro, de todos os arquivos; nunca dizer que um documento não existe sem procurar no inventário</li>
+<li>manter o vetor: nada de rasterizar para o HTML</li>
+<li>escopo sem preço: nenhum valor unitário, total ou fornecedor</li>
+<li>irmãs de pranchas com malha devem ser enraizadas numa prancha absoluta</li>
+<li>relatar lacunas explicitamente (ex.: etapa no desenho que o TR não menciona)</li>
+<li>não deixar dois agentes varrerem tool-results/ ao mesmo tempo</li>
+<li>a divisão Haiku/Sonnet/Opus é por subtarefa, não uma só para a skill</li>
+</ul>
+<h3 id="doc-skills-obras-lineares">Obras lineares</h3>
+<p><code>obras-lineares</code> · projetos_em_camadas/.claude/skills/obras-lineares</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>obras lineares, vala, escoramento ou esgotamento</li>
+<li>tubulação dentro da ETA</li>
+<li>MND/HDD</li>
+<li>supressão vegetal ou recomposição de pavimento de uma rede</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>qualquer preço: a skill é só geometria e serviço associado</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>largura L = D + SL + X + Y; X = 0,10 m só se escorado</li>
+<li>escoramento acima de 1,25 m de profundidade</li>
+<li>NA mais raso que o fundo da vala indica esgotamento</li>
+<li>diferença acima de 1 % frente à planilha é alerta</li>
+<li>trecho sem profundidade distorce o reaterro</li>
+<li>paver e lajota só pelo usuário</li>
+<li>MND: citar as orientações de HDD, sem dimensionar pelo executor</li>
+</ul>
+<h3 id="doc-skills-projeto-em-camadas">Projeto em camadas</h3>
+<p><code>projeto-em-camadas</code> · projetos_em_camadas/.claude/skills/projeto-em-camadas</p>
+<p><em>Ferramentas: ezdxf.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>montar, atualizar ou estender o HTML de projeto em camadas de uma obra</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>obra com pranchas vetoriais e pipeline completo: usar obra-em-camadas (fluxo v2)</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>coordenadas sempre em UTM no Python; o navegador só converte para exibir</li>
+<li>com DXF ou DWG, preferir camadas vetoriais por layer (ezdxf)</li>
+<li>PDF chapado: renderizar, separar por cor e gravar webp sem perdas</li>
+<li>conferir no Chromium: sem erros de console e folha alinhada à foto em zoom alto</li>
+<li>para publicar como Artifact, usar a versão CDN sem documento</li>
+</ul>
+<h2 id="doc-skills-da-plataforma-disponiveis-nas-sessoes-do-claude">Da plataforma (disponíveis nas sessões do Claude)</h2>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Para quê</th>
+<th>Agente sugerido</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>code-review</code></td>
+<td>Revisar o diff, ou um PR, para bugs de correção, com níveis de esforço.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>dataviz</code></td>
+<td>Orientar o desenho de gráficos e dashboards (cores, escalas, acessibilidade), para qualquer biblioteca, inclusive Plotly.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>deep-research</code></td>
+<td>Pesquisar um tema em várias fontes, com subagentes, e entregar relatório com citações.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>docx</code></td>
+<td>Criar e editar documentos Word (.docx).</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>pdf</code></td>
+<td>Ler, extrair texto e tabelas, juntar, dividir, preencher formulários e fazer OCR de PDFs.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>pptx</code></td>
+<td>Criar e editar apresentações PowerPoint (.pptx).</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>run</code></td>
+<td>Subir e dirigir a aplicação do projeto para ver a mudança funcionando, além dos testes.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>session-start-hook</code></td>
+<td>Criar hooks de início de sessão versionados no repositório, para sessões na nuvem.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>simplify</code></td>
+<td>Revisar o código alterado para reuso, simplificação e eficiência, e aplicar as correções.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>skill-creator</code></td>
+<td>Criar, ajustar e avaliar skills novas.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>xlsx</code></td>
+<td>Abrir, editar, criar e limpar planilhas .xlsx e .csv, com fórmulas e gráficos.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doc-skills-revisao-de-codigo">Revisão de código</h3>
+<p><code>code-review</code> · sessão do Claude Code (skill code-review)</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>revisar o diff antes de abrir PR</li>
+<li>procurar bugs de correção em uma mudança</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>só limpeza de código (reuso, simplificação): usar simplify</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>o nível máximo custa mais e só se pede por instrução explícita (CLAUDE.md ou pedido do humano)</li>
+<li>achados são hipóteses: confirmar antes de corrigir</li>
+<li>a revisão não substitui os testes do projeto (uv run pytest)</li>
+</ul>
+<h3 id="doc-skills-visualizacao-de-dados">Visualização de dados</h3>
+<p><code>dataviz</code> · sessão do Claude Code (skill dataviz)</p>
+<p><em>Ferramentas: Plotly, Matplotlib.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>gráfico de etapa, curva ou indicador do projeto</li>
+<li>gráfico Plotly ou matplotlib de relatório</li>
+<li>paleta de cores para camadas ou disciplinas</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>cálculo do gráfico: o número vem do Python, nunca de conta feita no navegador</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>regra do mantenedor: Python calcula, HTML/JS só apresenta</li>
+<li>cores do projeto (civil, hidromecânica, elétrica, geral) seguem a convenção existente</li>
+<li>checar contraste no modo escuro</li>
+</ul>
+<h3 id="doc-skills-pesquisa-aprofundada">Pesquisa aprofundada</h3>
+<p><code>deep-research</code> · sessão do Claude Code (skill deep-research)</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>comparar alternativas técnicas ou normas</li>
+<li>revisar literatura sobre um método de medição</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>dado que já está no repositório ou na documentação do projeto: ler direto</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>conferir cada citação antes de usar em documento técnico</li>
+<li>a pesquisa não substitui a norma vigente: citar a edição</li>
+</ul>
+<h3 id="doc-skills-documentos-word">Documentos Word</h3>
+<p><code>docx</code> · sessão do Claude Code (skill docx)</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>memorial, relatório ou carta que o cliente pede em Word</li>
+<li>editar um .docx existente</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>relatório interativo do projeto: o visualizador é HTML gerado pelo Python</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>números do documento devem vir da saída do Python, não ser digitados à mão</li>
+<li>conferir a versão final antes de enviar ao cliente</li>
+</ul>
+<h3 id="doc-skills-pdf">PDF</h3>
+<p><code>pdf</code> · sessão do Claude Code (skill pdf)</p>
+<p><em>Ferramentas: PyMuPDF, pdfplumber, pytesseract.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>conferir rapidamente uma prancha ou documento em PDF</li>
+<li>extrair texto ou tabela de um PDF avulso</li>
+<li>juntar ou dividir PDFs</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>extração repetível de pranchas no pipeline: usar código do projeto (pymupdf) para ficar determinístico</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>leitura avulsa não é fonte de resultado de engenharia: conferir o valor contra a prancha</li>
+<li>OCR de texto SHX pode trocar dígitos</li>
+</ul>
+<h3 id="doc-skills-apresentacoes">Apresentações</h3>
+<p><code>pptx</code> · sessão do Claude Code (skill pptx)</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>apresentação de obra para reunião com o cliente</li>
+<li>resumo visual de etapas ou escopo para decisão</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>dado que precisa ser recalculado: o número sai do Python, a apresentação só mostra</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>conferir cada número contra a saída do Python antes de apresentar</li>
+<li>gráficos colados como imagem não podem ser conferidos depois: guardar a fonte</li>
+</ul>
+<h3 id="doc-skills-rodar-a-aplicacao">Rodar a aplicação</h3>
+<p><code>run</code> · sessão do Claude Code (skill run)</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>pedido para rodar, iniciar ou fotografar a aplicação</li>
+<li>confirmar que a mudança funciona no uso real</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>mudança que só toca testes ou documentação</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>se o projeto já tiver skill própria de execução, ela tem prioridade</li>
+<li>registrar o que foi visto na execução, não só que subiu sem erro</li>
+</ul>
+<h3 id="doc-skills-hook-de-inicio-de-sessao">Hook de início de sessão</h3>
+<p><code>session-start-hook</code> · sessão do Claude Code (skill session-start-hook)</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>pedido explícito de um SessionStart hook commitado no repositório</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>configurar ambiente ou repositório para sessões na nuvem: usar as ferramentas de ambiente</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>hook é executado pelo harness: preferências em memória não cumprem esse papel</li>
+<li>hook que instala dependências pode atrasar o início da sessão</li>
+</ul>
+<h3 id="doc-skills-simplificar-codigo">Simplificar código</h3>
+<p><code>simplify</code> · sessão do Claude Code (skill simplify)</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>limpar código recém-alterado antes do PR</li>
+<li>reduzir duplicação ou complexidade</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>procurar bugs: usar code-review (esta skill não caça bugs)</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>aplica mudanças: rodar uv run pytest e uv run ruff check . depois</li>
+<li>não mexer em avaliadores e gabaritos trancados sem pedido explícito</li>
+</ul>
+<h3 id="doc-skills-criador-de-skills">Criador de skills</h3>
+<p><code>skill-creator</code> · sessão do Claude Code (skill skill-creator)</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>criar uma skill nova para um fluxo repetido do projeto</li>
+<li>ajustar ou avaliar uma skill existente</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>mudança no código Python do projeto: não é uma skill</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>testar a skill com um caso real antes de dar por pronta</li>
+<li>skill nova do projeto fica em .claude/skills/ do repositório que a usa</li>
+</ul>
+<h3 id="doc-skills-planilhas">Planilhas</h3>
+<p><code>xlsx</code> · sessão do Claude Code (skill xlsx)</p>
+<p><em>Ferramentas: pandas, Polars.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>abrir ou editar planilha de orçamento ou de quantitativos</li>
+<li>criar planilha com fórmulas ou gráfico para o cliente</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>cálculo de engenharia que precisa ser reprodutível: calcular em Python (pandas ou Polars), não em fórmula de planilha</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>fórmula gravada na planilha não substitui o cálculo do projeto</li>
+<li>planilha de cliente pode ter abas ocultas: conferir antes de concluir</li>
+</ul>
+<h2 id="doc-skills-de-plugins-instalados">De plugins instalados</h2>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Para quê</th>
+<th>Agente sugerido</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>architecture</code></td>
+<td>Criar ou avaliar um registro de decisão de arquitetura (ADR), com trade-offs e consequências.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>debug</code></td>
+<td>Conduzir depuração estruturada: reproduzir, isolar, diagnosticar e corrigir.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>documentation</code></td>
+<td>Escrever e manter documentação técnica: README, runbook, guia de uso e referência.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>tech-debt</code></td>
+<td>Levantar, categorizar e priorizar dívida técnica no repositório.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>testing-strategy</code></td>
+<td>Planejar a estratégia e o plano de testes de um componente ou de uma etapa.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doc-skills-arquitetura-adr">Arquitetura (ADR)</h3>
+<p><code>architecture</code> · sessão do Claude Code (skill engineering:architecture)</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>escolher entre tecnologias ou bibliotecas com trade-offs</li>
+<li>documentar uma decisão de desenho que outros vão precisar entender</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>mudança pequena sem decisão de desenho envolvida</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>registrar alternativas descartadas e o motivo</li>
+<li>registrar a data e o contexto da decisão</li>
+<li>decisão que afeta cálculo de engenharia precisa de tolerância declarada</li>
+</ul>
+<h3 id="doc-skills-depuracao">Depuração</h3>
+<p><code>debug</code> · sessão do Claude Code (skill engineering:debug)</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>erro com mensagem ou stack trace</li>
+<li>comportamento diferente do esperado sem causa óbvia</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>erro de digitação evidente, corrigível direto</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>reproduzir antes de corrigir</li>
+<li>corrigir a causa, não o sintoma</li>
+<li>acrescentar teste que falhava antes da correção</li>
+</ul>
+<h3 id="doc-skills-documentacao-tecnica">Documentação técnica</h3>
+<p><code>documentation</code> · sessão do Claude Code (skill engineering:documentation)</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>escrever ou atualizar README ou runbook</li>
+<li>documentar um fluxo de uso do repositório</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>docs/index.html: é gerado por 'uv run vcm docs' e nunca se edita à mão</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>ao editar docs/*.md, rodar 'uv run vcm docs' e commitar docs/index.html junto</li>
+<li>o CI roda 'vcm docs --check'</li>
+<li>documentação de processo não substitui o plano em docs/plano.md</li>
+</ul>
+<h3 id="doc-skills-divida-tecnica">Dívida técnica</h3>
+<p><code>tech-debt</code> · sessão do Claude Code (skill engineering:tech-debt)</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>auditoria de dívida técnica ou de saúde do código</li>
+<li>decidir o que refatorar primeiro</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>corrigir um bug agora: usar debug</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>priorizar com evidência (métricas do balanço do vcm), não só por impressão</li>
+<li>cada item priorizado vira tarefa pequena com arquivos permitidos</li>
+</ul>
+<h3 id="doc-skills-estrategia-de-testes">Estratégia de testes</h3>
+<p><code>testing-strategy</code> · sessão do Claude Code (skill engineering:testing-strategy)</p>
+<p><em>Ferramentas: Hypothesis, pytest-benchmark, mutmut.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>planejar testes de um módulo novo de cálculo</li>
+<li>definir o que testar e com que cobertura</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>escrever um teste pontual: fazer direto, sem plano</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>avaliadores e gabaritos são trancados: não alterar sem pedido explícito do humano</li>
+<li>cobertura é medida pelo balanço do vcm; o limite não pode cair</li>
+</ul>
+<h2 id="doc-skills-externas-repositorios-publicos">Externas (repositórios públicos)</h2>
+<table>
+<thead>
+<tr>
+<th>Skill</th>
+<th>Para quê</th>
+<th>Agente sugerido</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ext-doc-coauthoring</code></td>
+<td>Fluxo em três etapas (contexto, refinamento por seção, teste com leitor sem contexto) para escrever propostas, especificações e documentos de decisão.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>ext-docx</code></td>
+<td>Criar e editar documentos Word (.docx), incluindo alterações rastreadas e comentários.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>ext-frontend-design</code></td>
+<td>Orientação para decisões visuais intencionais (tipografia, layout, tokens) ao criar ou reformar interfaces.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>ext-geopandas</code></td>
+<td>Fluxo com checagens para dados vetoriais em GeoPandas 1.2.0 (CRS, validade de geometria, junções espaciais, exportação).</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>ext-mcp-builder</code></td>
+<td>Guia para construir servidores MCP de qualidade (Python FastMCP ou TypeScript) e suas avaliações.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>ext-networkx</code></td>
+<td>Construir, analisar e desenhar grafos com NetworkX (caminhos mínimos, centralidade, comunidades, leitura e escrita).</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>ext-pdf</code></td>
+<td>Ler/extrair texto e tabelas de PDF, juntar, dividir, girar, criar PDF, preencher formulários e fazer OCR.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>ext-skill-creator</code></td>
+<td>Criar, melhorar e avaliar skills (evals com e sem a skill, otimização da descrição, empacotamento).</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>ext-webapp-testing</code></td>
+<td>Testar e depurar apps web locais com Playwright em Python (capturas de tela, logs do console, servidores auxiliares).</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+<tr>
+<td><code>ext-xlsx</code></td>
+<td>Criar, editar e converter planilhas com openpyxl/pandas, recalculando fórmulas com LibreOffice e relatando erros.</td>
+<td>—</td>
+<td>candidato</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doc-skills-coautoria-de-documentos-anthropic">Coautoria de documentos (Anthropic)</h3>
+<p><code>ext-doc-coauthoring</code> · https://github.com/anthropics/skills/tree/main/skills/doc-coauthoring</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>Redigir especificação, proposta técnica ou nota de decisão com revisão estruturada.</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>Textos curtos ou documentos que o método gera automaticamente.</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>Só SKILL.md (sem scripts nem dependências).</li>
+<li>A pasta não tem LICENSE.txt nem campo license; licença do repositório raiz não conferida, por isso licenca null.</li>
+<li>Em inglês; sobrepõe-se a skills embutidas de documentos.</li>
+</ul>
+<h3 id="doc-skills-documentos-word-anthropic">Documentos Word (Anthropic)</h3>
+<p><code>ext-docx</code> · https://github.com/anthropics/skills/tree/main/skills/docx</p>
+<p><em>Ferramentas: Jinja2.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>Memorial ou relatório que o cliente exige em .docx, com revisão rastreada.</li>
+<li>Editar modelo .docx existente.</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>Relatórios HTML do método (já são gerados por Python/Jinja2).</li>
+<li>Redistribuir a skill (licença proprietária).</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>Licença proprietária (LICENSE.txt, 2025 Anthropic) sem cópia fora dos serviços nem derivados.</li>
+<li>Pasta tem scripts/ (OOXML); ler antes de instalar.</li>
+<li>Sobrepõe-se à skill embutida docx.</li>
+<li>Dependências exatas não verificadas (o SKILL.md não foi lido).</li>
+</ul>
+<h3 id="doc-skills-design-de-interface-anthropic">Design de interface (Anthropic)</h3>
+<p><code>ext-frontend-design</code> · https://github.com/anthropics/skills/tree/main/skills/frontend-design</p>
+<p><em>Ferramentas: Plotly, Jinja2.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>Melhorar a aparência de relatórios HTML e do visualizador (apresentação, sem cálculo em JS).</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>Alterar regra de cálculo; HTML/JS só apresentam valores do Python.</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>Apache-2.0 (LICENSE.txt conferido).</li>
+<li>Só SKILL.md e LICENSE.txt, sem scripts.</li>
+<li>Sobrepõe-se às skills embutidas artifact-design e dataviz.</li>
+</ul>
+<p>Licença: Apache-2.0 (verificada em 2026-11-02)</p>
+<h3 id="doc-skills-geopandas-k-dense-comunitaria">GeoPandas (K-Dense, comunitária)</h3>
+<p><code>ext-geopandas</code> · https://github.com/K-Dense-AI/scientific-agent-skills/tree/main/skills/geopandas</p>
+<p><em>Ferramentas: GeoPandas, Shapely, pyproj.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>{'Trabalho com shapes e UTM': 'planejar reprojeção, auditar geometrias e junções espaciais.'}</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>Tarefas sem dado vetorial; cálculos que já têm função validada no projeto.</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>Skill de terceiros; ler SKILL.md e os scripts/ antes de instalar (o README do repositório recomenda escanear skills de terceiros).</li>
+<li>Licença MIT declarada no frontmatter da skill e no repositório (LICENSE.md); cada skill do repositório pode ter licença própria.</li>
+<li>Instalar a skill não instala dependências; pede ambiente Python 3.12 com uv.</li>
+<li>{'Atividade recente': 'repositório com 763 commits, versão 2.72.0 e 55,8 mil estrelas; data do último commit não confirmada.'}</li>
+</ul>
+<p>Licença: MIT (verificada em 2026-11-02)</p>
+<h3 id="doc-skills-construtor-de-servidor-mcp-anthropic">Construtor de servidor MCP (Anthropic)</h3>
+<p><code>ext-mcp-builder</code> · https://github.com/anthropics/skills/tree/main/skills/mcp-builder</p>
+<p><em>Ferramentas: Pydantic.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>Expor funções determinísticas do projeto (cálculos, consulta a cadastros) como ferramentas MCP.</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>Sem necessidade de integração externa; um CLI Python (vcm) costuma bastar.</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>Apache-2.0 (LICENSE.txt conferido).</li>
+<li>Traz scripts/ e reference/; ler antes de instalar.</li>
+<li>Foco recomendado em TypeScript; exige Node ou o SDK Python.</li>
+</ul>
+<p>Licença: Apache-2.0 (verificada em 2026-11-02)</p>
+<h3 id="doc-skills-networkx-k-dense-comunitaria">NetworkX (K-Dense, comunitária)</h3>
+<p><code>ext-networkx</code> · https://github.com/K-Dense-AI/scientific-agent-skills/tree/main/skills/networkx</p>
+<p><em>Ferramentas: NetworkX.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>Redes de tubulação, conectividade de trechos ou dependências entre tarefas.</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>Grafos muito grandes (considerar rustworkx ou igraph).</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>Skill de terceiros; ler SKILL.md e referências antes de instalar.</li>
+<li>O campo license da skill diz BSD de 3 cláusulas (provavelmente a do NetworkX); o repositório é MIT.</li>
+<li>Pasta tem SKILL.md e references/, sem scripts.</li>
+<li>Data do último commit não confirmada.</li>
+</ul>
+<p>Licença: BSD-3-Clause (verificada em 2026-11-02)</p>
+<h3 id="doc-skills-pdf-anthropic">PDF (Anthropic)</h3>
+<p><code>ext-pdf</code> · https://github.com/anthropics/skills/tree/main/skills/pdf</p>
+<p><em>Ferramentas: pdfplumber, PyMuPDF, pytesseract.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>Extração de tabelas e texto de memoriais e listas em PDF para pandas/planilha.</li>
+<li>Mesclar, dividir ou girar PDFs de projeto; PDF escaneado que precisa de OCR.</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>Pranchas vetoriais em camadas CAD ou georreferenciamento; usar as skills internas do projeto (ler-prancha, georef-pranchas).</li>
+<li>Redistribuir ou adaptar a skill (licença proprietária).</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>Licença proprietária (LICENSE.txt, 2025 Anthropic) que proíbe extrair, copiar fora dos serviços e criar derivados; uso conforme o contrato com a Anthropic.</li>
+<li>Traz scripts/, forms.md e reference.md; ler antes de instalar.</li>
+<li>Depende de pypdf, pdfplumber, reportlab, pytesseract, pdf2image e ferramentas de sistema (poppler, tesseract).</li>
+<li>Sobrepõe-se à skill embutida pdf (por isso o prefixo ext-).</li>
+</ul>
+<h3 id="doc-skills-criador-de-skills-anthropic">Criador de skills (Anthropic)</h3>
+<p><code>ext-skill-creator</code> · https://github.com/anthropics/skills/tree/main/skills/skill-creator</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>Transformar um procedimento recorrente do mantenedor em skill do projeto com avaliações.</li>
+<li>Medir se a descrição aciona a skill (alinha com a medição antes x depois do método).</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>Skill trivial de poucas linhas; escrever à mão seguindo as boas práticas oficiais basta.</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>Apache-2.0 (LICENSE.txt conferido).</li>
+<li>Scripts Python (run_eval, run_loop, package_skill, eval-viewer); ler antes de instalar.</li>
+<li>Otimização de descrição usa a CLI claude -p (só Claude Code) e subagentes em paralelo, o que consome tokens.</li>
+<li>Sobrepõe-se ao skill-creator embutido.</li>
+</ul>
+<p>Licença: Apache-2.0 (verificada em 2026-11-02)</p>
+<h3 id="doc-skills-teste-de-aplicacao-web-anthropic">Teste de aplicação web (Anthropic)</h3>
+<p><code>ext-webapp-testing</code> · https://github.com/anthropics/skills/tree/main/skills/webapp-testing</p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>Conferir o visualizador HTML (medição, camadas) no navegador headless e capturar o console.</li>
+<li>Complementar scripts/testar_visualizador.py com cenários de interface.</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>{'Verificar cálculo': 'este fica em Python com pytest, não em teste de interface.'}</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>Apache-2.0 (LICENSE.txt conferido).</li>
+<li>Traz scripts/with_server.py e examples/; ler antes de instalar.</li>
+<li>Requer Playwright e Chromium instalados (o SKILL.md não dá passos de instalação).</li>
+</ul>
+<p>Licença: Apache-2.0 (verificada em 2026-11-02)</p>
+<h3 id="doc-skills-planilhas-excel-anthropic">Planilhas Excel (Anthropic)</h3>
+<p><code>ext-xlsx</code> · https://github.com/anthropics/skills/tree/main/skills/xlsx</p>
+<p><em>Ferramentas: pandas.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>Entregar planilha com fórmulas vivas (quantitativos, orçamentos) e conferir que não há</li>
+<li>Editar planilha existente preservando formatação.</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>{'Cálculo de engenharia do método': 'o resultado final é calculado em Python (regra do mantenedor); a planilha apenas apresenta.'}</li>
+<li>Quando o entregável principal é HTML, banco de dados ou Google Sheets (a própria skill exclui esses casos).</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>Licença proprietária declarada no frontmatter (LICENSE.txt); não redistribuir.</li>
+<li>Traz scripts/ (recalc.py usa LibreOffice via soffice); ler antes de instalar.</li>
+<li>Exige openpyxl, pandas, markitdown e LibreOffice instalados.</li>
+<li>Sobrepõe-se à skill embutida xlsx.</li>
+</ul>
+
+</article>
+
 <article id="doc-plano">
   <div class="fonte">
     <span>Fonte: <a href="plano.md">docs/plano.md</a></span>
@@ -2640,6 +3735,12 @@ registrado e pelo menos uma decisão humana pedida e registrada.</p>
 <li class="tarefa"><input type="checkbox" disabled> Regressão automática ao incluir um modelo novo no catálogo</li>
 </ul>
 <p><strong>Aceite:</strong> a mesma tarefa roda em três fornecedores, com custo e qualidade comparáveis no mesmo relatório.</p>
+<h2 id="doc-plano-repertorio-de-skills-02-11-2026">Repertório de skills (02/11/2026)</h2>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled checked> Catálogo de skills em <code>repertorio/skills/</code> (projeto, plataforma, plugins, externas) e página <code>skills.md</code> gerada (Haiku + Sonnet + Opus)</li>
+<li class="tarefa"><input type="checkbox" disabled> Skills próprias do método, instaladas pelo <code>vcm iniciar</code>: <code>vcm-iteracao</code> (especificar → executor → balanço → decidir → registrar) e <code>vcm-diagnostico</code> (linha de base de um projeto existente)</li>
+<li class="tarefa"><input type="checkbox" disabled> Tese: medir o efeito de uma skill (mesma tarefa com e sem a skill: custo, retrabalho, aprovação)</li>
+</ul>
 <h2 id="doc-plano-fase-8-primeiro-programa-experimental">Fase 8 — Primeiro programa experimental</h2>
 <p>Teses T001 (extração de pranchas), T002 (armazenamento espacial), T003 (roteamento) e T004
 (determinismo) aplicadas ao <strong>projeto-em-camadas</strong>, que é consumido como repositório externo
@@ -2835,7 +3936,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte 18e3c9ff1c80). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte e8042f2d8736). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";

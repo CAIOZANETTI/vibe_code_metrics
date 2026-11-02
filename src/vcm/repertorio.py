@@ -152,6 +152,10 @@ def markdown_skills(pasta: Path) -> str:
         texto = como.read_text(encoding="utf-8").strip().splitlines()
         if texto and texto[0].startswith("# "):
             texto = texto[1:]  # o título vira seção desta página
+        # Títulos das notas descem um nível, para ficarem dentro de "Como as skills funcionam".
+        texto = ["#" + t if t.startswith("#") else t for t in texto]
+        while texto and not texto[0].strip():
+            texto = texto[1:]
         linhas += ["## Como as skills funcionam", "", *texto, ""]
     por_origem: dict[str, list[dict]] = {}
     for entrada in entradas:

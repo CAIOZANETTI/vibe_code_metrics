@@ -93,3 +93,14 @@ def test_esquema_das_skills_e_ligacao_com_ferramentas():
             assert s["id"].startswith("ext-") and s["onde"].startswith("https://")
         for f in s["ferramentas_relacionadas"]:
             assert f in ferramentas, f"{s['id']}: ferramenta {f} fora do repertório"
+
+
+def test_notas_de_funcionamento_ficam_dentro_da_secao(tmp_path):
+    from vcm.repertorio import markdown_skills
+
+    (tmp_path / "skills").mkdir()
+    (tmp_path / "skills" / "_como_funcionam.md").write_text(
+        "# Título\n\n## Onde ficam\n\ntexto\n", encoding="utf-8"
+    )
+    md = markdown_skills(tmp_path)
+    assert "## Como as skills funcionam\n\n### Onde ficam" in md

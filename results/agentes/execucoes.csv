@@ -21,3 +21,5 @@ data,fase,tarefa,papel,modelo,tokens,chamadas_ferramenta,duracao_s,aprovado,retr
 2026-11-02,repertório,"repertório: cálculo, dados, armazenamento, validação",executor_padrao,claude-sonnet-5-5,101949,53,263.1,True,nenhum,licença e versão pelo PyPI; premissas verificadas em parte nas páginas oficiais
 2026-11-02,repertório,"repertório: geoespacial, CAD/3D, grafos, intercâmbio",executor_padrao,claude-sonnet-5-5,96452,30,228.7,True,nenhum,licença e versão pelo PyPI; premissas verificadas em parte nas páginas oficiais
 2026-11-02,repertório,"repertório: documentos, apresentação, qualidade",executor_padrao,claude-sonnet-5-5,89748,24,186.9,True,nenhum,licença e versão pelo PyPI; premissas verificadas em parte nas páginas oficiais
+2026-11-02,skills,catálogo de skills internas e do projeto,executor_mecanico,claude-haiku-5-5,119083,41,137.3,True,nenhum,25 skills
+2026-11-02,skills,skills externas e funcionamento,executor_padrao,claude-sonnet-5-5,142165,68,272.1,True,baixo: títulos das notas rebaixados,licenças lidas no LICENSE de cada skill
