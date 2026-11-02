@@ -14,6 +14,7 @@ def _pasta(tmp_path: Path) -> Path:
     )
     (tmp_path / "estilo.md").write_text("# Estilo\n\n## Regras\n", encoding="utf-8")
     (tmp_path / "guia.md").write_text("# Guia\n\n## Instalar\n", encoding="utf-8")
+    (tmp_path / "repertorio.md").write_text("# Repertório\n\n## Cálculo\n", encoding="utf-8")
     return tmp_path
 
 
@@ -57,3 +58,36 @@ def test_markdown_avulso_vira_html_com_titulo(tmp_path):
     assert saida.name == "diagnostico.html"
     assert "<title>Diagnóstico X</title>" in h and "<table>" in h
     assert "docs/diagnostico.md" not in h and "vcm html diagnostico.md" in h
+
+
+def test_versao_artefato_sem_esqueleto_nem_script_externo(tmp_path):
+    pasta = _pasta(tmp_path)
+    saida = docs.gerar_artefato(pasta, tmp_path / "artefato.html")
+    h = saida.read_text(encoding="utf-8")
+    assert h.startswith("<title>Vibe Code Metrics</title>")
+    assert "<html" not in h and "<body" not in h and "<script" not in h
+    assert '<pre class="mermaid">' in h and 'data-theme="dark"' in h
+    assert "https://github.com/CAIOZANETTI/vibe_code_metrics/blob/main/docs/plano.md" in h
+
+
+def test_repertorio_md_e_gerado_dos_yaml_e_vigiado_pelo_check(tmp_path):
+    from vcm import repertorio
+
+    docs_ = tmp_path / "docs"
+    docs_.mkdir()
+    _pasta(docs_)
+    origem = tmp_path / "repertorio" / "calculo"
+    origem.mkdir(parents=True)
+    (origem / "numpy.yaml").write_text(
+        "id: numpy\nnome: NumPy\npapel: calculo\ndescricao: Arrays.\n"
+        "quando_considerar: [matriz densa]\nquando_evitar: []\ncuidados: [threads do BLAS]\n"
+        "coopera_com: []\ncompete_com: []\nlicenca: BSD-3-Clause\nstatus: em_uso\n",
+        encoding="utf-8",
+    )
+    md = repertorio.markdown(tmp_path / "repertorio")
+    assert "## Cálculo numérico" in md and "| NumPy | em uso | BSD-3-Clause |" in md
+    assert "- threads do BLAS" in md
+    assert not docs.gerar(docs_, check=True)  # repertorio.md da fixture está desatualizado
+    docs.gerar(docs_)
+    assert docs.gerar(docs_, check=True)
+    assert (docs_ / "repertorio.md").read_text(encoding="utf-8") == md

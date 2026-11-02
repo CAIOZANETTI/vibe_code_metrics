@@ -11,6 +11,9 @@ from vcm import docs
 
 def _cmd_docs(args: argparse.Namespace) -> int:
     pasta = Path(args.pasta)
+    if args.artefato:
+        print(f"{docs.gerar_artefato(pasta, Path(args.artefato))} gerado (página para o claude.ai)")
+        return 0
     ok = docs.gerar(pasta, check=args.check)
     if args.check and not ok:
         print(
@@ -196,6 +199,7 @@ def main(argv: list[str] | None = None) -> int:
     d = sub.add_parser("docs", help="gera docs/index.html a partir dos Markdown")
     d.add_argument("--pasta", default="docs")
     d.add_argument("--check", action="store_true", help="falha se o HTML estiver desatualizado")
+    d.add_argument("--artefato", default=None, help="gera a versão para publicar no claude.ai")
     d.set_defaults(func=_cmd_docs)
 
     h = sub.add_parser("html", help="converte um Markdown (relatório) em HTML formatado")

@@ -1,0 +1,22 @@
+<nav>
+  <div class="marca">Vibe Code Metrics</div>
+  <div class="sub">fonte: {{ pasta_rotulo | default("docs/") }}*.md · hash {{ hash_fonte }}</div>
+  {% for d in docs %}
+  <h4>{{ d.titulo }}</h4>
+  <a href="#{{ d.id }}">Início</a>
+  {% for s in d.secoes %}<a class="n{{ s.nivel }}" href="#{{ s.ancora }}">{{ s.titulo }}</a>
+  {% endfor %}
+  {% endfor %}
+</nav>
+<main>
+{% for d in docs %}
+<article id="{{ d.id }}">
+  <div class="fonte">
+    <span>Fonte: <a href="{{ url_fonte | default("") }}{{ d.arquivo }}">{{ pasta_rotulo | default("docs/") }}{{ d.arquivo }}</a></span>
+    <span>Gerado por <code>{{ comando_rotulo | default("uv run vcm docs") }}</code></span>
+  </div>
+  {{ d.html | safe }}
+</article>
+{% endfor %}
+<footer>Este HTML é derivado dos Markdown (hash da fonte {{ hash_fonte }}). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+</main>

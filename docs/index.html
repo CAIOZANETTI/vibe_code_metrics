@@ -6,15 +6,23 @@
 <title>Vibe Code Metrics — Arquitetura e Plano</title>
 <!-- Gerado por `uv run vcm docs` a partir de docs/*.md. Não edite este arquivo: edite o Markdown. -->
 <style>
+/* Documentação viva: barra lateral de navegação + coluna de leitura. Tokens claros na raiz;
+   escuro pelo sistema (sem escolha explícita) e pela escolha explícita do leitor. */
 :root {
   --bg: #fbfbfa; --fg: #1f2328; --muted: #5d6470; --line: #e3e5e8; --card: #ffffff;
   --accent: #1f6feb; --accent-soft: #e8f0fe; --code: #f3f4f6; --side: #f4f5f6;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #111418; --fg: #e6e8eb; --muted: #9aa3ad; --line: #2b3138; --card: #171b20;
     --accent: #58a6ff; --accent-soft: #15243a; --code: #1d2228; --side: #14181d;
+    color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+  --bg: #111418; --fg: #e6e8eb; --muted: #9aa3ad; --line: #2b3138; --card: #171b20;
+  --accent: #58a6ff; --accent-soft: #15243a; --code: #1d2228; --side: #14181d;
+  color-scheme: dark;
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -24,7 +32,8 @@ body {
   display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: 100vh;
 }
 nav {
-  position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 24px 18px;
+  position: sticky; top: env(safe-area-inset-top, 0px); height: 100vh; overflow-y: auto;
+  padding-block: 24px; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: 18px;
   background: var(--side); border-right: 1px solid var(--line); font-size: 14px;
 }
 nav .marca { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
@@ -33,7 +42,7 @@ nav h4 { margin: 18px 0 6px; font-size: 12px; text-transform: uppercase; letter-
 nav a { display: block; color: var(--fg); text-decoration: none; padding: 3px 8px; border-radius: 6px; }
 nav a:hover { background: var(--accent-soft); color: var(--accent); }
 nav a.n3 { padding-left: 22px; color: var(--muted); font-size: 13px; }
-main { padding: 32px 48px 80px; max-width: 1040px; }
+main { padding-block: 32px 80px; padding-left: 48px; padding-right: max(48px, env(safe-area-inset-right, 0px)); max-width: 1040px; min-width: 0; }
 article { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 40px 32px; margin-bottom: 40px; }
 .fonte { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
   font-size: 13px; color: var(--muted); border-bottom: 1px solid var(--line); padding: 14px 0 10px; margin-bottom: 8px; }
@@ -49,7 +58,7 @@ blockquote p { margin: 4px 0; }
 code { font: 13.5px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--code); padding: 1px 5px; border-radius: 4px; }
 pre { background: var(--code); padding: 14px 16px; border-radius: 8px; overflow-x: auto; }
 pre code { padding: 0; background: none; }
-pre.mermaid { background: transparent; text-align: center; border: 1px solid var(--line); }
+pre.mermaid { background: transparent; text-align: center; border: 1px solid var(--line); overflow-x: auto; }
 table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 14.5px; display: block; overflow-x: auto; }
 th, td { border: 1px solid var(--line); padding: 7px 10px; text-align: left; vertical-align: top; }
 th { background: var(--side); font-weight: 600; }
@@ -60,7 +69,7 @@ footer { color: var(--muted); font-size: 12px; }
 @media (max-width: 860px) {
   body { grid-template-columns: 1fr; }
   nav { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
-  main { padding: 16px; }
+  main { padding-block: 16px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
   article { padding: 4px 18px 20px; }
 }
 </style>
@@ -68,7 +77,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash 35cd35c9c11a</div>
+  <div class="sub">fonte: docs/*.md · hash 5ae6261b9a09</div>
   
   <h4>Guia rápido: usar o vcm num protótipo</h4>
   <a href="#doc-guia">Início</a>
@@ -100,6 +109,29 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n2" href="#doc-arquitetura-10-principios-inviolaveis">10. Princípios invioláveis</a>
   <a class="n2" href="#doc-arquitetura-11-o-repositorio-como-prototipo-dele-mesmo-t000">11. O repositório como protótipo dele mesmo (T000)</a>
   <a class="n2" href="#doc-arquitetura-12-como-esta-documentacao-se-mantem-atualizada">12. Como esta documentação se mantém atualizada</a>
+  
+  
+  <h4>Repertório de ferramentas</h4>
+  <a href="#doc-repertorio">Início</a>
+  <a class="n2" href="#doc-repertorio-calculo-numerico">Cálculo numérico</a>
+  <a class="n3" href="#doc-repertorio-numpy">NumPy</a>
+  <a class="n3" href="#doc-repertorio-scipy">SciPy</a>
+  <a class="n2" href="#doc-repertorio-dados-tabulares">Dados tabulares</a>
+  <a class="n3" href="#doc-repertorio-duckdb">DuckDB</a>
+  <a class="n3" href="#doc-repertorio-pandas">pandas</a>
+  <a class="n3" href="#doc-repertorio-polars">Polars</a>
+  <a class="n2" href="#doc-repertorio-armazenamento">Armazenamento</a>
+  <a class="n3" href="#doc-repertorio-geoparquet">GeoParquet</a>
+  <a class="n3" href="#doc-repertorio-parquet">Parquet</a>
+  <a class="n3" href="#doc-repertorio-sqlite">SQLite</a>
+  <a class="n2" href="#doc-repertorio-grafos">Grafos</a>
+  <a class="n3" href="#doc-repertorio-networkx">NetworkX</a>
+  <a class="n3" href="#doc-repertorio-rustworkx">rustworkx</a>
+  <a class="n2" href="#doc-repertorio-intercambio-de-dados">Intercâmbio de dados</a>
+  <a class="n3" href="#doc-repertorio-json-ld">JSON-LD</a>
+  <a class="n2" href="#doc-repertorio-apresentacao">Apresentação</a>
+  <a class="n3" href="#doc-repertorio-jinja2">Jinja2</a>
+  <a class="n3" href="#doc-repertorio-plotly">Plotly</a>
   
   
   <h4>Plano de implementação</h4>
@@ -847,6 +879,459 @@ qualquer agente regenere o HTML ao editar a documentação.</p>
 
 </article>
 
+<article id="doc-repertorio">
+  <div class="fonte">
+    <span>Fonte: <a href="repertorio.md">docs/repertorio.md</a></span>
+    <span>Gerado por <code>uv run vcm docs</code></span>
+  </div>
+  <h1 id="doc-repertorio-repertorio-de-ferramentas">Repertório de ferramentas</h1>
+<blockquote>
+<p>Premissas de uso de cada ferramenta: quando considerar, quando evitar e os cuidados.
+Só se comparam ferramentas do <strong>mesmo papel</strong>; a escolha entre elas é tese, não gosto.
+Licença e versão foram conferidas na fonte (PyPI e repositório) na data indicada.
+Página gerada a partir de <code>repertorio/*/*.yaml</code> por <code>vcm docs</code>; edite os YAML.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Papel</th>
+<th>Ferramentas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cálculo numérico</td>
+<td>NumPy, SciPy</td>
+</tr>
+<tr>
+<td>Dados tabulares</td>
+<td>DuckDB, pandas, Polars</td>
+</tr>
+<tr>
+<td>Armazenamento</td>
+<td>GeoParquet, Parquet, SQLite</td>
+</tr>
+<tr>
+<td>Grafos</td>
+<td>NetworkX, rustworkx</td>
+</tr>
+<tr>
+<td>Intercâmbio de dados</td>
+<td>JSON-LD</td>
+</tr>
+<tr>
+<td>Apresentação</td>
+<td>Jinja2, Plotly</td>
+</tr>
+</tbody>
+</table>
+<h2 id="doc-repertorio-calculo-numerico">Cálculo numérico</h2>
+<table>
+<thead>
+<tr>
+<th>Ferramenta</th>
+<th>Situação</th>
+<th>Licença</th>
+<th>Última versão</th>
+<th>Verificado em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://numpy.org/doc/stable/">NumPy</a></td>
+<td>em uso</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="https://docs.scipy.org/doc/scipy/">SciPy</a></td>
+<td>candidato</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doc-repertorio-numpy">NumPy</h3>
+<p>Arrays N-dimensionais e álgebra linear vetorizada em Python.</p>
+<p><em>Coopera com <code>pandas</code>, <code>polars</code>, <code>plotly</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>cálculo matricial e vetorizado</li>
+<li>álgebra linear</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>dados tabulares heterogêneos com junções e agrupamentos</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>a ordem das somas pode variar com o número de threads do BLAS; medir determinismo</li>
+<li>{'medido em 31/10/2026 (vcm.coletores.determinismo, 4 núcleos)': 'produto matricial 500×500 e solve 200×200 mudam de hash entre 1 thread e o padrão; com threads fixas, 100% estável; cumsum não muda. Fixar OPENBLAS_NUM_THREADS quando o resultado precisar ser reprodutível bit a bit'}</li>
+</ul>
+<h3 id="doc-repertorio-scipy">SciPy</h3>
+<p>Algoritmos científicos sobre NumPy, como otimização, interpolação, estatística e álgebra linear esparsa.</p>
+<p><em>Coopera com <code>numpy</code>, <code>pandas</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>otimização numérica</li>
+<li>interpolação</li>
+<li>estatística</li>
+<li>álgebra linear esparsa</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>manipulação de tabelas com junções e agrupamentos</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>solvers iterativos dependem de tolerância e critério de parada; declarar ambos</li>
+</ul>
+<h2 id="doc-repertorio-dados-tabulares">Dados tabulares</h2>
+<table>
+<thead>
+<tr>
+<th>Ferramenta</th>
+<th>Situação</th>
+<th>Licença</th>
+<th>Última versão</th>
+<th>Verificado em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://duckdb.org/docs/">DuckDB</a></td>
+<td>candidato</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="https://pandas.pydata.org/docs/">pandas</a></td>
+<td>em uso</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="https://docs.pola.rs/">Polars</a></td>
+<td>em teste</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doc-repertorio-duckdb">DuckDB</h3>
+<p>Banco SQL analítico embutido no processo, que lê arquivos Parquet e CSV diretamente.</p>
+<p><em>Compete com <code>pandas</code>, <code>polars</code>; coopera com <code>parquet</code>, <code>pandas</code>, <code>polars</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>consultas SQL sobre arquivos grandes</li>
+<li>junções e agregações complexas</li>
+<li>operação sem servidor</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>muitos processos escrevendo ao mesmo tempo</li>
+<li>aplicações transacionais de alta frequência de escrita</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>um arquivo de banco aceita um processo escritor por vez</li>
+</ul>
+<h3 id="doc-repertorio-pandas">pandas</h3>
+<p>Biblioteca de DataFrames para filtrar, juntar e agrupar dados tabulares em Python.</p>
+<p><em>Compete com <code>polars</code>, <code>duckdb</code>; coopera com <code>numpy</code>, <code>parquet</code>, <code>plotly</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>dados tabulares com junções e agrupamentos</li>
+<li>ecossistema maduro e amplamente documentado</li>
+<li>integração direta com NumPy e Parquet</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>volumes que não cabem com folga na memória</li>
+<li>pipelines que se beneficiam de execução preguiçosa otimizada</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>o comportamento de valores ausentes e os tipos dependem do dtype; definir dtype explícito</li>
+<li>algumas operações copiam os dados</li>
+</ul>
+<h3 id="doc-repertorio-polars">Polars</h3>
+<p>Biblioteca de DataFrames com motor escrito em Rust, baseada em Apache Arrow e com API de expressões.</p>
+<p><em>Compete com <code>pandas</code>, <code>duckdb</code>; coopera com <code>numpy</code>, <code>parquet</code>, <code>plotly</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>tabelas grandes</li>
+<li>agregações e junções em paralelo</li>
+<li>execução preguiçosa com otimização de consulta</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>código existente que depende fortemente da API do pandas</li>
+<li>bibliotecas que aceitam apenas pandas</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>a API difere do pandas, pois não há índice de linha</li>
+<li>na execução preguiçosa, o resultado só existe após collect()</li>
+</ul>
+<h2 id="doc-repertorio-armazenamento">Armazenamento</h2>
+<table>
+<thead>
+<tr>
+<th>Ferramenta</th>
+<th>Situação</th>
+<th>Licença</th>
+<th>Última versão</th>
+<th>Verificado em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://geoparquet.org/">GeoParquet</a></td>
+<td>candidato</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="https://arrow.apache.org/docs/python/parquet.html">Parquet</a></td>
+<td>em uso</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="https://docs.python.org/3/library/sqlite3.html">SQLite</a></td>
+<td>candidato</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doc-repertorio-geoparquet">GeoParquet</h3>
+<p>Parquet com metadados geoespaciais padronizados, lido e escrito com GeoPandas.</p>
+<p><em>Compete com <code>sqlite</code>; coopera com <code>pandas</code>, <code>parquet</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>tabelas com geometrias trocadas entre ferramentas</li>
+<li>preservar colunas e tipos do Parquet</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>consultas espaciais complexas e frequentes, para as quais um banco espacial é mais adequado</li>
+<li>dados sem geometria</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>a versão da especificação de metadados precisa ser declarada</li>
+<li>o sistema de referência de coordenadas precisa ser declarado</li>
+</ul>
+<h3 id="doc-repertorio-parquet">Parquet</h3>
+<p>Formato de arquivo colunar, lido e escrito em Python pelo pacote pyarrow.</p>
+<p><em>Compete com <code>sqlite</code>; coopera com <code>pandas</code>, <code>polars</code>, <code>duckdb</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>persistir tabelas grandes</li>
+<li>leitura seletiva de colunas</li>
+<li>compressão por coluna</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>edição linha a linha</li>
+<li>arquivos pequenos que são reescritos com muita frequência</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>declarar os tipos explicitamente ao gravar</li>
+<li>o arquivo não é alterado no lugar; ele é reescrito por inteiro</li>
+</ul>
+<h3 id="doc-repertorio-sqlite">SQLite</h3>
+<p>Banco relacional em arquivo único, embutido, disponível pela biblioteca padrão do Python.</p>
+<p><em>Compete com <code>parquet</code>, <code>geoparquet</code>; coopera com <code>pandas</code>, <code>duckdb</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>armazenar tabelas pequenas e médias com consultas SQL</li>
+<li>não exigir dependência extra</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>volumes analíticos grandes com varreduras de colunas</li>
+<li>muitos escritores concorrentes</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>aceita um escritor por vez</li>
+<li>os tipos são dinâmicos, não rígidos</li>
+<li>a verificação de chaves estrangeiras precisa ser ativada explicitamente</li>
+</ul>
+<h2 id="doc-repertorio-grafos">Grafos</h2>
+<table>
+<thead>
+<tr>
+<th>Ferramenta</th>
+<th>Situação</th>
+<th>Licença</th>
+<th>Última versão</th>
+<th>Verificado em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://networkx.org/documentation/stable/">NetworkX</a></td>
+<td>candidato</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="https://www.rustworkx.org/">rustworkx</a></td>
+<td>candidato</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doc-repertorio-networkx">NetworkX</h3>
+<p>Biblioteca de grafos em Python puro, com grande conjunto de algoritmos e API flexível.</p>
+<p><em>Compete com <code>rustworkx</code>; coopera com <code>numpy</code>, <code>pandas</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>prototipar algoritmos de grafos</li>
+<li>grafos de tamanho moderado</li>
+<li>atributos arbitrários em nós e arestas</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>grafos muito grandes em que o tempo de execução é o fator limitante</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>a implementação em Python é mais lenta que a de bibliotecas com núcleo nativo</li>
+<li>a ordem de iteração segue a ordem de inserção; fixá-la para resultados reproduzíveis</li>
+</ul>
+<h3 id="doc-repertorio-rustworkx">rustworkx</h3>
+<p>Biblioteca de grafos com núcleo em Rust e API em Python.</p>
+<p><em>Compete com <code>networkx</code>; coopera com <code>numpy</code>, <code>pandas</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>grafos grandes</li>
+<li>algoritmos de grafos com execução em código nativo</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>quando os nós precisam ser identificados diretamente por rótulos de domínio</li>
+<li>quando é preciso o ecossistema mais amplo de algoritmos do NetworkX</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>os nós são referenciados por índices inteiros; mapear os identificadores de domínio para esses índices</li>
+</ul>
+<h2 id="doc-repertorio-intercambio-de-dados">Intercâmbio de dados</h2>
+<table>
+<thead>
+<tr>
+<th>Ferramenta</th>
+<th>Situação</th>
+<th>Licença</th>
+<th>Última versão</th>
+<th>Verificado em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://json-ld.org/">JSON-LD</a></td>
+<td>candidato</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doc-repertorio-json-ld">JSON-LD</h3>
+<p>Formato de dados ligados em JSON, em que um contexto associa termos a identificadores globais (IRIs).</p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>intercambiar dados semânticos com vocabulário compartilhado</li>
+<li>publicar metadados vinculados a outros conjuntos de dados</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>troca interna simples, em que um JSON comum basta</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>a expansão de contexto pode buscar URLs remotos; usar carregador local e controlado</li>
+</ul>
+<h2 id="doc-repertorio-apresentacao">Apresentação</h2>
+<table>
+<thead>
+<tr>
+<th>Ferramenta</th>
+<th>Situação</th>
+<th>Licença</th>
+<th>Última versão</th>
+<th>Verificado em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://jinja.palletsprojects.com/">Jinja2</a></td>
+<td>em uso</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="https://plotly.com/python/">Plotly</a></td>
+<td>em uso</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doc-repertorio-jinja2">Jinja2</h3>
+<p>Motor de templates para gerar texto e HTML a partir de dados já calculados em Python.</p>
+<p><em>Coopera com <code>plotly</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>montar relatórios HTML com laços e blocos reutilizáveis</li>
+<li>separar apresentação do cálculo</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>lógica de negócio dentro do template</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>o autoescape vem desligado por padrão no Environment; ligá-lo para HTML</li>
+</ul>
+<h3 id="doc-repertorio-plotly">Plotly</h3>
+<p>Gráficos interativos gerados em Python e renderizados no navegador pelo Plotly.js.</p>
+<p><em>Coopera com <code>jinja2</code>, <code>numpy</code>, <code>pandas</code>, <code>polars</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>gráficos interativos em HTML autocontido</li>
+<li>receber DataFrames de pandas e Polars</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>figuras estáticas para publicação impressa, em que uma ferramenta de figura estática é mais simples</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>o HTML gerado inclui JavaScript; o JavaScript só exibe valores já calculados</li>
+</ul>
+
+</article>
+
 <article id="doc-plano">
   <div class="fonte">
     <span>Fonte: <a href="plano.md">docs/plano.md</a></span>
@@ -1321,10 +1806,10 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte 35cd35c9c11a). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte 5ae6261b9a09). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
-  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
   const escuro = window.matchMedia("(prefers-color-scheme: dark)").matches;
   mermaid.initialize({ startOnLoad: true, theme: escuro ? "dark" : "neutral", securityLevel: "strict" });
 </script>
