@@ -154,8 +154,26 @@ def _cmd_sessoes(args: argparse.Namespace) -> int:
         print(f"Linhas inválidas ignoradas: {invalidas}")
     if com_custo:
         print("Aviso: custo equivalente de API; em plano de assinatura não é o gasto real.")
+    _imprimir_adesao(sessoes.adesao_formulario(Path(args.pasta), args.projeto), saida)
     print(f"Gravado em {saida}")
     return 0
+
+
+def _imprimir_adesao(turnos, saida: Path) -> None:
+    """Adesão ao formulário de interação nos turnos que mexeram em arquivos."""
+    from vcm import formatacao
+    from vcm.coletores import sessoes
+
+    turnos.to_parquet(saida / "adesao_formulario.parquet", index=False)
+    r = sessoes.resumo_adesao(turnos)
+    if not r["turnos_com_trabalho"]:
+        return
+    print(
+        f"\nFormulário de interação: {formatacao.numero(100 * r['frac_com_formulario'], 0)}% "
+        f"de {r['turnos_com_trabalho']} turnos com trabalho · tokens de saída da resposta: "
+        f"{formatacao.numero(r['tokens_saida_com_formulario'], 0)} com formulário, "
+        f"{formatacao.numero(r['tokens_saida_sem_formulario'], 0)} sem"
+    )
 
 
 def _cmd_iniciar(args: argparse.Namespace) -> int:
@@ -262,7 +280,14 @@ def _cmd_rumo(args: argparse.Namespace) -> int:
             if not (args.etapa and args.status):
                 print("erro: use --etapa e --status juntos", file=sys.stderr)
                 return 1
-            mod.marcar(arquivo, args.etapa, args.status)
+            mod.marcar(
+                arquivo,
+                args.etapa,
+                args.status,
+                forcar=args.forcar,
+                motivo=args.motivo,
+                raiz_repo=repo,
+            )
             print(f"etapa {args.etapa} -> {args.status}")
             return 0
         rumo = mod.carregar(arquivo)
@@ -302,6 +327,24 @@ def _cmd_rumo(args: argparse.Namespace) -> int:
         destino.parent.mkdir(parents=True, exist_ok=True)
         destino.write_text(conteudo, encoding="utf-8")
     print(texto)
+    return 0
+
+
+def _cmd_formulario(args: argparse.Namespace) -> int:
+    """Gancho Stop: lê o JSON do stdin e imprime a decisão de bloqueio, se houver."""
+    import json
+
+    from vcm import gancho
+
+    try:
+        entrada = json.loads(sys.stdin.read())
+    except ValueError:
+        return 0
+    if not isinstance(entrada, dict):
+        return 0
+    decisao = gancho.avaliar_parada(entrada)
+    if decisao:
+        print(json.dumps(decisao, ensure_ascii=False))
     return 0
 
 
@@ -366,6 +409,12 @@ def main(argv: list[str] | None = None) -> int:
     ru.add_argument("--novo", metavar="OBJETIVO", default=None, help="cria o rumo.yaml inicial")
     ru.add_argument("--etapa", default=None, help="id da etapa a marcar (com --status)")
     ru.add_argument("--status", default=None, help="novo status da etapa")
+    ru.add_argument(
+        "--forcar",
+        action="store_true",
+        help="marca 'feito' mesmo com pendências (exige --motivo; vira desvio)",
+    )
+    ru.add_argument("--motivo", default=None, help="justificativa de --forcar")
     ru.add_argument("--sem-sessoes", action="store_true", help="não lê os logs locais de sessão")
     ru.add_argument(
         "--formulario",
@@ -398,6 +447,15 @@ def main(argv: list[str] | None = None) -> int:
     i.add_argument("--pacote", required=True, help="nome do pacote Python em src/")
     i.add_argument("--forcar", action="store_true", help="sobrescreve arquivos existentes")
     i.set_defaults(func=_cmd_iniciar)
+
+    fo = sub.add_parser("formulario", help="gancho Stop: confere o formulário padrão da resposta")
+    fo.add_argument(
+        "--verificar",
+        action="store_true",
+        required=True,
+        help="lê o JSON do hook Stop no stdin e bloqueia se faltar campo do formulário",
+    )
+    fo.set_defaults(func=_cmd_formulario)
 
     args = p.parse_args(argv)
     return args.func(args)

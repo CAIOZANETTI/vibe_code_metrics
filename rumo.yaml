@@ -1,98 +1,72 @@
-objetivo: 'Execução autônoma: baixar a complexidade do vcm e fazer o vcm sugerir correções
-  (sem aplicá-las)'
+objetivo: 'Proteger o formulário de interação: status "feito" só com prova, gancho
+  que confere o formulário e medição da adesão'
 criterio_de_pronto:
-- complexidade média do vcm <= 4,0 e nenhuma função com nota D
-- cartão e rumo trazem uma seção 'Correções sugeridas' gerada dos dados, sem alterar
-  código
-- estimativas calibradas pela razão real/estimado das rodadas anteriores
-- balanço sem REVERTER; merge na main; rumo comentado no PR; gasto <= US$ 30
-base: 795ba65
+- vcm rumo --status feito recusa etapa com entregável ausente ou com teste falhando
+  no último balanço (com --forcar e motivo registrado)
+- gancho Stop instalado pelo vcm iniciar devolve ao agente a resposta que mexeu em
+  arquivos sem o formulário completo, sem laço
+- vcm sessoes mostra a adesão ao formulário e o custo extra em tokens
+- balanço MANTER; merge na main; rumo comentado no PR
+base: 6b76bac
 etapas:
 - id: E1
-  nome: Refatorar rumo.carregar e config.carregar_config em tabela de regras
+  nome: Prova para marcar feito (entregáveis e último balanço)
   entregaveis:
   - src/vcm/rumo.py
-  - src/vcm/config.py
+  - src/vcm/cli.py
   - tests/test_rumo.py
-  - tests/test_config.py
   depende_de: []
   agente: sonnet
-  estimativa_min: 20
+  estimativa_min: 10
   estimativa_tokens: 120000
   status: feito
-  inicio: '2026-11-02T14:32:47Z'
-  fim: '2026-11-02T14:36:53Z'
+  inicio: '2026-11-02T14:50:26Z'
+  fim: '2026-11-02T14:53:18Z'
+  forcado: null
 - id: E2
-  nome: Correções sugeridas no cartão e no rumo (vcm.sugestoes)
+  nome: Gancho Stop que confere o formulário (vcm formulario --verificar) e instalação
+    pelo vcm iniciar
   entregaveis:
-  - src/vcm/sugestoes.py
-  - src/vcm/cartao.py
-  - src/vcm/templates/cartao.html.j2
-  - src/vcm/templates/rumo.html.j2
-  - tests/test_sugestoes.py
-  - tests/test_snapshot_cartao.py
+  - src/vcm/cli.py
+  - src/vcm/formulario.py
+  - src/vcm/gancho.py
+  - src/vcm/iniciar.py
+  - src/vcm/modelos_projeto/settings.json
+  - .claude/settings.json
+  - tests/test_gancho.py
+  - tests/test_iniciar.py
   depende_de: []
   agente: sonnet
-  estimativa_min: 25
+  estimativa_min: 15
   estimativa_tokens: 150000
   status: feito
-  inicio: '2026-11-02T14:32:48Z'
-  fim: '2026-11-02T14:37:43Z'
-- id: E5
-  nome: 'Formulário de interação: skill vcm-formulario, regra no CLAUDE.md, instalação
-    pelo vcm iniciar e vcm rumo --formulario'
-  entregaveis:
-  - src/vcm/modelos_projeto/skills/vcm-formulario/SKILL.md
-  - .claude/skills/vcm-formulario/SKILL.md
-  - src/vcm/iniciar.py
-  - src/vcm/modelos_projeto/CLAUDE.md.j2
-  - CLAUDE.md
-  - tests/test_iniciar.py
-  - repertorio/skills/vcm-formulario.yaml
-  - src/vcm/formulario.py
-  - tests/test_formulario.py
-  depende_de: []
-  agente: opus
-  estimativa_min: 20
-  estimativa_tokens: 100000
-  status: feito
-  inicio: '2026-11-02T14:35:19Z'
-  fim: '2026-11-02T14:40:04Z'
+  inicio: '2026-11-02T14:50:27Z'
+  fim: '2026-11-02T14:52:58Z'
+  forcado: null
 - id: E3
-  nome: Calibração das estimativas e documentação
+  nome: Medição da adesão ao formulário, skill e documentação, integração
   entregaveis:
+  - src/vcm/coletores/sessoes.py
+  - src/vcm/cli.py
+  - tests/test_sessoes.py
+  - src/vcm/modelos_projeto/skills/*
+  - .claude/skills/*
   - docs/*.md
   - docs/index.html
-  - src/vcm/modelos_projeto/skills/vcm-rumo/SKILL.md
-  - .claude/skills/vcm-rumo/SKILL.md
-  - rumo.yaml
-  - results/rumos/*
+  - results/*
   depende_de:
   - E1
   - E2
-  - E5
   agente: opus
-  estimativa_min: 10
-  estimativa_tokens: 100000
+  estimativa_min: 15
+  estimativa_tokens: 150000
   status: feito
-  inicio: '2026-11-02T14:40:11Z'
-  fim: '2026-11-02T14:41:42Z'
-- id: E4
-  nome: 'Integração: balanço, rumo no PR, merge e republicação'
-  entregaveis:
-  - results/iteracoes/*
-  - results/agentes/execucoes.csv
-  - src/vcm/cli.py
-  depende_de:
-  - E3
-  agente: opus
-  estimativa_min: 10
-  estimativa_tokens: 100000
-  status: feito
-  inicio: '2026-11-02T14:41:43Z'
-  fim: '2026-11-02T14:42:54Z'
+  inicio: '2026-11-02T14:54:45Z'
+  fim: '2026-11-02T14:57:36Z'
+  forcado: null
 historico:
 - data: '2026-11-02'
-  mudanca: 'nova etapa E5: formulário padrão de interação (o agente responde sempre
-    no mesmo formato)'
-  motivo: pedido do mantenedor durante a execução autônoma
+  mudanca: 'E1: entregável tests/test_cli_rumo.py retirado; o teste do CLI ficou em
+    tests/test_rumo.py'
+  motivo: a prova de 'feito' (nova regra) acusou o entregável ausente; corrigido o
+    plano, sem forçar

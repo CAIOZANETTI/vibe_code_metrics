@@ -77,7 +77,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash aafaf2350b1a</div>
+  <div class="sub">fonte: docs/*.md · hash 82a2550ecd00</div>
   
   <h4>Guia rápido: usar o vcm num protótipo</h4>
   <a href="#doc-guia">Início</a>
@@ -358,6 +358,16 @@ números com <code>vcm rumo --formulario</code>, e o agente completa os campos d
 </tr>
 </tbody>
 </table>
+<p>Duas proteções acompanham o formulário:</p>
+<ul>
+<li><strong>Gancho que confere:</strong> o <code>vcm iniciar</code> instala em <code>.claude/settings.json</code> um gancho <code>Stop</code>
+(<code>vcm formulario --verificar</code>). Se a resposta mexeu em arquivos e faltam campos, o agente
+recebe a resposta de volta para completar. Pergunta curta, sem edição, passa livre.</li>
+<li><strong>&quot;Feito&quot; só com prova:</strong> <code>vcm rumo --etapa E2 --status feito</code> recusa se faltar entregável ou se
+o último balanço tiver teste falhando ou <code>REVERTER</code>. Forçar exige motivo e vira desvio.</li>
+</ul>
+<p><code>vcm sessoes</code> mostra a adesão: a fração de respostas com trabalho que vieram no formulário e os
+tokens de saída com e sem ele.</p>
 <p>Num projeto que já usava o <code>vcm</code>, rode <code>vcm iniciar . --pacote &lt;nome&gt;</code> de novo para receber a skill
 nova; ele não sobrescreve o que já existe. Depois, acrescente ao <code>CLAUDE.md</code> a seção
 &quot;Formulário de interação&quot; do modelo.</p>
@@ -912,6 +922,9 @@ relido a cada resposta) fica de fora: ela chegou a 19 milhões de tokens em 14 m
 e já entra no custo.</li>
 <li><strong>Etapas simultâneas</strong> não dividem as mesmas chamadas: cada etapa conta só as do modelo do seu
 agente.</li>
+<li><strong>&quot;Feito&quot; exige prova:</strong> entregáveis presentes e último balanço (depois do início da etapa) sem
+teste falhando nem <code>REVERTER</code>. É a defesa contra o agente declarar sucesso que não houve
+(<em>apparent-success reporting</em>, observado em cerca de 2% de sessões reais de agentes de código).</li>
 <li><strong>Etapas do mesmo modelo em paralelo</strong> se separam pela descrição do agente: a que começa com o
 id da etapa (<code>E2: …</code>) fica só com as chamadas dele.</li>
 <li><strong>Horas de relógio da IA</strong> juntam os agentes em paralelo (sobreposição conta uma vez); <strong>horas de
@@ -3980,6 +3993,10 @@ registrado e pelo menos uma decisão humana pedida e registrada.</p>
 <ul>
 <li class="tarefa"><input type="checkbox" disabled checked> <code>vcm.sugestoes</code>: o cartão e o rumo trazem &quot;Correções sugeridas&quot; (o quê, por quê, agente), geradas das medições; o vcm <strong>sugere e não aplica</strong>, porque aplicar exige aprovação humana (Sonnet)</li>
 <li class="tarefa"><input type="checkbox" disabled checked> Formulário padrão de interação: skill <code>vcm-formulario</code>, <code>vcm rumo --formulario</code> e regra no <code>CLAUDE.md</code>, instalados em todo projeto pelo <code>vcm iniciar</code> (pedido do mantenedor no meio da rodada, registrado no <code>historico</code>)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> &quot;Feito&quot; só com prova (<code>vcm rumo --status feito</code> confere entregáveis e último balanço; <code>--forcar --motivo</code> vira desvio) — na primeira prova real recusou a E1 por um entregável do plano que não existia</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Gancho <code>Stop</code> (<code>vcm formulario --verificar</code>) instalado pelo <code>vcm iniciar</code>, com merge do <code>.claude/settings.json</code> e proteção contra laço</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Adesão ao formulário no <code>vcm sessoes</code> (linha de base desta sessão: 2% dos turnos com trabalho, porque o formulário nasceu no fim dela)</li>
+<li class="tarefa"><input type="checkbox" disabled> Reavaliar a adesão e o custo em tokens depois de uma semana de uso (meta: ≥ 90% com o gancho)</li>
 <li class="tarefa"><input type="checkbox" disabled> Levar a skill <code>vcm-formulario</code> ao <code>projetos_em_camadas</code> (precisa de aprovação: muda o <code>CLAUDE.md</code> do projeto)</li>
 <li class="tarefa"><input type="checkbox" disabled> Baixar a complexidade média para ≤ 4,0 a partir das funções C listadas no cartão</li>
 </ul>
@@ -4178,7 +4195,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte aafaf2350b1a). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte 82a2550ecd00). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";

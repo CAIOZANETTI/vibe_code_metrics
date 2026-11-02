@@ -265,6 +265,10 @@ registrado e pelo menos uma decisão humana pedida e registrada.
 
 - [x] `vcm.sugestoes`: o cartão e o rumo trazem "Correções sugeridas" (o quê, por quê, agente), geradas das medições; o vcm **sugere e não aplica**, porque aplicar exige aprovação humana (Sonnet)
 - [x] Formulário padrão de interação: skill `vcm-formulario`, `vcm rumo --formulario` e regra no `CLAUDE.md`, instalados em todo projeto pelo `vcm iniciar` (pedido do mantenedor no meio da rodada, registrado no `historico`)
+- [x] "Feito" só com prova (`vcm rumo --status feito` confere entregáveis e último balanço; `--forcar --motivo` vira desvio) — na primeira prova real recusou a E1 por um entregável do plano que não existia
+- [x] Gancho `Stop` (`vcm formulario --verificar`) instalado pelo `vcm iniciar`, com merge do `.claude/settings.json` e proteção contra laço
+- [x] Adesão ao formulário no `vcm sessoes` (linha de base desta sessão: 2% dos turnos com trabalho, porque o formulário nasceu no fim dela)
+- [ ] Reavaliar a adesão e o custo em tokens depois de uma semana de uso (meta: ≥ 90% com o gancho)
 - [ ] Levar a skill `vcm-formulario` ao `projetos_em_camadas` (precisa de aprovação: muda o `CLAUDE.md` do projeto)
 - [ ] Baixar a complexidade média para ≤ 4,0 a partir das funções C listadas no cartão
 
