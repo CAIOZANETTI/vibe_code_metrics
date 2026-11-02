@@ -97,7 +97,7 @@ proposital em teste resulta em `REVERTER`. **Atingido** no teste ponta a ponta (
 - [x] `vcm html`: relatórios Markdown → HTML (Opus)
 - [x] `vcm agentes --pdca` lendo `pdca/agentes.jsonl` do projeto; aprovação desconhecida é NaN, não 0 (Haiku)
 - [x] Adoção no `projetos_em_camadas`, passos 1–3 do diagnóstico (PR #25 lá, aguardando aprovação; balanço total MANTER)
-- [ ] Passo 4: testes de caracterização do pipeline `obra.py`
+- [x] Passo 4: testes de caracterização do pipeline `obra.py` (PR #37 lá): cobertura 38% → 90%, 8 comportamentos suspeitos registrados sem correção (Sonnet)
 - [ ] Conferência JS × Python da medição interativa do visualizador
 
 ### Lições da Fase 1 (registradas pelo próprio método)
