@@ -77,7 +77,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash 5ae6261b9a09</div>
+  <div class="sub">fonte: docs/*.md · hash 18e3c9ff1c80</div>
   
   <h4>Guia rápido: usar o vcm num protótipo</h4>
   <a href="#doc-guia">Início</a>
@@ -114,8 +114,11 @@ footer { color: var(--muted); font-size: 12px; }
   <h4>Repertório de ferramentas</h4>
   <a href="#doc-repertorio">Início</a>
   <a class="n2" href="#doc-repertorio-calculo-numerico">Cálculo numérico</a>
+  <a class="n3" href="#doc-repertorio-numba">Numba</a>
   <a class="n3" href="#doc-repertorio-numpy">NumPy</a>
   <a class="n3" href="#doc-repertorio-scipy">SciPy</a>
+  <a class="n3" href="#doc-repertorio-sympy">SymPy</a>
+  <a class="n3" href="#doc-repertorio-xarray">xarray</a>
   <a class="n2" href="#doc-repertorio-dados-tabulares">Dados tabulares</a>
   <a class="n3" href="#doc-repertorio-duckdb">DuckDB</a>
   <a class="n3" href="#doc-repertorio-pandas">pandas</a>
@@ -124,14 +127,41 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n3" href="#doc-repertorio-geoparquet">GeoParquet</a>
   <a class="n3" href="#doc-repertorio-parquet">Parquet</a>
   <a class="n3" href="#doc-repertorio-sqlite">SQLite</a>
+  <a class="n2" href="#doc-repertorio-validacao-e-unidades">Validação e unidades</a>
+  <a class="n3" href="#doc-repertorio-pandera">pandera</a>
+  <a class="n3" href="#doc-repertorio-pint">Pint</a>
+  <a class="n3" href="#doc-repertorio-pydantic">Pydantic</a>
+  <a class="n2" href="#doc-repertorio-geoespacial">Geoespacial</a>
+  <a class="n3" href="#doc-repertorio-geopandas">GeoPandas</a>
+  <a class="n3" href="#doc-repertorio-pyproj">pyproj</a>
+  <a class="n3" href="#doc-repertorio-rasterio">rasterio</a>
+  <a class="n3" href="#doc-repertorio-shapely">Shapely</a>
+  <a class="n2" href="#doc-repertorio-cad-bim-e-3d">CAD, BIM e 3D</a>
+  <a class="n3" href="#doc-repertorio-ezdxf">ezdxf</a>
+  <a class="n3" href="#doc-repertorio-ifcopenshell">IfcOpenShell</a>
+  <a class="n3" href="#doc-repertorio-open3d">Open3D</a>
+  <a class="n3" href="#doc-repertorio-pycolmap">pycolmap</a>
   <a class="n2" href="#doc-repertorio-grafos">Grafos</a>
   <a class="n3" href="#doc-repertorio-networkx">NetworkX</a>
+  <a class="n3" href="#doc-repertorio-python-igraph">python-igraph</a>
   <a class="n3" href="#doc-repertorio-rustworkx">rustworkx</a>
   <a class="n2" href="#doc-repertorio-intercambio-de-dados">Intercâmbio de dados</a>
   <a class="n3" href="#doc-repertorio-json-ld">JSON-LD</a>
+  <a class="n3" href="#doc-repertorio-rdflib">RDFLib</a>
+  <a class="n2" href="#doc-repertorio-documentos-e-ocr">Documentos e OCR</a>
+  <a class="n3" href="#doc-repertorio-docling">Docling</a>
+  <a class="n3" href="#doc-repertorio-paddleocr">PaddleOCR</a>
+  <a class="n3" href="#doc-repertorio-pdfplumber">pdfplumber</a>
+  <a class="n3" href="#doc-repertorio-pymupdf">PyMuPDF</a>
+  <a class="n3" href="#doc-repertorio-pytesseract">pytesseract</a>
   <a class="n2" href="#doc-repertorio-apresentacao">Apresentação</a>
   <a class="n3" href="#doc-repertorio-jinja2">Jinja2</a>
+  <a class="n3" href="#doc-repertorio-matplotlib">Matplotlib</a>
   <a class="n3" href="#doc-repertorio-plotly">Plotly</a>
+  <a class="n2" href="#doc-repertorio-qualidade-e-testes">Qualidade e testes</a>
+  <a class="n3" href="#doc-repertorio-hypothesis">Hypothesis</a>
+  <a class="n3" href="#doc-repertorio-mutmut">mutmut</a>
+  <a class="n3" href="#doc-repertorio-pytest-benchmark">pytest-benchmark</a>
   
   
   <h4>Plano de implementação</h4>
@@ -901,7 +931,7 @@ Página gerada a partir de <code>repertorio/*/*.yaml</code> por <code>vcm docs</
 <tbody>
 <tr>
 <td>Cálculo numérico</td>
-<td>NumPy, SciPy</td>
+<td>Numba, NumPy, SciPy, SymPy, xarray</td>
 </tr>
 <tr>
 <td>Dados tabulares</td>
@@ -912,16 +942,36 @@ Página gerada a partir de <code>repertorio/*/*.yaml</code> por <code>vcm docs</
 <td>GeoParquet, Parquet, SQLite</td>
 </tr>
 <tr>
+<td>Validação e unidades</td>
+<td>pandera, Pint, Pydantic</td>
+</tr>
+<tr>
+<td>Geoespacial</td>
+<td>GeoPandas, pyproj, rasterio, Shapely</td>
+</tr>
+<tr>
+<td>CAD, BIM e 3D</td>
+<td>ezdxf, IfcOpenShell, Open3D, pycolmap</td>
+</tr>
+<tr>
 <td>Grafos</td>
-<td>NetworkX, rustworkx</td>
+<td>NetworkX, python-igraph, rustworkx</td>
 </tr>
 <tr>
 <td>Intercâmbio de dados</td>
-<td>JSON-LD</td>
+<td>JSON-LD, RDFLib</td>
+</tr>
+<tr>
+<td>Documentos e OCR</td>
+<td>Docling, PaddleOCR, pdfplumber, PyMuPDF, pytesseract</td>
 </tr>
 <tr>
 <td>Apresentação</td>
-<td>Jinja2, Plotly</td>
+<td>Jinja2, Matplotlib, Plotly</td>
+</tr>
+<tr>
+<td>Qualidade e testes</td>
+<td>Hypothesis, mutmut, pytest-benchmark</td>
 </tr>
 </tbody>
 </table>
@@ -938,56 +988,171 @@ Página gerada a partir de <code>repertorio/*/*.yaml</code> por <code>vcm docs</
 </thead>
 <tbody>
 <tr>
+<td><a href="https://numba.readthedocs.io/en/stable/">Numba</a></td>
+<td>candidato</td>
+<td>BSD-2-Clause</td>
+<td>0.68.1 (2026-10)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
 <td><a href="https://numpy.org/doc/stable/">NumPy</a></td>
 <td>em uso</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
+<td>BSD-3-Clause</td>
+<td>2.5.4 (2026-10)</td>
+<td>2026-11-02</td>
 </tr>
 <tr>
 <td><a href="https://docs.scipy.org/doc/scipy/">SciPy</a></td>
 <td>candidato</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
+<td>BSD-3-Clause</td>
+<td>1.18.1 (2026-08)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://docs.sympy.org/latest/">SymPy</a></td>
+<td>candidato</td>
+<td>BSD-3-Clause</td>
+<td>1.14.0 (2025-04)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://docs.xarray.dev/">xarray</a></td>
+<td>candidato</td>
+<td>Apache-2.0</td>
+<td>2026.9.0 (2026-09)</td>
+<td>2026-11-02</td>
 </tr>
 </tbody>
 </table>
+<h3 id="doc-repertorio-numba">Numba</h3>
+<p>Compilador JIT que traduz funções Python e NumPy em código de máquina via LLVM.</p>
+<p><em>Coopera com <code>numpy</code>, <code>scipy</code>, <code>sympy</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>laços numéricos escalares que não vetorizam bem em NumPy (marcha de cálculo trecho a trecho, iterações com dependência entre passos)</li>
+<li>funções chamadas muitas vezes sobre arrays grandes, em que o custo de compilação se paga</li>
+<li>paralelismo simples em laços independentes com prange</li>
+<li>manter o código Python legível em vez de reescrevê-lo em C ou Rust</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>funções curtas ou chamadas poucas vezes, em que a compilação custa mais que o ganho</li>
+<li>código que usa DataFrames, strings, objetos Python ou bibliotecas fora do subconjunto suportado</li>
+<li>cálculo que já se expressa em operações vetorizadas de NumPy</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>a primeira chamada compila e é lenta; cache=True guarda a compilação em disco</li>
+<li>fastmath=True permite reordenar operações de ponto flutuante e pode mudar o resultado; evitar quando o resultado precisar ser reprodutível</li>
+<li>com parallel=True a ordem das reduções pode variar entre execuções; medir determinismo antes de adotar</li>
+<li>o Numba aceita só algumas versões do NumPy e do Python; conferir a compatibilidade antes de atualizar o NumPy</li>
+<li>variáveis globais são tratadas como constantes no momento da compilação</li>
+<li>erros de tipagem são difíceis de ler; testar a função também com NUMBA_DISABLE_JIT para depurar</li>
+</ul>
+<p>Repositório: <a href="https://github.com/numba/numba">https://github.com/numba/numba</a></p>
 <h3 id="doc-repertorio-numpy">NumPy</h3>
 <p>Arrays N-dimensionais e álgebra linear vetorizada em Python.</p>
-<p><em>Coopera com <code>pandas</code>, <code>polars</code>, <code>plotly</code>.</em></p>
+<p><em>Coopera com <code>pandas</code>, <code>polars</code>, <code>plotly</code>, <code>scipy</code>, <code>numba</code>, <code>xarray</code>, <code>pint</code>.</em></p>
 <p><strong>Quando considerar</strong></p>
 <ul>
 <li>cálculo matricial e vetorizado</li>
 <li>álgebra linear</li>
+<li>base comum do ecossistema numérico (pandas, SciPy e Plotly trocam dados com arrays NumPy)</li>
+<li>cálculo elemento a elemento sobre milhares de seções, trechos ou nós sem laços em Python</li>
+<li>dtype explícito (float64, int32) torna o comportamento numérico previsível e documentável</li>
 </ul>
 <p><strong>Quando evitar</strong></p>
 <ul>
 <li>dados tabulares heterogêneos com junções e agrupamentos</li>
+<li>dados com dimensões nomeadas e coordenadas (tempo, cota, estação), em que o rótulo evita erro de eixo (considerar xarray)</li>
+<li>laços escalares que não vetorizam, em que um compilador JIT pode ser mais adequado (considerar numba)</li>
 </ul>
 <p><strong>Cuidados</strong></p>
 <ul>
 <li>a ordem das somas pode variar com o número de threads do BLAS; medir determinismo</li>
 <li>{'medido em 31/10/2026 (vcm.coletores.determinismo, 4 núcleos)': 'produto matricial 500×500 e solve 200×200 mudam de hash entre 1 thread e o padrão; com threads fixas, 100% estável; cumsum não muda. Fixar OPENBLAS_NUM_THREADS quando o resultado precisar ser reprodutível bit a bit'}</li>
+<li>float32 acumula erro diferente de float64; declarar o dtype e a tolerância absoluta ou relativa nos testes (np.testing.assert_allclose com atol e rtol explícitos)</li>
+<li>o NumPy 2 mudou as regras de promoção de tipos (NEP 50) e removeu aliases antigos; código escrito para 1.x pode mudar de dtype</li>
+<li>fatias são vistas, não cópias; alterar uma fatia altera o array original</li>
 </ul>
+<p>Repositório: <a href="https://github.com/numpy/numpy">https://github.com/numpy/numpy</a></p>
 <h3 id="doc-repertorio-scipy">SciPy</h3>
 <p>Algoritmos científicos sobre NumPy, como otimização, interpolação, estatística e álgebra linear esparsa.</p>
-<p><em>Coopera com <code>numpy</code>, <code>pandas</code>.</em></p>
+<p><em>Coopera com <code>numpy</code>, <code>pandas</code>, <code>sympy</code>, <code>numba</code>, <code>xarray</code>.</em></p>
 <p><strong>Quando considerar</strong></p>
 <ul>
 <li>otimização numérica</li>
 <li>interpolação</li>
 <li>estatística</li>
 <li>álgebra linear esparsa</li>
+<li>sistemas grandes e esparsos (redes de tubulação, malhas, matrizes de rigidez) com scipy.sparse</li>
+<li>integração numérica e equações diferenciais ordinárias (scipy.integrate) com tolerâncias declaradas</li>
+<li>raízes e ajuste de curvas (scipy.optimize) para equações implícitas, como Colebrook-White</li>
 </ul>
 <p><strong>Quando evitar</strong></p>
 <ul>
 <li>manipulação de tabelas com junções e agrupamentos</li>
+<li>álgebra simbólica ou derivação exata (considerar sympy)</li>
+<li>quando uma operação simples de NumPy já resolve</li>
 </ul>
 <p><strong>Cuidados</strong></p>
 <ul>
 <li>solvers iterativos dependem de tolerância e critério de parada; declarar ambos</li>
+<li>rotinas de otimização podem convergir para mínimo local ou falhar sem lançar erro; verificar o campo success do resultado e registrar o ponto inicial</li>
+<li>interpoladores tratam de formas diferentes o que está fora do intervalo dos dados (erro, constante, extrapolação); declarar o comportamento escolhido</li>
+<li>herda do NumPy a variação de somas com threads do BLAS; fixar threads quando o resultado precisar ser reprodutível bit a bit</li>
+<li>a versão 1.18 exige Python 3.12 ou mais recente; conferir a versão do Python do projeto</li>
+<li>algoritmos estocásticos (por exemplo, evolução diferencial) exigem semente fixa para serem determinísticos</li>
 </ul>
+<p>Repositório: <a href="https://github.com/scipy/scipy">https://github.com/scipy/scipy</a></p>
+<h3 id="doc-repertorio-sympy">SymPy</h3>
+<p>Álgebra simbólica em Python puro, com derivação, integração, resolução de equações e geração de código.</p>
+<p><em>Coopera com <code>numpy</code>, <code>scipy</code>, <code>numba</code>, <code>pint</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>deduzir e conferir uma fórmula de engenharia (derivadas, integrais, simplificação) antes de implementá-la</li>
+<li>gerar a função numérica a partir da expressão simbólica com lambdify, mantendo a fórmula documentada e testável</li>
+<li>obter por solução exata um caso de teste que o código numérico deve reproduzir</li>
+<li>resolver sistemas pequenos de equações com solução em forma fechada</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>cálculo numérico pesado sobre arrays grandes, em que o simbólico é lento (usar numpy ou scipy)</li>
+<li>caminho de produção sensível a tempo, se a expressão simbólica for montada a cada chamada</li>
+<li>equações sem solução fechada, melhor resolvidas por métodos numéricos (scipy)</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>simplify e solve podem demorar muito ou devolver formas diferentes entre versões; fixar a versão e não depender da forma textual do resultado</li>
+<li>lambdify gera função NumPy; conferir o módulo de destino e o dtype</li>
+<li>usar Rational ou inteiros em vez de float dentro da expressão evita erro de arredondamento antes da hora</li>
+<li>a última versão publicada (1.14.0) é de 2025-04; verificar se há versão mais nova antes de adotar</li>
+</ul>
+<p>Repositório: <a href="https://github.com/sympy/sympy">https://github.com/sympy/sympy</a></p>
+<h3 id="doc-repertorio-xarray">xarray</h3>
+<p>Arrays N-dimensionais com dimensões nomeadas, coordenadas e atributos, sobre NumPy e pandas.</p>
+<p><em>Coopera com <code>numpy</code>, <code>pandas</code>, <code>pint</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>dados em grade ou multidimensionais (tempo × estação, tempo × cota × posição, séries de chuva, campos de modelo)</li>
+<li>operar por nome de dimensão, sem depender da ordem dos eixos, o que reduz erros de eixo</li>
+<li>ler e gravar NetCDF e Zarr, formatos comuns de dados hidrológicos e climáticos</li>
+<li>manter metadados e unidades declaradas junto dos valores (atributos)</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>dados tabulares simples, melhor atendidos por pandas ou Polars</li>
+<li>cálculo sobre um array sem coordenadas, em que NumPy basta</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>o alinhamento automático por coordenadas faz junção implícita; coordenadas float diferentes por arredondamento geram eixo vazio ou NaN sem aviso</li>
+<li>depende de NumPy e pandas; o cálculo de fundo é do NumPy e herda sua variação de threads</li>
+<li>arrays com Dask são preguiçosos e o resultado só existe após compute()</li>
+<li>as unidades ficam em atributos de texto e não são verificadas; para checagem, combinar com pint</li>
+<li>a versão segue o calendário (2026.9.0) e a API muda entre versões; fixar a versão</li>
+</ul>
+<p>Repositório: <a href="https://github.com/pydata/xarray">https://github.com/pydata/xarray</a></p>
 <h2 id="doc-repertorio-dados-tabulares">Dados tabulares</h2>
 <table>
 <thead>
@@ -1003,82 +1168,104 @@ Página gerada a partir de <code>repertorio/*/*.yaml</code> por <code>vcm docs</
 <tr>
 <td><a href="https://duckdb.org/docs/">DuckDB</a></td>
 <td>candidato</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
+<td>MIT</td>
+<td>2.0.0 (2026-10)</td>
+<td>2026-11-02</td>
 </tr>
 <tr>
 <td><a href="https://pandas.pydata.org/docs/">pandas</a></td>
 <td>em uso</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
+<td>BSD-3-Clause</td>
+<td>3.1.0 (2026-10)</td>
+<td>2026-11-02</td>
 </tr>
 <tr>
 <td><a href="https://docs.pola.rs/">Polars</a></td>
 <td>em teste</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
+<td>MIT</td>
+<td>2.1.0 (2026-10)</td>
+<td>2026-11-02</td>
 </tr>
 </tbody>
 </table>
 <h3 id="doc-repertorio-duckdb">DuckDB</h3>
 <p>Banco SQL analítico embutido no processo, que lê arquivos Parquet e CSV diretamente.</p>
-<p><em>Compete com <code>pandas</code>, <code>polars</code>; coopera com <code>parquet</code>, <code>pandas</code>, <code>polars</code>.</em></p>
+<p><em>Compete com <code>pandas</code>, <code>polars</code>; coopera com <code>parquet</code>, <code>pandas</code>, <code>polars</code>, <code>sqlite</code>.</em></p>
 <p><strong>Quando considerar</strong></p>
 <ul>
 <li>consultas SQL sobre arquivos grandes</li>
 <li>junções e agregações complexas</li>
 <li>operação sem servidor</li>
+<li>consultar Parquet em disco sem carregar tudo na memória, com SQL</li>
+<li>consultar DataFrames do pandas ou Polars já em memória com SQL, sem cópia explícita</li>
+<li>SQL com funções de janela para consultas analíticas sobre séries e resumos</li>
 </ul>
 <p><strong>Quando evitar</strong></p>
 <ul>
 <li>muitos processos escrevendo ao mesmo tempo</li>
 <li>aplicações transacionais de alta frequência de escrita</li>
+<li>cálculo numérico de engenharia, que deve ficar em NumPy; o DuckDB serve para consulta e agregação</li>
 </ul>
 <p><strong>Cuidados</strong></p>
 <ul>
 <li>um arquivo de banco aceita um processo escritor por vez</li>
+<li>a versão 2.0 é recente; fixar a versão e conferir a compatibilidade do formato de arquivo de banco ao atualizar</li>
+<li>somas de ponto flutuante em paralelo podem variar na última casa; ordenar e usar DECIMAL ou arredondamento declarado quando o resultado precisar ser reprodutível</li>
+<li>o limite de memória e o diretório temporário para derramamento em disco são configuráveis; declarar ambos em consultas grandes</li>
 </ul>
+<p>Repositório: <a href="https://github.com/duckdb/duckdb-python">https://github.com/duckdb/duckdb-python</a></p>
 <h3 id="doc-repertorio-pandas">pandas</h3>
 <p>Biblioteca de DataFrames para filtrar, juntar e agrupar dados tabulares em Python.</p>
-<p><em>Compete com <code>polars</code>, <code>duckdb</code>; coopera com <code>numpy</code>, <code>parquet</code>, <code>plotly</code>.</em></p>
+<p><em>Compete com <code>polars</code>, <code>duckdb</code>; coopera com <code>numpy</code>, <code>parquet</code>, <code>plotly</code>, <code>pandera</code>, <code>xarray</code>, <code>scipy</code>.</em></p>
 <p><strong>Quando considerar</strong></p>
 <ul>
 <li>dados tabulares com junções e agrupamentos</li>
 <li>ecossistema maduro e amplamente documentado</li>
 <li>integração direta com NumPy e Parquet</li>
+<li>séries temporais com índice de datas e reamostragem (medições, vazões, precipitação)</li>
+<li>bibliotecas de terceiros (Plotly, GeoPandas, pandera) que aceitam DataFrame do pandas</li>
 </ul>
 <p><strong>Quando evitar</strong></p>
 <ul>
 <li>volumes que não cabem com folga na memória</li>
 <li>pipelines que se beneficiam de execução preguiçosa otimizada</li>
+<li>junções e agregações muito grandes, em que Polars ou DuckDB tendem a usar melhor a memória (medir antes)</li>
 </ul>
 <p><strong>Cuidados</strong></p>
 <ul>
 <li>o comportamento de valores ausentes e os tipos dependem do dtype; definir dtype explícito</li>
 <li>algumas operações copiam os dados</li>
+<li>o pandas 3 adotou copy-on-write e removeu a atribuição encadeada; usar df.loc[mascara, coluna] = valor</li>
+<li>o pandas 3 infere colunas de texto como dtype str (antes object) e a resolução de datas passou a ser inferida (microssegundos para texto); converter data para inteiro sem fixar a unidade (as_unit) dá valores diferentes</li>
+<li>arredondamento e somas em ponto flutuante dependem da ordem das linhas; ordenar de forma explícita antes de agregar quando o resultado precisar ser reprodutível</li>
 </ul>
+<p>Repositório: <a href="https://github.com/pandas-dev/pandas">https://github.com/pandas-dev/pandas</a></p>
 <h3 id="doc-repertorio-polars">Polars</h3>
 <p>Biblioteca de DataFrames com motor escrito em Rust, baseada em Apache Arrow e com API de expressões.</p>
-<p><em>Compete com <code>pandas</code>, <code>duckdb</code>; coopera com <code>numpy</code>, <code>parquet</code>, <code>plotly</code>.</em></p>
+<p><em>Compete com <code>pandas</code>, <code>duckdb</code>; coopera com <code>numpy</code>, <code>parquet</code>, <code>plotly</code>, <code>duckdb</code>, <code>pandera</code>.</em></p>
 <p><strong>Quando considerar</strong></p>
 <ul>
 <li>tabelas grandes</li>
 <li>agregações e junções em paralelo</li>
 <li>execução preguiçosa com otimização de consulta</li>
+<li>expressões preguiçosas otimizam junções e filtros em tabelas grandes, lendo Parquet com seleção de colunas e filtro empurrados para a leitura</li>
+<li>tipos estritos e valores nulos explícitos, sem conversões silenciosas de inteiro para float</li>
 </ul>
 <p><strong>Quando evitar</strong></p>
 <ul>
 <li>código existente que depende fortemente da API do pandas</li>
 <li>bibliotecas que aceitam apenas pandas</li>
+<li>código que depende do índice de linha do pandas (alinhamento por índice, reindex)</li>
 </ul>
 <p><strong>Cuidados</strong></p>
 <ul>
 <li>a API difere do pandas, pois não há índice de linha</li>
 <li>na execução preguiçosa, o resultado só existe após collect()</li>
+<li>o paralelismo pode alterar a ordem das linhas em agregações e junções; ordenar explicitamente (ou usar maintain_order) quando a ordem importar</li>
+<li>a API ainda evolui entre versões; fixar a versão no projeto</li>
+<li>a conversão para pandas ou NumPy (to_pandas, to_numpy) pode copiar dados e exige pyarrow ou numpy instalados</li>
 </ul>
+<p>Repositório: <a href="https://github.com/pola-rs/polars">https://github.com/pola-rs/polars</a></p>
 <h2 id="doc-repertorio-armazenamento">Armazenamento</h2>
 <table>
 <thead>
@@ -1094,33 +1281,34 @@ Página gerada a partir de <code>repertorio/*/*.yaml</code> por <code>vcm docs</
 <tr>
 <td><a href="https://geoparquet.org/">GeoParquet</a></td>
 <td>candidato</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
+<td>BSD-3-Clause</td>
+<td>1.2.0 (2026-09)</td>
+<td>2026-11-02</td>
 </tr>
 <tr>
 <td><a href="https://arrow.apache.org/docs/python/parquet.html">Parquet</a></td>
 <td>em uso</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
+<td>Apache-2.0</td>
+<td>26.0.0 (2026-10)</td>
+<td>2026-11-02</td>
 </tr>
 <tr>
 <td><a href="https://docs.python.org/3/library/sqlite3.html">SQLite</a></td>
 <td>candidato</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
+<td>blessing</td>
+<td>3.54.1 (2026-10)</td>
+<td>2026-11-02</td>
 </tr>
 </tbody>
 </table>
 <h3 id="doc-repertorio-geoparquet">GeoParquet</h3>
 <p>Parquet com metadados geoespaciais padronizados, lido e escrito com GeoPandas.</p>
-<p><em>Compete com <code>sqlite</code>; coopera com <code>pandas</code>, <code>parquet</code>.</em></p>
+<p><em>Compete com <code>sqlite</code>; coopera com <code>pandas</code>, <code>parquet</code>, <code>shapely</code>, <code>pyproj</code>, <code>geopandas</code>.</em></p>
 <p><strong>Quando considerar</strong></p>
 <ul>
 <li>tabelas com geometrias trocadas entre ferramentas</li>
 <li>preservar colunas e tipos do Parquet</li>
+<li>guardar atributos e geometria juntos, com o sistema de coordenadas gravado no arquivo</li>
 </ul>
 <p><strong>Quando evitar</strong></p>
 <ul>
@@ -1131,45 +1319,468 @@ Página gerada a partir de <code>repertorio/*/*.yaml</code> por <code>vcm docs</
 <ul>
 <li>a versão da especificação de metadados precisa ser declarada</li>
 <li>o sistema de referência de coordenadas precisa ser declarado</li>
+<li>geopandas depende de bibliotecas nativas (GEOS, PROJ) trazidas por shapely e pyproj; conferir a instalação em cada ambiente</li>
+<li>a versão e a licença informadas são do pacote geopandas; a especificação GeoParquet tem versionamento próprio e não foi verificada em 2026-11-02</li>
 </ul>
+<p>Repositório: <a href="https://github.com/geopandas/geopandas">https://github.com/geopandas/geopandas</a></p>
 <h3 id="doc-repertorio-parquet">Parquet</h3>
 <p>Formato de arquivo colunar, lido e escrito em Python pelo pacote pyarrow.</p>
-<p><em>Compete com <code>sqlite</code>; coopera com <code>pandas</code>, <code>polars</code>, <code>duckdb</code>.</em></p>
+<p><em>Compete com <code>sqlite</code>; coopera com <code>pandas</code>, <code>polars</code>, <code>duckdb</code>, <code>geoparquet</code>, <code>pandera</code>.</em></p>
 <p><strong>Quando considerar</strong></p>
 <ul>
 <li>persistir tabelas grandes</li>
 <li>leitura seletiva de colunas</li>
 <li>compressão por coluna</li>
+<li>trocar tabelas entre pandas, Polars e DuckDB preservando os tipos</li>
+<li>guardar resultados de cálculo com esquema explícito (tipos, nulos) e metadados do arquivo</li>
 </ul>
 <p><strong>Quando evitar</strong></p>
 <ul>
 <li>edição linha a linha</li>
 <li>arquivos pequenos que são reescritos com muita frequência</li>
+<li>dados que precisam ser lidos por pessoas em editor de texto (usar CSV)</li>
 </ul>
 <p><strong>Cuidados</strong></p>
 <ul>
 <li>declarar os tipos explicitamente ao gravar</li>
 <li>o arquivo não é alterado no lugar; ele é reescrito por inteiro</li>
+<li>o hash do arquivo pode mudar entre versões do pyarrow ou com metadados e compressão diferentes; para reprodutibilidade, comparar o conteúdo (tabela) e não os bytes, ou fixar versão e opções de escrita</li>
+<li>a escrita via pandas grava o índice e metadados do pandas por padrão; declarar index=False quando não for desejado</li>
+<li>carimbos de data e hora têm resolução e fuso próprios; declarar a unidade ao gravar</li>
 </ul>
+<p>Repositório: <a href="https://github.com/apache/arrow">https://github.com/apache/arrow</a></p>
 <h3 id="doc-repertorio-sqlite">SQLite</h3>
 <p>Banco relacional em arquivo único, embutido, disponível pela biblioteca padrão do Python.</p>
-<p><em>Compete com <code>parquet</code>, <code>geoparquet</code>; coopera com <code>pandas</code>, <code>duckdb</code>.</em></p>
+<p><em>Compete com <code>parquet</code>, <code>geoparquet</code>; coopera com <code>pandas</code>, <code>duckdb</code>, <code>pydantic</code>.</em></p>
 <p><strong>Quando considerar</strong></p>
 <ul>
 <li>armazenar tabelas pequenas e médias com consultas SQL</li>
 <li>não exigir dependência extra</li>
+<li>guardar estado de aplicação web de cálculo (cadastros, execuções, parâmetros) com transações</li>
+<li>atualizar linhas no lugar, o que o Parquet não faz</li>
 </ul>
 <p><strong>Quando evitar</strong></p>
 <ul>
 <li>volumes analíticos grandes com varreduras de colunas</li>
 <li>muitos escritores concorrentes</li>
+<li>tabelas largas lidas por coluna em grande volume (preferir Parquet)</li>
 </ul>
 <p><strong>Cuidados</strong></p>
 <ul>
 <li>aceita um escritor por vez</li>
 <li>os tipos são dinâmicos, não rígidos</li>
 <li>a verificação de chaves estrangeiras precisa ser ativada explicitamente</li>
+<li>a versão do SQLite embutida depende do Python instalado, não do pacote; funcionalidades novas podem faltar em Pythons antigos</li>
+<li>a licença é de domínio público (identificador SPDX blessing, usado nos fontes do SQLite); a versão do pacote Python não se aplica, pois sqlite3 é módulo da biblioteca padrão</li>
 </ul>
+<p>Repositório: <a href="https://sqlite.org/src">https://sqlite.org/src</a></p>
+<h2 id="doc-repertorio-validacao-e-unidades">Validação e unidades</h2>
+<table>
+<thead>
+<tr>
+<th>Ferramenta</th>
+<th>Situação</th>
+<th>Licença</th>
+<th>Última versão</th>
+<th>Verificado em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://pandera.readthedocs.io/">pandera</a></td>
+<td>candidato</td>
+<td>MIT</td>
+<td>0.35.0 (2026-10)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://pint.readthedocs.io/">Pint</a></td>
+<td>candidato</td>
+<td>BSD-3-Clause</td>
+<td>0.26.2 (2026-10)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://pydantic.dev/docs/validation/latest/get-started/">Pydantic</a></td>
+<td>candidato</td>
+<td>MIT</td>
+<td>2.14.2 (2026-10)</td>
+<td>2026-11-02</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doc-repertorio-pandera">pandera</h3>
+<p>Validação de DataFrames por esquemas declarados (tipos, faixas, nulos, unicidade e checagens estatísticas).</p>
+<p><em>Compete com <code>pydantic</code>; coopera com <code>pandas</code>, <code>polars</code>, <code>parquet</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>conferir tabelas de entrada e saída (colunas, dtype, faixas físicas, ausência de nulos, unicidade de chaves) antes e depois do cálculo</li>
+<li>detectar na leitura um Parquet ou CSV com coluna faltando ou dtype trocado</li>
+<li>coletar todas as falhas de uma tabela de uma vez com validate(lazy=True)</li>
+<li>esquema único para pandas e Polars, quando os dois estiverem em uso</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>validar um registro isolado ou um formulário (usar pydantic)</li>
+<li>tabelas muito pequenas e estáveis, em que um assert simples basta</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>{'a validação não é preguiçosa por padrão': 'sem lazy=True para no primeiro erro'}</li>
+<li>o suporte é dividido em extras (pandera[pandas], pandera[polars]); instalar o extra do motor usado</li>
+<li>desde a 0.29 importar de pandera.pandas; a importação pelo módulo raiz está obsoleta</li>
+<li>checagens de dados percorrem a tabela inteira e custam tempo em tabelas grandes; validar na fronteira, não a cada passo</li>
+<li>a API ainda é 0.x e muda entre versões; fixar a versão</li>
+</ul>
+<p>Repositório: <a href="https://github.com/pandera-dev/pandera">https://github.com/pandera-dev/pandera</a></p>
+<h3 id="doc-repertorio-pint">Pint</h3>
+<p>Biblioteca de grandezas físicas com unidades, que converte e recusa operações dimensionalmente inconsistentes.</p>
+<p><em>Coopera com <code>numpy</code>, <code>pandas</code>, <code>xarray</code>, <code>sympy</code>, <code>pydantic</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>fronteiras do sistema (entrada de usuário, planilhas, arquivos de terceiros) em que as unidades chegam misturadas e precisam virar SI</li>
+<li>fórmulas de engenharia em que um erro de unidade (mm × m, L/s × m3/s) é um risco real</li>
+<li>testes que conferem consistência dimensional da fórmula, não só o valor numérico</li>
+<li>converter para SI na entrada e trabalhar com arrays NumPy puros no miolo do cálculo</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>laços internos de cálculo pesado, em que o objeto com unidade atrapalha o desempenho e a vetorização</li>
+<li>código que já segue a regra de unidade SI como sufixo do nome e não recebe dados em outras unidades</li>
+<li>quando as unidades só precisam constar como metadado (atributos do xarray ou nome da coluna)</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>unidades com deslocamento (graus Celsius) têm regras próprias; somar duas temperaturas absolutas gera erro e diferenças usam delta_degC</li>
+<li>usar um único registro de unidades (UnitRegistry) em todo o projeto; quantidades de registros diferentes não se misturam</li>
+<li>o resultado de Quantity.magnitude é um número ou array NumPy sem unidade; converter para a unidade SI esperada antes de extraí-lo</li>
+<li>nem toda função do NumPy e do pandas preserva as unidades; testar as operações usadas</li>
+<li>a versão atual exige Python 3.12 ou mais recente</li>
+</ul>
+<p>Repositório: <a href="https://github.com/hgrecco/pint">https://github.com/hgrecco/pint</a></p>
+<h3 id="doc-repertorio-pydantic">Pydantic</h3>
+<p>Validação de dados por esquemas declarados com anotações de tipo, com erros detalhados e exportação de JSON Schema.</p>
+<p><em>Compete com <code>pandera</code>; coopera com <code>pint</code>, <code>sqlite</code>, <code>pandas</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>validar parâmetros de entrada de um cálculo (formulário web, JSON, YAML) antes de executá-lo</li>
+<li>declarar faixas e restrições físicas dos campos (valor positivo, diâmetro mínimo) com mensagens de erro claras</li>
+<li>gerar o JSON Schema do contrato de dados entre o cálculo em Python e a interface</li>
+<li>registros e configurações com poucos campos, validados um a um</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>validar milhões de linhas de um DataFrame, em que um modelo por linha é lento (usar pandera)</li>
+<li>cálculo numérico; o Pydantic valida estrutura e tipos, não faz a conta</li>
+<li>quando uma dataclass simples e testes já bastam</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>o modo padrão é permissivo e converte tipos (a string &quot;123&quot; vira inteiro 123); usar strict=True quando uma conversão silenciosa for inaceitável</li>
+<li>float aceita NaN e infinito por padrão; restringir com allow_inf_nan=False quando o valor entrar em cálculo</li>
+<li>a versão 2 mudou a API em relação à 1 (validadores, model_validate, model_dump); código e tutoriais antigos podem não valer</li>
+<li>o núcleo de validação é compilado (Rust), com wheels nativas por plataforma</li>
+<li>a página da documentação oficial migrou de docs.pydantic.dev para pydantic.dev/docs</li>
+</ul>
+<p>Repositório: <a href="https://github.com/pydantic/pydantic">https://github.com/pydantic/pydantic</a></p>
+<h2 id="doc-repertorio-geoespacial">Geoespacial</h2>
+<table>
+<thead>
+<tr>
+<th>Ferramenta</th>
+<th>Situação</th>
+<th>Licença</th>
+<th>Última versão</th>
+<th>Verificado em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://geopandas.org">GeoPandas</a></td>
+<td>em uso</td>
+<td>BSD-3-Clause</td>
+<td>1.2.0 (2026-09)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://pyproj4.github.io/pyproj/">pyproj</a></td>
+<td>em uso</td>
+<td>MIT</td>
+<td>3.8.0 (2026-09)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://rasterio.readthedocs.io/">rasterio</a></td>
+<td>em uso</td>
+<td>BSD-3-Clause</td>
+<td>1.5.2 (2026-09)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://shapely.readthedocs.io/">Shapely</a></td>
+<td>em uso</td>
+<td>BSD-3-Clause</td>
+<td>2.2.0 (2026-10)</td>
+<td>2026-11-02</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doc-repertorio-geopandas">GeoPandas</h3>
+<p>Tabelas do pandas com coluna de geometria (Shapely) e CRS, com leitura e escrita de formatos vetoriais.</p>
+<p><em>Coopera com <code>shapely</code>, <code>pyproj</code>, <code>pandas</code>, <code>geoparquet</code>, <code>rasterio</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>tabela de lotes, trechos de rede, sondagens ou pranchas com atributos e geometria juntos</li>
+<li>junção espacial (sjoin, sjoin_nearest) para ligar trecho de tubo à sondagem mais próxima</li>
+<li>reprojetar uma camada inteira com to_crs</li>
+<li>ler e gravar GeoPackage, GeoJSON, Shapefile e GeoParquet</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>quando só se precisa de poucas geometrias soltas; shapely basta</li>
+<li>ambientes em que a instalação de dependências nativas (GDAL ou Pyogrio) é um problema</li>
+<li>volumes grandes de dados tabulares sem geometria</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>to_crs reprojeta; set_crs apenas rotula. Trocar um pelo outro corrompe as coordenadas sem dar erro</li>
+<li>medir área e comprimento só em CRS métrico (UTM); em graus o resultado não é metro</li>
+<li>nas geometrias a ordem é x=leste/longitude, y=norte/latitude</li>
+<li>a leitura depende de Pyogrio ou Fiona (GDAL); registrar a versão da GDAL que veio na roda</li>
+<li>Shapefile trunca nomes de coluna para 10 caracteres e tem limites de tipos; preferir GeoPackage ou GeoParquet</li>
+<li>sjoin e overlay podem reordenar linhas; ordenar por chave explícita antes de gravar para ter resultado determinístico</li>
+<li>geometrias inválidas fazem overlay falhar; validar antes</li>
+</ul>
+<p>Repositório: <a href="https://github.com/geopandas/geopandas">https://github.com/geopandas/geopandas</a></p>
+<h3 id="doc-repertorio-pyproj">pyproj</h3>
+<p>Interface Python para a biblioteca PROJ, para transformar coordenadas entre sistemas de referência.</p>
+<p><em>Coopera com <code>shapely</code>, <code>geopandas</code>, <code>rasterio</code>, <code>numpy</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>converter SIRGAS 2000 geográfico (EPSG:4674) para UTM SIRGAS 2000 (zonas EPSG:31978 a 31985 no Brasil) e o inverso</li>
+<li>converter coordenadas de EXIF de drone (WGS 84, EPSG:4326) para o UTM do projeto</li>
+<li>declarar o sistema de coordenadas de cada camada (ortofoto, pranchas, rede) e transformar entre elas de forma explícita</li>
+<li>cálculo geodésico (distância e azimute sobre o elipsoide) com a classe Geod</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>quando o projeto é puramente local e todas as camadas já estão no mesmo CRS métrico</li>
+<li>quando se quer manipular geometrias inteiras; combinar com shapely ou geopandas</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>usar Transformer.from_crs(origem, destino, always_xy=True); sem isso, a ordem dos eixos segue a definição da autoridade (latitude, longitude para EPSG:4326 e 4674) e o ponto sai invertido</li>
+<li>SIRGAS 2000 e WGS 84 diferem por poucos decímetros; tratar como iguais só se a tolerância do projeto permitir, e declarar a escolha</li>
+<li>a transformação depende da base de dados do PROJ (grades, datum shifts); registrar a versão do PROJ embutida na roda para reprodutibilidade</li>
+<li>grades de datum opcionais podem não estar instaladas; conferir a operação escolhida (Transformer.description) e se a precisão é a esperada</li>
+<li>a zona UTM deve ser escolhida pela longitude ou fixada no projeto; coordenadas fora da zona natural distorcem a escala</li>
+<li>a PROJ vem embarcada nas rodas binárias; compilar do código-fonte exige PROJ instalada no sistema</li>
+<li>fixar o EPSG como constante nomeada e usar sufixo de unidade nos nomes (leste_m, norte_m)</li>
+</ul>
+<p>Repositório: <a href="https://github.com/pyproj4/pyproj">https://github.com/pyproj4/pyproj</a></p>
+<h3 id="doc-repertorio-rasterio">rasterio</h3>
+<p>Leitura e escrita de rasters georreferenciados (GeoTIFF e outros) sobre a GDAL, com arrays NumPy.</p>
+<p><em>Coopera com <code>numpy</code>, <code>pyproj</code>, <code>shapely</code>, <code>geopandas</code>, <code>xarray</code>, <code>pycolmap</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>ler ortofoto e MDS em GeoTIFF como arrays NumPy, com a transformação afim (pixel para UTM) e o CRS</li>
+<li>amostrar o valor do MDS em pontos de uma rede ou de um perfil (sample)</li>
+<li>recortar a ortofoto por polígono (mask) ou por janela, sem carregar o arquivo inteiro</li>
+<li>reprojetar ou reamostrar um raster (warp)</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>imagens sem georreferenciamento; PIL ou OpenCV bastam</li>
+<li>rasters multidimensionais em NetCDF ou Zarr; considerar xarray</li>
+<li>quando não se pode depender da GDAL (embarcada nas rodas binárias, mas pesada)</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>a transformação afim (transform) leva (coluna, linha) para (x, y); a linha cresce para o sul, então a altura do pixel costuma ser negativa</li>
+<li>o valor nodata deve ser lido do arquivo e mascarado; tratá-lo como altitude real contamina volumes e perfis</li>
+<li>ler em janelas (Window) para ortofotos grandes; ler tudo de uma vez pode estourar a RAM</li>
+<li>o CRS do arquivo pode estar ausente ou errado; conferir contra o esperado (por exemplo UTM SIRGAS 2000) antes de usar</li>
+<li>bandas uint8 (RGB) e float32 (MDS) têm tratamento diferente; não misturar na média</li>
+<li>a reamostragem (nearest, bilinear, cubic) altera valores; escolher e registrar o método</li>
+<li>a GDAL embarcada na roda pode diferir da do sistema; registrar a versão para reprodutibilidade</li>
+</ul>
+<p>Repositório: <a href="https://github.com/rasterio/rasterio">https://github.com/rasterio/rasterio</a></p>
+<h3 id="doc-repertorio-shapely">Shapely</h3>
+<p>Geometrias planas (pontos, linhas, polígonos) e operações geométricas, sobre a biblioteca GEOS.</p>
+<p><em>Coopera com <code>pyproj</code>, <code>geopandas</code>, <code>numpy</code>, <code>rasterio</code>, <code>ezdxf</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>área, comprimento, interseção, união, buffer e distância de polígonos e polilinhas em coordenadas métricas (UTM)</li>
+<li>recortar trechos de rede (obra linear) por polígono de lote ou de pavimento</li>
+<li>operações vetorizadas sobre arrays de geometrias (Shapely 2.x), em vez de laços Python</li>
+<li>índice espacial (STRtree) para consultas de vizinhança entre muitas geometrias</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>quando as coordenadas estão em graus (SIRGAS 2000 geográfico) e a medida deve ser em metros; projetar para UTM antes</li>
+<li>quando é preciso 3D de verdade (volumes, interseção de sólidos); a biblioteca é essencialmente 2D</li>
+<li>quando a tabela de atributos é o foco; usar geopandas, que embrulha o Shapely</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>a ordem das coordenadas é (x, y), isto é, (leste, norte) ou (longitude, latitude); misturar com (latitude, longitude) inverte o ponto</li>
+<li>não conhece sistema de coordenadas; guardar o EPSG ao lado (geopandas ou pyproj) e nunca medir área ou comprimento em graus</li>
+<li>a coordenada Z é carregada, mas as operações (área, distância, interseção) a ignoram</li>
+<li>polígonos inválidos (autointerseção, anel aberto) dão resultado errado ou erro; checar is_valid e corrigir com make_valid</li>
+<li>coordenadas UTM têm 6 a 7 dígitos; comparar com tolerância absoluta declarada, não com igualdade exata</li>
+<li>set_precision altera a geometria; usar de forma explícita</li>
+<li>{'determinismo': 'a mesma versão do GEOS dá o mesmo resultado; versões diferentes podem divergir em casos de borda'}</li>
+</ul>
+<p>Repositório: <a href="https://github.com/shapely/shapely">https://github.com/shapely/shapely</a></p>
+<h2 id="doc-repertorio-cad-bim-e-3d">CAD, BIM e 3D</h2>
+<table>
+<thead>
+<tr>
+<th>Ferramenta</th>
+<th>Situação</th>
+<th>Licença</th>
+<th>Última versão</th>
+<th>Verificado em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://ezdxf.readthedocs.io">ezdxf</a></td>
+<td>candidato</td>
+<td>MIT</td>
+<td>1.4.5 (2026-10)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://docs.ifcopenshell.org">IfcOpenShell</a></td>
+<td>candidato</td>
+<td>LGPL-3.0-or-later</td>
+<td>0.9.0.post1 (2026-10)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://www.open3d.org/docs">Open3D</a></td>
+<td>candidato</td>
+<td>MIT</td>
+<td>0.20.0 (2026-09)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://colmap.github.io/">pycolmap</a></td>
+<td>em uso</td>
+<td>BSD-3-Clause</td>
+<td>4.2.1 (2026-09)</td>
+<td>2026-11-02</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doc-repertorio-ezdxf">ezdxf</h3>
+<p>Leitura, criação e edição de arquivos DXF (CAD 2D e 3D) em Python, sem depender do AutoCAD.</p>
+<p><em>Coopera com <code>shapely</code>, <code>pymupdf</code>, <code>ifcopenshell</code>, <code>pyproj</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>extrair linhas, polilinhas, blocos, textos e camadas (layers) de pranchas exportadas em DXF</li>
+<li>gerar um DXF com a rede projetada (polilinhas por camada) para abrir no CAD</li>
+<li>ler o desenho por nome de camada, para ligar elementos a conceitos (rede de esgoto, tubo, estaca)</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>arquivos DWG, formato proprietário; converter antes para DXF (por exemplo com o ODA File Converter, que o ezdxf pode chamar em ezdxf.addons.odafc)</li>
+<li>pranchas em PDF vetorial; usar pymupdf para extrair os caminhos</li>
+<li>modelo BIM com semântica de objetos; usar IFC</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>DWG não é lido diretamente; a conversão externa é uma etapa a mais e deve ser registrada na proveniência</li>
+<li>o DXF não guarda CRS de forma confiável; as coordenadas podem estar em UTM, em coordenadas locais ou em unidades de desenho; confirmar e registrar a unidade (INSUNITS)</li>
+<li>polilinhas com arco (bulge), splines e hatches precisam ser achatadas para virar geometria Shapely; declarar a tolerância do achatamento</li>
+<li>blocos (INSERT) trazem escala, rotação e ponto de inserção; expandir com virtual_entities em vez de tratar como ponto</li>
+<li>entidades extrudadas usam o OCS e o desenho pode usar UCS; aplicar a extrusão ao ler, senão o sentido do eixo pode ficar invertido</li>
+<li>arquivos corrompidos ou gerados por outros softwares podem exigir ezdxf.recover</li>
+<li>o DXF guarda coordenadas como texto em ponto flutuante; confirmar a precisão ao exportar coordenadas UTM de 6 a 7 dígitos</li>
+</ul>
+<p>Repositório: <a href="https://github.com/mozman/ezdxf">https://github.com/mozman/ezdxf</a></p>
+<h3 id="doc-repertorio-ifcopenshell">IfcOpenShell</h3>
+<p>Biblioteca para ler, criar e editar modelos IFC (BIM), com geometria e propriedades dos objetos.</p>
+<p><em>Coopera com <code>ezdxf</code>, <code>open3d</code>, <code>shapely</code>, <code>pandas</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>ler modelo BIM em IFC (paredes, tubos, equipamentos) com propriedades e quantitativos</li>
+<li>extrair a geometria 3D dos elementos para cruzar com a nuvem de pontos ou com a rede</li>
+<li>gerar IFC de saída a partir de dados calculados (por exemplo trechos de rede com diâmetro e cota)</li>
+<li>consultar a posição georreferenciada do modelo (IfcMapConversion e IfcProjectedCRS, no IFC4)</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>desenho CAD 2D sem semântica; usar ezdxf</li>
+<li>quando só se precisa de nuvem de pontos ou malha; usar open3d</li>
+<li>distribuição de software fechado sem avaliar a obrigação da LGPL</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>licença LGPL-3.0-or-later nas bibliotecas principais; componentes como o Bonsai usam GPL-3.0-or-later; verificar a compatibilidade antes de distribuir</li>
+<li>o IFC costuma estar em coordenadas locais do projeto; a conversão para UTM depende de IfcMapConversion, que pode estar ausente ou errada</li>
+<li>coordenadas de 6 a 7 dígitos podem perder precisão na geometria processada; trabalhar com origem deslocada e somar o deslocamento depois</li>
+<li>as unidades do modelo (milímetro, metro) vêm de IfcUnitAssignment; converter para SI explicitamente</li>
+<li>esquemas suportados na leitura são IFC2x3, IFC4, IFC4x1, IFC4x2 e IFC4x3; a geometria cobre menos esquemas que a leitura (IFC2x3 e IFC4)</li>
+<li>o pacote tem dependência nativa (geometria) e restrição de versão do Python (de 3.10 a 3.15 na roda 0.9.0.post1)</li>
+<li>a API de alto nível (ifcopenshell.api) evolui entre versões; fixar a versão</li>
+</ul>
+<p>Repositório: <a href="https://github.com/ifcopenshell/ifcopenshell">https://github.com/ifcopenshell/ifcopenshell</a></p>
+<h3 id="doc-repertorio-open3d">Open3D</h3>
+<p>Biblioteca de processamento 3D para nuvens de pontos, malhas, registro (ICP) e reconstrução de superfícies.</p>
+<p><em>Coopera com <code>numpy</code>, <code>pycolmap</code>, <code>rasterio</code>, <code>ifcopenshell</code>, <code>shapely</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>filtrar, reduzir (voxel downsample), remover ruído e estimar normais da nuvem de pontos do SfM</li>
+<li>alinhar duas nuvens, ou a nuvem a pontos de controle, com ICP</li>
+<li>reconstruir malha (Poisson, ball pivoting) a partir da nuvem densa</li>
+<li>visualizar nuvem e malha de forma interativa durante a depuração</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>cálculo de MDS raster; usar rasterio e numpy sobre a nuvem</li>
+<li>modelo BIM com semântica; usar IFC</li>
+<li>nuvens muito grandes sem tratamento por blocos</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>coordenadas UTM de 6 a 7 dígitos em float32 perdem precisão; subtrair uma origem local, trabalhar em float64 e somar a origem ao salvar</li>
+<li>o ICP depende da posição inicial e da distância máxima de correspondência; pode convergir para mínimo local; conferir o resultado contra pontos de controle</li>
+<li>voxel downsample e estimativa de normais mudam o resultado; registrar os parâmetros</li>
+<li>parte das operações tem versão em GPU (CUDA) que exige roda e hardware específicos; a CPU é mais previsível</li>
+<li>paralelismo e amostragem aleatória podem alterar o resultado entre execuções; fixar semente e checar determinismo</li>
+<li>o suporte a versões novas do Python costuma atrasar; conferir os requisitos da roda antes de atualizar</li>
+<li>a janela de visualização exige ambiente gráfico; em servidor, exportar ou renderizar fora da tela</li>
+</ul>
+<p>Repositório: <a href="https://github.com/isl-org/Open3D">https://github.com/isl-org/Open3D</a></p>
+<h3 id="doc-repertorio-pycolmap">pycolmap</h3>
+<p>Ligações Python do COLMAP para estrutura a partir de movimento (SfM) e estéreo multivista, a partir de fotos.</p>
+<p><em>Coopera com <code>open3d</code>, <code>rasterio</code>, <code>numpy</code>, <code>pyproj</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>reconstruir poses de câmera e nuvem esparsa a partir de fotos de drone (nadirais e oblíquas)</li>
+<li>rodar extração de características, correspondência e mapeamento incremental em CPU</li>
+<li>obter o ajuste de feixes (bundle adjustment) e usar o resultado para gerar MDS e ortofoto</li>
+<li>reaproveitar o GPS do EXIF de fotos DJI como posição aproximada das câmeras</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>quando já há fluxo fotogramétrico fechado com pontos de controle de campo e exigência formal de precisão; usar software dedicado</li>
+<li>quando a densificação estéreo é essencial e não há GPU NVIDIA</li>
+<li>quando a reconstrução precisa ser idêntica bit a bit entre máquinas</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>o SfM entrega modelo com escala e orientação arbitrárias; georreferenciar com GPS do EXIF ou pontos de controle (transformação de similaridade) antes de usar em UTM</li>
+<li>o GPS do EXIF de drone tem erro de metros; sem pontos de controle, a precisão absoluta é limitada, mesmo que a relativa seja boa</li>
+<li>o repositório do COLMAP oferece o pacote separado pycolmap-cuda12 com rodas CUDA; o pacote pycolmap comum é o caminho para CPU, e passos que exigem CUDA (como a densificação) devem ser confirmados na documentação antes de planejar o fluxo</li>
+<li>threads e RANSAC podem variar entre execuções; fixar semente e número de threads, e comparar com tolerância em vez de bytes</li>
+<li>misturar fotos oblíquas e nadirais exige cuidado na correspondência; o modelo de câmera e a calibração afetam a deformação (prédio torto)</li>
+<li>a licença do COLMAP é BSD-3-Clause, mas dependências de terceiros têm licenças próprias</li>
+<li>memória e tempo crescem com o número de fotos e a resolução; reduzir o tamanho máximo da imagem em testes</li>
+</ul>
+<p>Repositório: <a href="https://github.com/colmap/colmap">https://github.com/colmap/colmap</a></p>
 <h2 id="doc-repertorio-grafos">Grafos</h2>
 <table>
 <thead>
@@ -1185,54 +1796,105 @@ Página gerada a partir de <code>repertorio/*/*.yaml</code> por <code>vcm docs</
 <tr>
 <td><a href="https://networkx.org/documentation/stable/">NetworkX</a></td>
 <td>candidato</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
+<td>BSD-3-Clause</td>
+<td>3.7 (2026-09)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://python.igraph.org">python-igraph</a></td>
+<td>candidato</td>
+<td>GPL-2.0</td>
+<td>1.0.0 (2025-10)</td>
+<td>2026-11-02</td>
 </tr>
 <tr>
 <td><a href="https://www.rustworkx.org/">rustworkx</a></td>
 <td>candidato</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
+<td>Apache-2.0</td>
+<td>0.18.1 (2026-07)</td>
+<td>2026-11-02</td>
 </tr>
 </tbody>
 </table>
 <h3 id="doc-repertorio-networkx">NetworkX</h3>
 <p>Biblioteca de grafos em Python puro, com grande conjunto de algoritmos e API flexível.</p>
-<p><em>Compete com <code>rustworkx</code>; coopera com <code>numpy</code>, <code>pandas</code>.</em></p>
+<p><em>Compete com <code>rustworkx</code>, <code>igraph</code>; coopera com <code>numpy</code>, <code>pandas</code>, <code>geopandas</code>, <code>shapely</code>, <code>rustworkx</code>.</em></p>
 <p><strong>Quando considerar</strong></p>
 <ul>
 <li>prototipar algoritmos de grafos</li>
 <li>grafos de tamanho moderado</li>
 <li>atributos arbitrários em nós e arestas</li>
+<li>rede de água ou esgoto como grafo dirigido (trechos como arestas, poços de visita como nós), com caminho de jusante, componentes conectados e ordenação topológica</li>
+<li>nós identificados por rótulos de domínio (código do poço de visita, nome do trecho), sem mapeamento para índices</li>
+<li>integrar com geopandas e shapely, em que cada aresta carrega geometria e comprimento_m</li>
 </ul>
 <p><strong>Quando evitar</strong></p>
 <ul>
 <li>grafos muito grandes em que o tempo de execução é o fator limitante</li>
+<li>fluxo de trabalho que exige determinismo estrito sem tratar a ordem de iteração</li>
+<li>algoritmos de grafos que não existem na biblioteca e exigem núcleo nativo</li>
 </ul>
 <p><strong>Cuidados</strong></p>
 <ul>
 <li>a implementação em Python é mais lenta que a de bibliotecas com núcleo nativo</li>
 <li>a ordem de iteração segue a ordem de inserção; fixá-la para resultados reproduzíveis</li>
+<li>em redes de esgoto, o sentido da aresta deve seguir o escoamento por gravidade (montante para jusante); usar DiGraph e conferir ciclos com is_directed_acyclic_graph</li>
+<li>grafos multi-aresta (MultiGraph, MultiDiGraph) são necessários quando há trechos paralelos entre os mesmos nós</li>
+<li>pesos de aresta com unidade no nome (comprimento_m); o algoritmo de caminho mínimo usa o atributo indicado em weight, e o padrão é peso 1 por aresta</li>
+<li>alguns algoritmos têm desempate arbitrário (caminhos de mesmo custo); não depender de um caminho específico sem fixar o critério</li>
+<li>a série 3.x requer versão recente do Python (&gt;=3.12 na versão 3.7); fixar a versão do pacote</li>
 </ul>
+<p>Repositório: <a href="https://github.com/networkx/networkx">https://github.com/networkx/networkx</a></p>
+<h3 id="doc-repertorio-python-igraph">python-igraph</h3>
+<p>Interface Python para a biblioteca igraph em C, com algoritmos de grafos e análise de redes.</p>
+<p><em>Compete com <code>networkx</code>, <code>rustworkx</code>; coopera com <code>numpy</code>, <code>pandas</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>análise de redes grandes com algoritmos nativos (centralidade, comunidades, caminhos mínimos)</li>
+<li>nós identificados por índices inteiros e atributos guardados em vetores</li>
+<li>comparação de desempenho e de resultados com NetworkX e rustworkx em uma tese de benchmark</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>quando a licença GPL é incompatível com a distribuição do projeto</li>
+<li>quando se quer a API mais flexível, com nós por rótulo de domínio; NetworkX é mais direto</li>
+<li>ecossistema de integração com geopandas, em que NetworkX tem mais exemplos</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>licença GPL (o repositório indica GPL-2.0; a cláusula &quot;ou posterior&quot; não foi verificada em 2026-11-02); avaliar o efeito sobre a distribuição antes de adotar</li>
+<li>os nós são índices inteiros de 0 a n-1; reindexados quando vértices são removidos, o que invalida os índices guardados</li>
+<li>o nome do pacote no PyPI é igraph, enquanto o repositório se chama python-igraph; instalar pelo nome do PyPI</li>
+<li>dependência nativa (biblioteca C); usar rodas binárias e registrar a versão</li>
+<li>grafos dirigidos exigem o argumento directed explícito em vários métodos; conferir o padrão de cada função</li>
+<li>determinismo de algoritmos aleatórios (por exemplo comunidades) exige fixar a semente do módulo random</li>
+</ul>
+<p>Repositório: <a href="https://github.com/igraph/python-igraph">https://github.com/igraph/python-igraph</a></p>
 <h3 id="doc-repertorio-rustworkx">rustworkx</h3>
-<p>Biblioteca de grafos com núcleo em Rust e API em Python.</p>
-<p><em>Compete com <code>networkx</code>; coopera com <code>numpy</code>, <code>pandas</code>.</em></p>
+<p>Biblioteca de grafos com núcleo em Rust e API em Python, originada no projeto Qiskit.</p>
+<p><em>Compete com <code>networkx</code>, <code>igraph</code>; coopera com <code>numpy</code>, <code>pandas</code>, <code>networkx</code>.</em></p>
 <p><strong>Quando considerar</strong></p>
 <ul>
 <li>grafos grandes</li>
 <li>algoritmos de grafos com execução em código nativo</li>
+<li>redes com muitos trechos em que a lentidão do Python puro se torna o gargalo medido</li>
+<li>cargas de trabalho que se beneficiam de índices inteiros contíguos e de arrays NumPy</li>
 </ul>
 <p><strong>Quando evitar</strong></p>
 <ul>
 <li>quando os nós precisam ser identificados diretamente por rótulos de domínio</li>
 <li>quando é preciso o ecossistema mais amplo de algoritmos do NetworkX</li>
+<li>redes pequenas, em que a diferença de tempo não compensa a conversão de índices</li>
 </ul>
 <p><strong>Cuidados</strong></p>
 <ul>
 <li>os nós são referenciados por índices inteiros; mapear os identificadores de domínio para esses índices</li>
+<li>ao remover nós, os índices livres podem ser reaproveitados; não guardar índices antigos como identificador estável</li>
+<li>a API é parecida com a do NetworkX, mas não idêntica; funções de mesmo nome podem ter assinatura ou retorno diferentes</li>
+<li>há ponte de conversão para NetworkX, mas ela custa tempo e perde detalhes de atributos; testar o caminho de ida e volta</li>
+<li>o desempenho só deve ser afirmado com medição própria (tese de benchmark), não por suposição</li>
 </ul>
+<p>Repositório: <a href="https://github.com/Qiskit/rustworkx">https://github.com/Qiskit/rustworkx</a></p>
 <h2 id="doc-repertorio-intercambio-de-dados">Intercâmbio de dados</h2>
 <table>
 <thead>
@@ -1248,27 +1910,245 @@ Página gerada a partir de <code>repertorio/*/*.yaml</code> por <code>vcm docs</
 <tr>
 <td><a href="https://json-ld.org/">JSON-LD</a></td>
 <td>candidato</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
+<td>BSD-3-Clause</td>
+<td>3.3.0 (2026-09)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://rdflib.readthedocs.org/">RDFLib</a></td>
+<td>candidato</td>
+<td>BSD-3-Clause</td>
+<td>7.6.0 (2026-02)</td>
+<td>2026-11-02</td>
 </tr>
 </tbody>
 </table>
 <h3 id="doc-repertorio-json-ld">JSON-LD</h3>
 <p>Formato de dados ligados em JSON, em que um contexto associa termos a identificadores globais (IRIs).</p>
+<p><em>Coopera com <code>rdflib</code>, <code>pydantic</code>.</em></p>
 <p><strong>Quando considerar</strong></p>
 <ul>
 <li>intercambiar dados semânticos com vocabulário compartilhado</li>
 <li>publicar metadados vinculados a outros conjuntos de dados</li>
+<li>descrever o projeto, as camadas e os arquivos com identificadores estáveis e vocabulário explícito</li>
+<li>manter um JSON legível por pessoas que também possa ser lido como grafo RDF</li>
 </ul>
 <p><strong>Quando evitar</strong></p>
 <ul>
 <li>troca interna simples, em que um JSON comum basta</li>
+<li>tabelas grandes de dados numéricos; usar parquet</li>
 </ul>
 <p><strong>Cuidados</strong></p>
 <ul>
 <li>a expansão de contexto pode buscar URLs remotos; usar carregador local e controlado</li>
+<li>o pacote Python é pyld; a leitura de JSON-LD em grafo RDF também é possível com rdflib</li>
+<li>o resultado da canonicalização (URDNA2015) é determinístico, mas deve ser usado quando se quer comparar bytes ou assinar</li>
+<li>coordenadas e unidades precisam de termos explícitos no contexto (por exemplo, o EPSG e a unidade no nome); sem isso, o número perde significado</li>
+<li>para dados geográficos, GeoJSON é mais adequado como formato de geometria; o JSON-LD pode apenas descrevê-lo</li>
 </ul>
+<p>Repositório: <a href="https://github.com/digitalbazaar/pyld">https://github.com/digitalbazaar/pyld</a></p>
+<h3 id="doc-repertorio-rdflib">RDFLib</h3>
+<p>Biblioteca Python para trabalhar com RDF, com leitura e escrita em vários formatos e consultas SPARQL.</p>
+<p><em>Coopera com <code>json-ld</code>, <code>pydantic</code>, <code>networkx</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>montar um grafo de conhecimento do projeto (obra, camadas, pranchas, arquivos) e consultá-lo com SPARQL</li>
+<li>ler e gravar RDF em Turtle, N-Triples, RDF/XML e JSON-LD</li>
+<li>ligar elementos da obra a vocabulários externos (por exemplo, o ifcOWL para IFC)</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>dados tabulares ou numéricos; usar pandas, polars ou parquet</li>
+<li>troca interna simples, em que um JSON comum basta</li>
+<li>grafos de tamanho grande com alto desempenho, pois a biblioteca guarda os dados em memória</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>o armazenamento padrão é em memória; para volumes maiores é preciso um backend de armazenamento</li>
+<li>literais numéricos precisam de tipo explícito (XSD) e a unidade deve constar no vocabulário, senão o valor perde significado</li>
+<li>a ordem de serialização pode variar; para comparar bytes, usar a canonicalização (rdflib.compare) ou ordenar</li>
+<li>consultas SPARQL mal formadas retornam resultados vazios sem erro óbvio; testar com dados pequenos</li>
+<li>carregar contextos JSON-LD ou ontologias remotas pode acessar a rede; preferir cópias locais</li>
+<li>fixar a versão do pacote; a API de plugins de formato e de armazenamento muda entre versões principais</li>
+</ul>
+<p>Repositório: <a href="https://github.com/RDFLib/rdflib">https://github.com/RDFLib/rdflib</a></p>
+<h2 id="doc-repertorio-documentos-e-ocr">Documentos e OCR</h2>
+<table>
+<thead>
+<tr>
+<th>Ferramenta</th>
+<th>Situação</th>
+<th>Licença</th>
+<th>Última versão</th>
+<th>Verificado em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://docling-project.github.io/docling/">Docling</a></td>
+<td>candidato</td>
+<td>MIT</td>
+<td>2.145.0 (2026-10)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://github.com/PaddlePaddle/PaddleOCR/blob/main/README.md">PaddleOCR</a></td>
+<td>candidato</td>
+<td>Apache-2.0</td>
+<td>3.7.0 (2026-06)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://github.com/jsvine/pdfplumber#readme">pdfplumber</a></td>
+<td>candidato</td>
+<td>MIT</td>
+<td>0.11.10 (2026-06)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://pymupdf.readthedocs.io/">PyMuPDF</a></td>
+<td>em uso</td>
+<td>AGPL-3.0-only</td>
+<td>2.0 (2026-10)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://github.com/madmaze/pytesseract#readme">pytesseract</a></td>
+<td>em uso</td>
+<td>Apache-2.0</td>
+<td>0.3.13 (2024-08)</td>
+<td>2026-11-02</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doc-repertorio-docling">Docling</h3>
+<p>Conversão de documentos (PDF, imagens, Office) em estrutura com layout, tabelas e ordem de leitura, usando modelos de análise de layout.</p>
+<p><em>Compete com <code>pymupdf</code>, <code>pdfplumber</code>; coopera com <code>pymupdf</code>, <code>pytesseract</code>, <code>paddleocr</code>, <code>pandas</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>documentos de texto corrido com tabelas (memoriais, especificações, relatórios), em que a ordem de leitura e a estrutura de tabelas importam</li>
+<li>PDF misto, com partes escaneadas, convertido em um único modelo de documento exportável para Markdown ou JSON</li>
+<li>comparar com pymupdf e pdfplumber a extração de tabelas que eles erram</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>{'pranchas de desenho técnico': 'o modelo de layout foi pensado para documentos, não para desenho CAD com cotas e hachuras'}</li>
+<li>ambiente sem rede ou sem espaço para baixar modelos</li>
+<li>quando é preciso resultado byte a byte idêntico e coordenadas exatas de traços</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>licença MIT do pacote conforme o PyPI; os modelos baixados têm licenças próprias, conferir cada um antes de distribuir</li>
+<li>baixa pesos de modelos de repositórios externos na primeira execução; fixar o diretório de artefatos para uso offline</li>
+<li>dependência pesada (PyTorch e outros); em CPU é lento, a GPU acelera mas exige instalação própria</li>
+<li>o OCR é delegado a motores configuráveis (por exemplo Tesseract, EasyOCR, RapidOCR); configurar o idioma português explicitamente</li>
+<li>o determinismo depende da versão dos modelos e do hardware; registrar versões e comparar saídas em teste antes de adotar</li>
+<li>lançamentos muito frequentes (2.145.0 em 2026-10); fixar a versão</li>
+</ul>
+<p>Repositório: <a href="https://github.com/docling-project/docling">https://github.com/docling-project/docling</a></p>
+<h3 id="doc-repertorio-paddleocr">PaddleOCR</h3>
+<p>OCR por redes neurais (detecção e reconhecimento de texto) do ecossistema PaddlePaddle, com suporte a vários idiomas.</p>
+<p><em>Compete com <code>pytesseract</code>; coopera com <code>pymupdf</code>, <code>pdfplumber</code>, <code>docling</code>, <code>numpy</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>{'texto escaneado em que o Tesseract falha': 'fundo ruidoso, texto inclinado ou girado, fontes irregulares'}</li>
+<li>comparar com pytesseract nas mesmas regiões de carimbo e tabelas de uma amostra de pranchas reais, medindo o acerto contra valores conferidos à mão</li>
+<li>há GPU disponível, ou a quantidade de páginas compensa o custo de instalação</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>texto vetorial extraível direto do PDF</li>
+<li>{'ambiente enxuto ou de CI leve': 'a dependência é grande'}</li>
+<li>quando o resultado precisa ser idêntico entre máquinas diferentes sem validação</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>licença Apache-2.0 conforme o PyPI; os modelos de cada idioma têm origem e termos próprios, conferir antes de distribuir</li>
+<li>exige também o framework PaddlePaddle, instalado em separado, com variantes para CPU e GPU; a instalação costuma ser a parte difícil</li>
+<li>baixa modelos na primeira execução; para uso offline fixar o diretório dos modelos</li>
+<li>para português usa-se o modelo de alfabeto latino; confirmar na amostra o reconhecimento de acentos e cedilha</li>
+<li>o resultado pode variar com a versão do modelo, o hardware e a GPU; registrar versões e validar em Python os números lidos</li>
+<li>a API mudou entre as séries 2.x e 3.x; fixar a versão (3.7.0 em 2026-06)</li>
+</ul>
+<p>Repositório: <a href="https://github.com/PaddlePaddle/PaddleOCR">https://github.com/PaddlePaddle/PaddleOCR</a></p>
+<h3 id="doc-repertorio-pdfplumber">pdfplumber</h3>
+<p>Extração de texto, linhas, retângulos e tabelas de PDF com camada de texto, construída sobre pdfminer.six.</p>
+<p><em>Compete com <code>pymupdf</code>, <code>docling</code>; coopera com <code>pymupdf</code>, <code>pandas</code>, <code>polars</code>, <code>pytesseract</code>, <code>paddleocr</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>tabelas de materiais e quantitativos em PDF vetorial, com extract_table e extract_tables ajustando as estratégias de linha (lines) ou de texto (text)</li>
+<li>depurar visualmente a detecção de tabela (page.to_image com debug_tablefinder) antes de confiar nos números</li>
+<li>recortar uma região (crop) da prancha, como o carimbo, e extrair só dali</li>
+<li>precisar de licença permissiva (MIT) em ferramenta que será distribuída</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>{'PDF escaneado': 'não há texto a extrair, só imagem'}</li>
+<li>pranchas grandes com muitos traços de desenho, em que o processamento é lento</li>
+<li>quando a velocidade e a leitura de layers do CAD são o foco (pymupdf)</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>licença MIT conforme classificação do PyPI; o pdfminer.six é dependência</li>
+<li>as configurações de tabela (table_settings) mudam o resultado; congelá-las no código e testar com tabelas reais</li>
+<li>células mescladas e tabelas sem bordas costumam sair truncadas ou deslocadas; conferir a contagem de linhas contra o esperado</li>
+<li>o texto sai como cadeias de caracteres; números no formato brasileiro (vírgula decimal, ponto de milhar) são convertidos em Python, com teste</li>
+<li>mesmo arquivo, mesma versão e mesmas configurações dão o mesmo resultado</li>
+</ul>
+<p>Repositório: <a href="https://github.com/jsvine/pdfplumber">https://github.com/jsvine/pdfplumber</a></p>
+<h3 id="doc-repertorio-pymupdf">PyMuPDF</h3>
+<p>Leitura rápida de PDF vetorial e escaneado (textos com posição, traços, imagens, layers) sobre a biblioteca MuPDF.</p>
+<p><em>Compete com <code>pdfplumber</code>, <code>docling</code>; coopera com <code>pdfplumber</code>, <code>pytesseract</code>, <code>paddleocr</code>, <code>docling</code>, <code>shapely</code>, <code>numpy</code>, <code>pandas</code>, <code>polars</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>prancha de projeto em PDF vetorial exportada de CAD, em que se quer textos com posição (get_text com blocos e spans), traços (get_drawings) e a camada (layer/OCG) de cada elemento</li>
+<li>carimbo e legendas em coordenadas conhecidas da página, recortando por retângulo para ler só a região do carimbo</li>
+<li>extrair imagens embutidas ou renderizar a página em pixmap com resolução controlada para entregar ao OCR</li>
+<li>páginas grandes (formatos A1/A0) em que a velocidade e o baixo uso de memória importam</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>distribuição de software fechado ou serviço em rede sem avaliar a licença AGPL ou contratar a licença comercial</li>
+<li>tabelas com bordas implícitas em que a reconstrução de linhas e colunas é o problema principal (pdfplumber ou docling tratam melhor)</li>
+<li>PDF escaneado sem camada de texto, em que só há imagem; é preciso OCR (pytesseract ou paddleocr) depois da renderização</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>{'LICENÇA': 'dupla, GNU AGPL 3.0 ou licença comercial da Artifex. Uso interno e pesquisa é simples; distribuir ou oferecer como serviço em rede exige abrir o código derivado ou comprar a licença comercial. Decisão de licenciamento é do mantenedor.'}</li>
+<li>o texto vetorial de CAD costuma vir quebrado em spans por fonte e por caractere; agrupar por proximidade em Python antes de interpretar</li>
+<li>as coordenadas são em pontos tipográficos (1/72 pol) com origem no canto superior esquerdo; converter para mm uma vez, na entrada, e carregar o sufixo no nome</li>
+<li>nome de layer só existe se o PDF preservou os grupos de conteúdo opcionais (OCG); conferir em cada exportação de CAD</li>
+<li>versão major 2.0 recente (2026-10) pode ter mudado API; fixar a versão no lockfile e rodar os testes de extração</li>
+<li>para o mesmo arquivo e a mesma versão a extração é determinística; registrar a versão junto do resultado</li>
+</ul>
+<p>Repositório: <a href="https://github.com/pymupdf/pymupdf">https://github.com/pymupdf/pymupdf</a></p>
+<h3 id="doc-repertorio-pytesseract">pytesseract</h3>
+<p>Interface Python para o motor de OCR Tesseract, que lê texto de imagens e devolve também posição e confiança por palavra.</p>
+<p><em>Compete com <code>paddleocr</code>; coopera com <code>pymupdf</code>, <code>pdfplumber</code>, <code>paddleocr</code>, <code>docling</code>, <code>numpy</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>prancha escaneada ou texto rasterizado sem camada de texto, depois de renderizar a página em imagem (por exemplo com pymupdf)</li>
+<li>ler o carimbo e tabelas por região recortada, com image_to_data para obter caixa e confiança de cada palavra</li>
+<li>texto em português, com os dados de idioma (traineddata &quot;por&quot;) instalados</li>
+<li>conferência cruzada de um valor lido do vetor contra o mesmo valor lido por OCR</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>texto vetorial do CAD, que se extrai exato direto do PDF sem OCR</li>
+<li>tabelas complexas ou texto girado sobre desenho denso, em que o Tesseract perde muito; avaliar paddleocr</li>
+<li>cotas pequenas em desenho, sem pré-processamento</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>{'o pytesseract é apenas o invólucro': 'o programa Tesseract precisa estar instalado no sistema (apt, brew ou instalador no Windows) e o idioma português baixado em separado'}</li>
+<li>licença Apache-2.0 do invólucro conforme o PyPI; a licença do Tesseract em si não foi verificada em 2026-11-02, conferir na distribuição usada</li>
+<li>última versão publicada 0.3.13 em 2024-08, ritmo de manutenção baixo; acompanhar o repositório</li>
+<li>o resultado depende da resolução, do contraste e do modo de segmentação (psm); fixar os parâmetros e a resolução de renderização no código</li>
+<li>para o mesmo binário, a mesma imagem e os mesmos parâmetros espera-se a mesma saída; registrar a versão do Tesseract</li>
+<li>confusões típicas entre 0/O, 1/l e vírgula/ponto em números exigem validação em Python (formato, faixa, soma)</li>
+<li>cada chamada abre um subprocesso, o que pesa em muitas regiões pequenas</li>
+</ul>
+<p>Repositório: <a href="https://github.com/madmaze/pytesseract">https://github.com/madmaze/pytesseract</a></p>
 <h2 id="doc-repertorio-apresentacao">Apresentação</h2>
 <table>
 <thead>
@@ -1284,51 +2164,200 @@ Página gerada a partir de <code>repertorio/*/*.yaml</code> por <code>vcm docs</
 <tr>
 <td><a href="https://jinja.palletsprojects.com/">Jinja2</a></td>
 <td>em uso</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
+<td>BSD-3-Clause</td>
+<td>3.1.6 (2025-03)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://matplotlib.org/stable/">Matplotlib</a></td>
+<td>candidato</td>
+<td>LicenseRef-Matplotlib</td>
+<td>3.11.2 (2026-09)</td>
+<td>2026-11-02</td>
 </tr>
 <tr>
 <td><a href="https://plotly.com/python/">Plotly</a></td>
 <td>em uso</td>
-<td>—</td>
-<td>—</td>
-<td>—</td>
+<td>MIT</td>
+<td>7.1.0 (2026-09)</td>
+<td>2026-11-02</td>
 </tr>
 </tbody>
 </table>
 <h3 id="doc-repertorio-jinja2">Jinja2</h3>
 <p>Motor de templates para gerar texto e HTML a partir de dados já calculados em Python.</p>
-<p><em>Coopera com <code>plotly</code>.</em></p>
+<p><em>Coopera com <code>plotly</code>, <code>matplotlib</code>.</em></p>
 <p><strong>Quando considerar</strong></p>
 <ul>
 <li>montar relatórios HTML com laços e blocos reutilizáveis</li>
-<li>separar apresentação do cálculo</li>
+<li>{'separar apresentação do cálculo': 'o template recebe valores prontos, já formatados com unidade'}</li>
+<li>herança de templates para manter o mesmo cabeçalho e estilo em vários relatórios</li>
 </ul>
 <p><strong>Quando evitar</strong></p>
 <ul>
 <li>lógica de negócio dentro do template</li>
+<li>cálculo, soma ou conversão de unidade no template, o que viola a regra de que o HTML só apresenta</li>
 </ul>
 <p><strong>Cuidados</strong></p>
 <ul>
 <li>o autoescape vem desligado por padrão no Environment; ligá-lo para HTML</li>
+<li>usar StrictUndefined para que variável ausente falhe em vez de sair vazia no relatório</li>
+<li>a formatação de número com vírgula decimal (padrão brasileiro) deve ser feita em Python, antes do template</li>
+<li>licença BSD-3-Clause segundo o repositório da Pallets; o PyPI traz só a classificação BSD, o identificador SPDX exato não foi verificado em 2026-11-02</li>
 </ul>
-<h3 id="doc-repertorio-plotly">Plotly</h3>
-<p>Gráficos interativos gerados em Python e renderizados no navegador pelo Plotly.js.</p>
-<p><em>Coopera com <code>jinja2</code>, <code>numpy</code>, <code>pandas</code>, <code>polars</code>.</em></p>
+<p>Repositório: <a href="https://github.com/pallets/jinja">https://github.com/pallets/jinja</a></p>
+<h3 id="doc-repertorio-matplotlib">Matplotlib</h3>
+<p>Figuras estáticas (PNG, SVG, PDF) geradas em Python, com controle fino de eixos, escala e anotações.</p>
+<p><em>Compete com <code>plotly</code>; coopera com <code>numpy</code>, <code>pandas</code>, <code>polars</code>, <code>jinja2</code>, <code>shapely</code>.</em></p>
 <p><strong>Quando considerar</strong></p>
 <ul>
-<li>gráficos interativos em HTML autocontido</li>
-<li>receber DataFrames de pandas e Polars</li>
+<li>figuras estáticas para relatório impresso ou PDF, inclusive em SVG vetorial</li>
+<li>desenhos técnicos simples com escala igual nos eixos (aspect equal), como planta de trechos ou perfil</li>
+<li>imagens embutidas no HTML (SVG ou PNG em base64) quando não se quer JavaScript no relatório, coerente com a regra de que o HTML só apresenta</li>
+<li>figuras reproduzíveis em CI, sem navegador</li>
 </ul>
 <p><strong>Quando evitar</strong></p>
 <ul>
-<li>figuras estáticas para publicação impressa, em que uma ferramenta de figura estática é mais simples</li>
+<li>gráficos que o leitor precisa explorar com zoom e passagem do mouse (plotly)</li>
+<li>painéis com muitos elementos interativos</li>
 </ul>
 <p><strong>Cuidados</strong></p>
 <ul>
-<li>o HTML gerado inclui JavaScript; o JavaScript só exibe valores já calculados</li>
+<li>em servidor ou CI usar o backend não interativo (Agg) para não depender de tela</li>
+<li>licença própria baseada na PSF (classificação PSF no PyPI), permissiva; o identificador SPDX exato não foi verificado em 2026-11-02, por isso o campo usa LicenseRef</li>
+<li>a saída em PNG pode variar levemente entre versões e fontes do sistema; fixar a versão e a fonte para comparar imagens em teste</li>
+<li>rótulos e unidades dos eixos vêm de variáveis com sufixo de unidade; texto em português com acentos exige fonte que os tenha</li>
+<li>o cálculo é feito antes, em Python; a figura só desenha valores prontos</li>
 </ul>
+<p>Repositório: <a href="https://github.com/matplotlib/matplotlib">https://github.com/matplotlib/matplotlib</a></p>
+<h3 id="doc-repertorio-plotly">Plotly</h3>
+<p>Gráficos interativos gerados em Python e renderizados no navegador pelo Plotly.js.</p>
+<p><em>Compete com <code>matplotlib</code>; coopera com <code>jinja2</code>, <code>numpy</code>, <code>pandas</code>, <code>polars</code>, <code>matplotlib</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>gráficos interativos (zoom, passagem do mouse) em HTML autocontido</li>
+<li>receber DataFrames de pandas e Polars</li>
+<li>mostrar séries e perfis já calculados em Python, deixando ao navegador só o desenho</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>figuras estáticas para publicação impressa, em que uma ferramenta de figura estática é mais simples (matplotlib)</li>
+<li>desenho técnico com escala rigorosa e muitos elementos geométricos</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>{'o HTML gerado inclui JavaScript; o JavaScript só exibe valores já calculados (regra do mantenedor': 'Python calcula, HTML/JS só apresenta)'}</li>
+<li>o HTML autocontido carrega a biblioteca Plotly.js inteira (vários MB) em cada arquivo, a menos que se use CDN, que exige rede</li>
+<li>licença MIT conforme o PyPI</li>
+<li>não usar agregações ou transformações feitas no navegador; entregar a figura com os números prontos e unidades nos rótulos</li>
+</ul>
+<p>Repositório: <a href="https://github.com/plotly/plotly.py">https://github.com/plotly/plotly.py</a></p>
+<h2 id="doc-repertorio-qualidade-e-testes">Qualidade e testes</h2>
+<table>
+<thead>
+<tr>
+<th>Ferramenta</th>
+<th>Situação</th>
+<th>Licença</th>
+<th>Última versão</th>
+<th>Verificado em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://hypothesis.readthedocs.io/">Hypothesis</a></td>
+<td>candidato</td>
+<td>MPL-2.0</td>
+<td>6.170.14 (2026-10)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://mutmut.readthedocs.io/">mutmut</a></td>
+<td>candidato</td>
+<td>BSD-3-Clause</td>
+<td>3.8.1 (2026-10)</td>
+<td>2026-11-02</td>
+</tr>
+<tr>
+<td><a href="https://pytest-benchmark.readthedocs.io/">pytest-benchmark</a></td>
+<td>candidato</td>
+<td>BSD-2-Clause</td>
+<td>5.3.1 (2026-11)</td>
+<td>2026-11-02</td>
+</tr>
+</tbody>
+</table>
+<h3 id="doc-repertorio-hypothesis">Hypothesis</h3>
+<p>Testes baseados em propriedades, que geram entradas variadas e reduzem o caso que falha ao menor exemplo.</p>
+<p><em>Coopera com <code>numpy</code>, <code>pandas</code>, <code>pydantic</code>, <code>pint</code>, <code>pytest-benchmark</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>{'funções de cálculo com propriedades claras': 'conversão de unidade que volta ao valor original, resultado não negativo, monotonicidade, invariância por translação de coordenadas'}</li>
+<li>leitores de texto (números em formato brasileiro, códigos de prancha), em que entradas estranhas escapam de testes por exemplo</li>
+<li>casos de borda em geometria (polígonos degenerados, áreas nulas) com estratégias que geram coordenadas</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>funções cujo resultado esperado só se conhece por tabela de gabarito; usar teste por exemplo</li>
+<li>código lento por chamada, em que centenas de execuções pesam</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>licença MPL-2.0 (copyleft por arquivo) conforme o PyPI; afeta só modificações nos arquivos do próprio Hypothesis</li>
+<li>a geração é aleatória; para CI reproduzível usar perfil com derandomize ou fixar a semente, e guardar os exemplos que falharam</li>
+<li>cria o diretório .hypothesis com a base de exemplos; avaliar o .gitignore</li>
+<li>estratégias de float precisam restringir faixa e excluir NaN e infinito quando o domínio físico os proíbe, senão o teste acusa falsos erros</li>
+<li>o limite de tempo por exemplo (deadline) pode dar falha intermitente em máquina lenta</li>
+</ul>
+<p>Repositório: <a href="https://github.com/HypothesisWorks/hypothesis">https://github.com/HypothesisWorks/hypothesis</a></p>
+<h3 id="doc-repertorio-mutmut">mutmut</h3>
+<p>Teste de mutação, que altera o código de forma controlada e verifica se os testes percebem; mutantes que sobrevivem apontam testes fracos.</p>
+<p><em>Coopera com <code>hypothesis</code>, <code>pytest-benchmark</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>avaliar se os testes de uma função de cálculo criada por agente realmente detectam erro, além de a cobertura de linhas ser alta</li>
+<li>módulos pequenos e críticos (fórmulas hidráulicas, geometria), com testes rápidos</li>
+<li>complementar a cobertura no balanço de qualidade</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>{'suíte lenta ou código grande': 'cada mutante roda os testes de novo'}</li>
+<li>código sem testes automáticos, em que tudo sobrevive</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>licença BSD-3-Clause conforme o PyPI</li>
+<li>é preciso configurar quais caminhos mutar; suporte a Windows não foi verificado em 2026-11-02 (conferir a documentação da versão usada)</li>
+<li>mutantes equivalentes (que não mudam o comportamento) sobrevivem sem indicar teste fraco; exige leitura humana</li>
+<li>o tempo total cresce com o número de mutantes; limitar a módulos e rodar fora do CI de cada commit</li>
+<li>guarda resultados em diretório local; avaliar o .gitignore</li>
+<li>em testes numéricos, tolerância larga demais deixa sobreviver mutantes pequenos; é um sinal útil, não um defeito</li>
+</ul>
+<p>Repositório: <a href="https://github.com/boxed/mutmut">https://github.com/boxed/mutmut</a></p>
+<h3 id="doc-repertorio-pytest-benchmark">pytest-benchmark</h3>
+<p>Plugin do pytest que mede o tempo de execução de trechos de código por teste, com estatísticas e comparação entre execuções.</p>
+<p><em>Coopera com <code>hypothesis</code>, <code>numpy</code>, <code>pandas</code>, <code>polars</code>.</em></p>
+<p><strong>Quando considerar</strong></p>
+<ul>
+<li>medir o tempo por função crítica a cada iteração e comparar com a execução salva (--benchmark-compare), alimentando o balanço antes e depois</li>
+<li>decidir entre implementações (por exemplo laço contra NumPy vetorizado) com a mesma entrada</li>
+<li>detectar regressão de tempo no CI com limite declarado (--benchmark-compare-fail)</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>medir pipeline de ponta a ponta com disco e rede, em que a variação é grande</li>
+<li>máquinas compartilhadas e ruidosas sem repetição suficiente</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>licença BSD-2-Clause conforme o PyPI</li>
+<li>o tempo depende da máquina e da carga; comparar só resultados do mesmo ambiente e registrar o ambiente</li>
+<li>o plugin repete a função até estabilizar; funções com efeito colateral ou cache precisam de preparação a cada rodada (modo pedantic)</li>
+<li>salva resultados em .benchmarks; decidir se entram no repositório</li>
+<li>não mede memória</li>
+<li>em execução paralela de testes os tempos ficam instáveis; desligar o benchmark nesse modo</li>
+</ul>
+<p>Repositório: <a href="https://github.com/ionelmc/pytest-benchmark">https://github.com/ionelmc/pytest-benchmark</a></p>
 
 </article>
 
@@ -1806,7 +2835,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte 5ae6261b9a09). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte 18e3c9ff1c80). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
