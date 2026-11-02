@@ -242,6 +242,62 @@ def _cmd_efeito(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_rumo(args: argparse.Namespace) -> int:
+    from vcm import rumo as mod
+
+    repo = Path(args.repo).resolve()
+    arquivo = Path(args.arquivo)
+    if not arquivo.is_absolute():
+        arquivo = repo / arquivo
+    try:
+        if args.novo:
+            if arquivo.exists():
+                print(f"erro: {arquivo} já existe; não sobrescrevo", file=sys.stderr)
+                return 1
+            arquivo.write_text(mod.modelo(args.novo), encoding="utf-8")
+            print(f"{arquivo} criado")
+            return 0
+        if args.etapa or args.status:
+            if not (args.etapa and args.status):
+                print("erro: use --etapa e --status juntos", file=sys.stderr)
+                return 1
+            mod.marcar(arquivo, args.etapa, args.status)
+            print(f"etapa {args.etapa} -> {args.status}")
+            return 0
+        rumo = mod.carregar(arquivo)
+    except ValueError as erro:
+        print(f"erro: {erro}", file=sys.stderr)
+        return 1
+    import pandas as pd
+
+    from vcm.coletores import sessoes
+
+    precos = None
+    if not args.sem_sessoes and sessoes.PASTA_PADRAO.is_dir():
+        precos_arq = repo / "repertorio" / "modelos.yaml"
+        if not precos_arq.exists():  # outro projeto: usa a cópia empacotada no vcm
+            precos_arq = Path(__file__).with_name("modelos_precos.yaml")
+        precos = sessoes.carregar_precos(precos_arq)
+        chamadas = sessoes.ler_chamadas()
+    else:
+        chamadas = pd.DataFrame(columns=sessoes.COLUNAS).astype(
+            {"inicio": "datetime64[ns, UTC]", **dict.fromkeys(sessoes.COLUNAS_TOKENS, "int64")}
+        )
+    real = mod.real_por_etapa(rumo, chamadas, repo, precos=precos)
+    prog = mod.progresso(rumo)
+    desv = mod.desvios(rumo, repo, real)
+    texto = mod.markdown(rumo, prog, real, desv)
+    for destino, conteudo in (
+        (Path(args.saida), mod.html(rumo, prog, real, desv)),
+        (Path(args.markdown), texto),
+    ):
+        destino = destino if destino.is_absolute() else repo / destino
+        destino.parent.mkdir(parents=True, exist_ok=True)
+        destino.write_text(conteudo, encoding="utf-8")
+    print(texto)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="vcm", description="Vibe Code Metrics")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -296,6 +352,17 @@ def main(argv: list[str] | None = None) -> int:
     ef.add_argument("--adocao", default=None, help="ref da adoção (padrão: add do vcm.yaml)")
     ef.add_argument("--saida", default="results/efeito.html")
     ef.set_defaults(func=_cmd_efeito)
+
+    ru = sub.add_parser("rumo", help="rumo do desenvolvimento: plano (WBS) × realizado")
+    ru.add_argument("--repo", default=".")
+    ru.add_argument("--arquivo", default="rumo.yaml")
+    ru.add_argument("--novo", metavar="OBJETIVO", default=None, help="cria o rumo.yaml inicial")
+    ru.add_argument("--etapa", default=None, help="id da etapa a marcar (com --status)")
+    ru.add_argument("--status", default=None, help="novo status da etapa")
+    ru.add_argument("--sem-sessoes", action="store_true", help="não lê os logs locais de sessão")
+    ru.add_argument("--saida", default="results/rumo.html")
+    ru.add_argument("--markdown", default="results/rumo.md")
+    ru.set_defaults(func=_cmd_rumo)
 
     a = sub.add_parser("agentes", help="resumo das execuções de agentes por modelo")
     a.add_argument(
