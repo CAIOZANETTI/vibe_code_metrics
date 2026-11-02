@@ -8,8 +8,12 @@ RAIZ = Path(__file__).resolve().parents[1] / "repertorio"
 CAMPOS = {
     "id", "nome", "papel", "descricao", "quando_considerar", "quando_evitar", "cuidados",
     "coopera_com", "compete_com", "pacote_python", "documentacao", "evidencias", "status",
+    "repositorio", "licenca", "ultima_versao", "verificado_em",
 }  # fmt: skip
-PAPEIS = {"calculo", "tabular", "armazenamento", "grafos", "intercambio", "apresentacao"}
+PAPEIS = {
+    "calculo", "tabular", "armazenamento", "validacao", "geoespacial", "cad_3d", "grafos",
+    "intercambio", "documentos", "apresentacao", "qualidade",
+}  # fmt: skip
 STATUS = {"em_uso", "em_teste", "candidato", "rejeitado"}
 
 
@@ -51,3 +55,15 @@ def test_precos_empacotados_iguais_ao_catalogo():
     assert empacotado.read_bytes() == (RAIZ / "modelos.yaml").read_bytes(), (
         "copie repertorio/modelos.yaml para src/vcm/modelos_precos.yaml"
     )
+
+
+def test_papeis_do_teste_iguais_aos_da_pagina():
+    from vcm.repertorio import PAPEIS as PAPEIS_DA_PAGINA
+
+    assert set(PAPEIS_DA_PAGINA) == PAPEIS
+
+
+def test_licenca_e_versao_tem_data_de_verificacao():
+    for id_, e in _entradas().items():
+        if e["licenca"] or e["ultima_versao"]:
+            assert e["verificado_em"], f"{id_}: licença/versão sem data de verificação"
