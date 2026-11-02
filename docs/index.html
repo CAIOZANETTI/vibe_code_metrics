@@ -68,7 +68,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash b28445c8268c</div>
+  <div class="sub">fonte: docs/*.md · hash 35cd35c9c11a</div>
   
   <h4>Guia rápido: usar o vcm num protótipo</h4>
   <a href="#doc-guia">Início</a>
@@ -86,6 +86,7 @@ footer { color: var(--muted); font-size: 12px; }
   <h4>Arquitetura de funcionamento</h4>
   <a href="#doc-arquitetura">Início</a>
   <a class="n2" href="#doc-arquitetura-1-ideia-em-uma-pagina">1. Ideia em uma página</a>
+  <a class="n3" href="#doc-arquitetura-na-pratica-o-instrumento-e-o-projeto-medido">Na prática: o instrumento e o projeto medido</a>
   <a class="n2" href="#doc-arquitetura-2-componentes">2. Componentes</a>
   <a class="n2" href="#doc-arquitetura-3-o-ciclo-pdca-de-uma-iteracao">3. O ciclo PDCA de uma iteração</a>
   <a class="n3" href="#doc-arquitetura-quem-faz-o-que">Quem faz o quê</a>
@@ -346,7 +347,7 @@ dados sintéticos, gabarito independente, runner com repetições e relatório H
 A IA propõe, o código executa, os testes verificam, as métricas comparam e o humano decide.
 O próprio repositório é desenvolvido com o seu método (tese <strong>T000</strong>).</p>
 </blockquote>
-<p>Versão 0.3 · 31/10/2026 · Status: protótipo em construção. Plano de execução: <a href="#doc-plano">plano.md</a>.
+<p>Versão 0.4 · 02/11/2026 · Status: em uso no <code>projetos_em_camadas</code>. Plano de execução: <a href="#doc-plano">plano.md</a>.
 Regras de código: <a href="#doc-estilo">estilo.md</a>.</p>
 <h2 id="doc-arquitetura-1-ideia-em-uma-pagina">1. Ideia em uma página</h2>
 <p>O repositório não escolhe ferramentas por gosto. Ele mantém um <strong>repertório</strong> de alternativas
@@ -377,6 +378,64 @@ Vale continuar?</p>
     E --&gt; H
     A --&gt;|&quot;estagnou? sugerir alternativa&quot;| R
 </pre>
+<h3 id="doc-arquitetura-na-pratica-o-instrumento-e-o-projeto-medido">Na prática: o instrumento e o projeto medido</h3>
+<p>O <code>vcm</code> é um <strong>instrumento instalado no computador</strong>, como uma trena: não fica dentro do projeto
+e não precisa do <code>vibe_code_metrics</code> clonado. Ele lê o git local da pasta onde é chamado e grava o
+resultado nessa mesma pasta.</p>
+<pre class="mermaid">flowchart LR
+    subgraph GH[&quot;GitHub&quot;]
+        V[&quot;vibe_code_metrics&lt;br/&gt;código do instrumento e método&quot;]
+    end
+    subgraph MAC[&quot;Seu computador&quot;]
+        T[&quot;comando vcm&lt;br/&gt;(uv tool install)&quot;]
+        subgraph P[&quot;pasta do projeto medido&quot;]
+            Y[&quot;vcm.yaml&lt;br/&gt;o que medir&quot;]
+            G[&quot;git local&lt;br/&gt;commits antes e depois&quot;]
+            C[&quot;CLAUDE.md&lt;br/&gt;regras para os agentes&quot;]
+            R[&quot;results/iteracoes/&lt;br/&gt;cartão HTML&quot;]
+        end
+        L[&quot;~/.claude/projects&lt;br/&gt;logs do Claude Code&quot;]
+    end
+    V --&gt;|&quot;instala / atualiza&quot;| T
+    T --&gt;|&quot;lê&quot;| Y
+    T --&gt;|&quot;cópias temporárias&lt;br/&gt;dos dois commits&quot;| G
+    T --&gt;|&quot;gasto dos agentes&quot;| L
+    T --&gt;|&quot;grava&quot;| R
+    C -.-&gt;|&quot;orienta o Claude Code&quot;| G
+</pre>
+<table>
+<thead>
+<tr>
+<th>De onde vem</th>
+<th>O que o vcm tira dali</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vcm.yaml</code> do projeto</td>
+<td>pastas do código, pasta de testes, comando de referência, dependências extras dos testes, limites do semáforo</td>
+</tr>
+<tr>
+<td>git local (dois commits)</td>
+<td>código-fonte medido em cópias temporárias: complexidade, densidade, dependências, segurança, testes, cobertura, reprodutibilidade, tempo e memória</td>
+</tr>
+<tr>
+<td><code>~/.claude/projects</code> (logs do Claude Code)</td>
+<td>chamadas, tokens e custo equivalente de API por modelo, entre os dois commits, no repositório ou nas worktrees dos agentes</td>
+</tr>
+<tr>
+<td>catálogo de preços</td>
+<td><code>repertorio/modelos.yaml</code>; noutro projeto, a cópia empacotada no próprio <code>vcm</code></td>
+</tr>
+</tbody>
+</table>
+<p>Consequências:</p>
+<ul>
+<li><strong>O gasto é por máquina.</strong> Os logs ficam no computador onde o Claude Code rodou; trabalho feito
+noutra máquina ou na nuvem não aparece no cartão.</li>
+<li><strong>O cache é por pasta.</strong> As medições ficam em <code>results/snapshots.parquet</code> de cada cópia do projeto.</li>
+<li><strong>Nada é enviado.</strong> O <code>vcm</code> só lê arquivos locais e grava o cartão; não chama nenhuma API.</li>
+</ul>
 <h2 id="doc-arquitetura-2-componentes">2. Componentes</h2>
 <table>
 <thead>
@@ -589,7 +648,7 @@ cair, insistir só gasta tokens.</p>
 </thead>
 <tbody>
 <tr>
-<td>Tokens, custo equivalente de API, latência por chamada (OpenTelemetry do Claude Code, logs de sessão)</td>
+<td>Tokens e custo equivalente de API por chamada, por agente e por modelo (<strong>logs de sessão: implementado</strong>; OpenTelemetry adiado)</td>
 <td>Delimitação da tarefa e critério de &quot;aprovada&quot;</td>
 </tr>
 <tr>
@@ -1262,7 +1321,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte b28445c8268c). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte 35cd35c9c11a). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
