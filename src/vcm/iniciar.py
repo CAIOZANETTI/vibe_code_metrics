@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
@@ -49,6 +50,50 @@ def _atualizar_gitignore(caminho: Path) -> tuple[Path, str]:
         return caminho, JA_EXISTIA
     caminho.write_text("\n".join(linhas + faltantes) + "\n", encoding="utf-8")
     return caminho, "atualizado" if existia else "criado"
+
+
+COMANDO_DO_GANCHO = "vcm formulario --verificar"
+JSON_INVALIDO = "não alterado (JSON inválido)"
+
+
+def _paradas(configuracao: dict) -> list:
+    """Lista de hooks Stop da configuração; ValueError se a estrutura for inesperada."""
+    ganchos = configuracao.get("hooks", {}) if isinstance(configuracao, dict) else None
+    paradas = ganchos.get("Stop", []) if isinstance(ganchos, dict) else None
+    if not isinstance(paradas, list):
+        raise TypeError("estrutura inesperada")
+    return paradas
+
+
+def _tem_gancho(paradas: list) -> bool:
+    """Já existe algum comando de `vcm formulario --verificar` no hook Stop?"""
+    return any(
+        COMANDO_DO_GANCHO in str(gancho.get("command", ""))
+        for grupo in paradas
+        for gancho in grupo.get("hooks", [])
+    )
+
+
+def _instalar_gancho(caminho: Path, modelo: str) -> tuple[Path, str]:
+    """Cria `.claude/settings.json` ou acrescenta o hook Stop, preservando o resto.
+
+    Nunca sobrescreve: nem `--forcar` apaga configurações do usuário.
+    """
+    if not caminho.exists():
+        caminho.parent.mkdir(parents=True, exist_ok=True)
+        caminho.write_text(modelo, encoding="utf-8")
+        return caminho, "criado"
+    try:
+        atual = json.loads(caminho.read_text(encoding="utf-8"))
+        paradas = _paradas(atual)
+        if _tem_gancho(paradas):
+            return caminho, JA_EXISTIA
+    except (ValueError, TypeError, AttributeError):
+        return caminho, JSON_INVALIDO
+    paradas.extend(json.loads(modelo)["hooks"]["Stop"])
+    atual.setdefault("hooks", {})["Stop"] = paradas
+    caminho.write_text(json.dumps(atual, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    return caminho, "atualizado"
 
 
 def detectar_layout(destino: Path, pacote: str) -> str:
@@ -110,5 +155,8 @@ def iniciar(destino: Path, pacote: str, forcar: bool = False) -> list[tuple[Path
     init = pacote_src / "__init__.py"
     resultado.append(_escrever(init, "", forcar=False))
     resultado.extend(_escrever(caminho, conteudo, forcar) for caminho, conteudo in plano)
+    resultado.append(
+        _instalar_gancho(destino / ".claude" / "settings.json", copiar("settings.json"))
+    )
     resultado.append(_atualizar_gitignore(destino / ".gitignore"))
     return resultado

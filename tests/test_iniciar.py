@@ -223,3 +223,55 @@ def test_iniciar_instala_a_skill_vcm_formulario_e_ela_nao_diverge(tmp_path):
     empacotada = raiz / "src" / "vcm" / "modelos_projeto" / "skills" / "vcm-formulario" / "SKILL.md"
     deste_repo = raiz / ".claude" / "skills" / "vcm-formulario" / "SKILL.md"
     assert empacotada.read_bytes() == deste_repo.read_bytes()
+
+
+COMANDO_GANCHO = "vcm formulario --verificar"
+
+
+def _comandos_stop(caminho):
+    configuracao = json.loads(caminho.read_text(encoding="utf-8"))
+    return [g["command"] for grupo in configuracao["hooks"]["Stop"] for g in grupo["hooks"]]
+
+
+def test_iniciar_cria_settings_com_gancho(tmp_path):
+    itens = modulo_iniciar.iniciar(tmp_path, "calculo")
+    assert _status(itens)["settings.json"] == "criado"
+    assert _comandos_stop(tmp_path / ".claude/settings.json") == [COMANDO_GANCHO]
+
+
+def test_iniciar_faz_merge_preservando_outras_chaves(tmp_path):
+    caminho = tmp_path / ".claude" / "settings.json"
+    caminho.parent.mkdir(parents=True)
+    existente = {"permissions": {"allow": ["Bash(ls)"]}, "hooks": {"PreToolUse": [{"x": 1}]}}
+    caminho.write_text(json.dumps(existente), encoding="utf-8")
+    itens = modulo_iniciar.iniciar(tmp_path, "calculo", forcar=True)
+    assert _status(itens)["settings.json"] == "atualizado"
+    final = json.loads(caminho.read_text(encoding="utf-8"))
+    assert final["permissions"] == existente["permissions"]
+    assert final["hooks"]["PreToolUse"] == [{"x": 1}]
+    assert _comandos_stop(caminho) == [COMANDO_GANCHO]
+
+
+def test_iniciar_nao_duplica_gancho(tmp_path):
+    modulo_iniciar.iniciar(tmp_path, "calculo")
+    itens = modulo_iniciar.iniciar(tmp_path, "calculo", forcar=True)
+    assert _status(itens)["settings.json"] == "mantido (já existia)"
+    assert len(_comandos_stop(tmp_path / ".claude/settings.json")) == 1
+
+
+def test_iniciar_reconhece_gancho_com_uv_run(tmp_path):
+    caminho = tmp_path / ".claude" / "settings.json"
+    caminho.parent.mkdir(parents=True)
+    gancho = {"type": "command", "command": f"uv run --quiet {COMANDO_GANCHO}"}
+    caminho.write_text(json.dumps({"hooks": {"Stop": [{"hooks": [gancho]}]}}), encoding="utf-8")
+    itens = modulo_iniciar.iniciar(tmp_path, "calculo")
+    assert _status(itens)["settings.json"] == "mantido (já existia)"
+
+
+def test_iniciar_nao_toca_em_json_invalido(tmp_path):
+    caminho = tmp_path / ".claude" / "settings.json"
+    caminho.parent.mkdir(parents=True)
+    caminho.write_text("{quebrado", encoding="utf-8")
+    itens = modulo_iniciar.iniciar(tmp_path, "calculo", forcar=True)
+    assert _status(itens)["settings.json"].startswith("não alterado")
+    assert caminho.read_text(encoding="utf-8") == "{quebrado"

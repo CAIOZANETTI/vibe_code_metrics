@@ -305,6 +305,24 @@ def _cmd_rumo(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_formulario(args: argparse.Namespace) -> int:
+    """Gancho Stop: lê o JSON do stdin e imprime a decisão de bloqueio, se houver."""
+    import json
+
+    from vcm import gancho
+
+    try:
+        entrada = json.loads(sys.stdin.read())
+    except ValueError:
+        return 0
+    if not isinstance(entrada, dict):
+        return 0
+    decisao = gancho.avaliar_parada(entrada)
+    if decisao:
+        print(json.dumps(decisao, ensure_ascii=False))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="vcm", description="Vibe Code Metrics")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -398,6 +416,15 @@ def main(argv: list[str] | None = None) -> int:
     i.add_argument("--pacote", required=True, help="nome do pacote Python em src/")
     i.add_argument("--forcar", action="store_true", help="sobrescreve arquivos existentes")
     i.set_defaults(func=_cmd_iniciar)
+
+    fo = sub.add_parser("formulario", help="gancho Stop: confere o formulário padrão da resposta")
+    fo.add_argument(
+        "--verificar",
+        action="store_true",
+        required=True,
+        help="lê o JSON do hook Stop no stdin e bloqueia se faltar campo do formulário",
+    )
+    fo.set_defaults(func=_cmd_formulario)
 
     args = p.parse_args(argv)
     return args.func(args)
