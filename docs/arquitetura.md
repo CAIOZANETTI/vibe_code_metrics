@@ -183,6 +183,41 @@ enquanto SLOC não oscila nada. Uma variação dentro do ruído é declarada "ig
 "melhorou". O critério de parada funciona como num método iterativo: quando o resíduo para de
 cair, insistir só gasta tokens.
 
+### Rumo do desenvolvimento: objetivo, etapas e desvios
+
+O cartão diz se a iteração **melhorou o código**; o rumo diz se o trabalho **foi na direção do
+objetivo**. O objetivo, o critério de pronto e as etapas (uma WBS curta) ficam em `rumo.yaml`, e a
+skill `vcm-rumo` faz o gerente e os executores seguirem o ciclo:
+
+```mermaid
+flowchart LR
+    I["início da rodada<br/>objetivo + etapa"] --> F["etapa fazendo<br/>vcm rumo --etapa E2 --status fazendo"]
+    F --> T["trabalho nos entregáveis"]
+    T --> M["fim da rodada<br/>status + vcm balanco + vcm rumo"]
+    M --> PR["resumo no PR<br/>e ao humano"]
+    PR --> I
+    T -.->|"arquivo fora do plano<br/>ou estouro"| D["decidir com o humano:<br/>nova etapa, ajustar ou desistir"]
+    D --> H["registrar em historico"]
+    H --> I
+```
+
+| O `vcm rumo` mostra | De onde vem |
+|---|---|
+| Progresso (ponderado pela estimativa de tempo) e próxima etapa | `rumo.yaml` |
+| Real × estimado por etapa: minutos, **horas de IA** e tokens trabalhados | logs do Claude Code |
+| **Tempo**: início, fim, dias corridos, horas de relógio da IA, horas de agente e paralelismo | logs do Claude Code |
+| Desvios: fora do plano, estouro (> 1,5×), parada, entregável ausente | git + estimativas |
+| Mudanças de objetivo registradas | `historico` do `rumo.yaml` |
+
+Duas regras de contagem, aprendidas na primeira rodada real:
+- **Tokens trabalhados** = entrada + saída + escrita de cache. A **leitura de cache** (o contexto
+  relido a cada resposta) fica de fora: ela chegou a 19 milhões de tokens em 14 minutos, custa pouco
+  e já entra no custo.
+- **Etapas simultâneas** não dividem as mesmas chamadas: cada etapa conta só as do modelo do seu
+  agente.
+- **Horas de relógio da IA** juntam os agentes em paralelo (sobreposição conta uma vez); **horas de
+  agente** somam cada um. Intervalos sem chamada por mais de 5 minutos são pausa.
+
 ### Desempenho do método: o vcm melhora os projetos?
 
 A pergunta final do método é sobre ele mesmo. A resposta vem do histórico do git de cada projeto,

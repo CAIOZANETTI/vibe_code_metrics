@@ -77,7 +77,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash 5bf47e709d09</div>
+  <div class="sub">fonte: docs/*.md · hash aea241a1ba06</div>
   
   <h4>Guia rápido: usar o vcm num protótipo</h4>
   <a href="#doc-guia">Início</a>
@@ -102,6 +102,7 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n3" href="#doc-arquitetura-quem-faz-o-que">Quem faz o quê</a>
   <a class="n2" href="#doc-arquitetura-4-retrospectiva-de-iteracao">4. Retrospectiva de iteração</a>
   <a class="n3" href="#doc-arquitetura-radar-de-semaforo">Radar de semáforo</a>
+  <a class="n3" href="#doc-arquitetura-rumo-do-desenvolvimento-objetivo-etapas-e-desvios">Rumo do desenvolvimento: objetivo, etapas e desvios</a>
   <a class="n3" href="#doc-arquitetura-desempenho-do-metodo-o-vcm-melhora-os-projetos">Desempenho do método: o vcm melhora os projetos?</a>
   <a class="n2" href="#doc-arquitetura-5-o-que-e-medido-passivamente-e-o-que-exige-protocolo">5. O que é medido passivamente e o que exige protocolo</a>
   <a class="n2" href="#doc-arquitetura-6-multiagente-e-catalogo-de-modelos">6. Multiagente e catálogo de modelos</a>
@@ -185,6 +186,7 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n3" href="#doc-skills-obra-em-camadas">Obra em camadas</a>
   <a class="n3" href="#doc-skills-obras-lineares">Obras lineares</a>
   <a class="n3" href="#doc-skills-projeto-em-camadas">Projeto em camadas</a>
+  <a class="n3" href="#doc-skills-rumo-do-desenvolvimento">Rumo do desenvolvimento</a>
   <a class="n2" href="#doc-skills-da-plataforma-disponiveis-nas-sessoes-do-claude">Da plataforma (disponíveis nas sessões do Claude)</a>
   <a class="n3" href="#doc-skills-revisao-de-codigo">Revisão de código</a>
   <a class="n3" href="#doc-skills-visualizacao-de-dados">Visualização de dados</a>
@@ -232,6 +234,7 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n2" href="#doc-plano-fase-7-multi-fornecedor-e-politica-de-dados">Fase 7 — Multi-fornecedor e política de dados</a>
   <a class="n2" href="#doc-plano-repertorio-de-skills-02-11-2026">Repertório de skills (02/11/2026)</a>
   <a class="n2" href="#doc-plano-desempenho-do-metodo-02-11-2026">Desempenho do método (02/11/2026)</a>
+  <a class="n2" href="#doc-plano-rumo-do-desenvolvimento-02-11-2026">Rumo do desenvolvimento (02/11/2026)</a>
   <a class="n2" href="#doc-plano-fase-8-primeiro-programa-experimental">Fase 8 — Primeiro programa experimental</a>
   <a class="n2" href="#doc-plano-regras-de-execucao-deste-plano">Regras de execução deste plano</a>
   <a class="n2" href="#doc-plano-decisoes-em-aberto-para-o-humano">Decisões em aberto (para o humano)</a>
@@ -296,11 +299,14 @@ Regras de código: <a href="#doc-estilo">estilo.md</a>.</p>
 </table>
 <p>O dia a dia num projeto, com o Claude Code aberto na pasta dele:</p>
 <ol>
-<li>Você pede uma tarefa em linguagem natural.</li>
+<li>Você pede uma tarefa em linguagem natural. Se é um objetivo novo, o Claude propõe o <code>rumo.yaml</code>
+(objetivo, critério de pronto, etapas com estimativas) e você aprova.</li>
 <li>O Claude (gerente) consulta o <code>CLAUDE.md</code> do projeto, o repertório e as skills, divide a tarefa e
 chama os executores (Sonnet, Haiku).</li>
 <li>Depois do commit, <code>vcm balanco HEAD~1 HEAD</code> gera o cartão: radar, semáforo e gasto dos agentes.</li>
 <li><code>REVERTER</code> desfaz; <code>MANTER</code> segue; troca de métricas, você decide e registra.</li>
+<li>A cada rodada, <code>vcm rumo</code> diz onde estamos: progresso, etapa, estimado × real, horas de IA e
+desvios. O mesmo resumo vai como comentário no PR.</li>
 <li>De tempos em tempos, <code>vcm efeito</code> mostra se o projeto está melhor do que antes da adoção.</li>
 </ol>
 <p>Para atualizar o instrumento: <code>uv tool install --force git+https://github.com/CAIOZANETTI/vibe_code_metrics</code>.</p>
@@ -803,6 +809,60 @@ métricas, e ⚪ indica sem medição.</li>
 enquanto SLOC não oscila nada. Uma variação dentro do ruído é declarada &quot;igual&quot;, nunca
 &quot;melhorou&quot;. O critério de parada funciona como num método iterativo: quando o resíduo para de
 cair, insistir só gasta tokens.</p>
+<h3 id="doc-arquitetura-rumo-do-desenvolvimento-objetivo-etapas-e-desvios">Rumo do desenvolvimento: objetivo, etapas e desvios</h3>
+<p>O cartão diz se a iteração <strong>melhorou o código</strong>; o rumo diz se o trabalho <strong>foi na direção do
+objetivo</strong>. O objetivo, o critério de pronto e as etapas (uma WBS curta) ficam em <code>rumo.yaml</code>, e a
+skill <code>vcm-rumo</code> faz o gerente e os executores seguirem o ciclo:</p>
+<pre class="mermaid">flowchart LR
+    I[&quot;início da rodada&lt;br/&gt;objetivo + etapa&quot;] --&gt; F[&quot;etapa fazendo&lt;br/&gt;vcm rumo --etapa E2 --status fazendo&quot;]
+    F --&gt; T[&quot;trabalho nos entregáveis&quot;]
+    T --&gt; M[&quot;fim da rodada&lt;br/&gt;status + vcm balanco + vcm rumo&quot;]
+    M --&gt; PR[&quot;resumo no PR&lt;br/&gt;e ao humano&quot;]
+    PR --&gt; I
+    T -.-&gt;|&quot;arquivo fora do plano&lt;br/&gt;ou estouro&quot;| D[&quot;decidir com o humano:&lt;br/&gt;nova etapa, ajustar ou desistir&quot;]
+    D --&gt; H[&quot;registrar em historico&quot;]
+    H --&gt; I
+</pre>
+<table>
+<thead>
+<tr>
+<th>O <code>vcm rumo</code> mostra</th>
+<th>De onde vem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Progresso (ponderado pela estimativa de tempo) e próxima etapa</td>
+<td><code>rumo.yaml</code></td>
+</tr>
+<tr>
+<td>Real × estimado por etapa: minutos, <strong>horas de IA</strong> e tokens trabalhados</td>
+<td>logs do Claude Code</td>
+</tr>
+<tr>
+<td><strong>Tempo</strong>: início, fim, dias corridos, horas de relógio da IA, horas de agente e paralelismo</td>
+<td>logs do Claude Code</td>
+</tr>
+<tr>
+<td>Desvios: fora do plano, estouro (&gt; 1,5×), parada, entregável ausente</td>
+<td>git + estimativas</td>
+</tr>
+<tr>
+<td>Mudanças de objetivo registradas</td>
+<td><code>historico</code> do <code>rumo.yaml</code></td>
+</tr>
+</tbody>
+</table>
+<p>Duas regras de contagem, aprendidas na primeira rodada real:</p>
+<ul>
+<li><strong>Tokens trabalhados</strong> = entrada + saída + escrita de cache. A <strong>leitura de cache</strong> (o contexto
+relido a cada resposta) fica de fora: ela chegou a 19 milhões de tokens em 14 minutos, custa pouco
+e já entra no custo.</li>
+<li><strong>Etapas simultâneas</strong> não dividem as mesmas chamadas: cada etapa conta só as do modelo do seu
+agente.</li>
+<li><strong>Horas de relógio da IA</strong> juntam os agentes em paralelo (sobreposição conta uma vez); <strong>horas de
+agente</strong> somam cada um. Intervalos sem chamada por mais de 5 minutos são pausa.</li>
+</ul>
 <h3 id="doc-arquitetura-desempenho-do-metodo-o-vcm-melhora-os-projetos">Desempenho do método: o vcm melhora os projetos?</h3>
 <p>A pergunta final do método é sobre ele mesmo. A resposta vem do histórico do git de cada projeto,
 comparando antes × depois da <strong>adoção</strong> (o commit que criou o <code>vcm.yaml</code>):</p>
@@ -2660,6 +2720,12 @@ Página gerada a partir de <code>repertorio/skills/</code> por <code>vcm docs</c
 <td>—</td>
 <td>em uso</td>
 </tr>
+<tr>
+<td><code>vcm-rumo</code></td>
+<td>Manter objetivo, etapas da WBS, estimado × real e desvios em rumo.yaml e informar o humano a cada rodada, com comentário no PR.</td>
+<td>qualquer</td>
+<td>em teste</td>
+</tr>
 </tbody>
 </table>
 <h3 id="doc-skills-ingestao-do-google-drive">Ingestão do Google Drive</h3>
@@ -2848,6 +2914,26 @@ Página gerada a partir de <code>repertorio/skills/</code> por <code>vcm docs</c
 <li>PDF chapado: renderizar, separar por cor e gravar webp sem perdas</li>
 <li>conferir no Chromium: sem erros de console e folha alinhada à foto em zoom alto</li>
 <li>para publicar como Artifact, usar a versão CDN sem documento</li>
+</ul>
+<h3 id="doc-skills-rumo-do-desenvolvimento">Rumo do desenvolvimento</h3>
+<p><code>vcm-rumo</code> · vibe_code_metrics/.claude/skills/vcm-rumo (instalada em cada projeto pelo vcm iniciar)</p>
+<p><em>Ferramentas: Plotly, Jinja2.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>início e fim de toda rodada de trabalho</li>
+<li>humano pergunta como está o desenvolvimento</li>
+<li>mudança de objetivo</li>
+<li>tarefa saindo do plano</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>correção de uma linha sem etapa própria: registrar só no PR</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>estimativa é para calibrar, não para cobrar</li>
+<li>mudar de objetivo é permitido; mudar sem registrar em historico não</li>
+<li>nunca esconder desvio (fora do plano, estouro, parada, entregável ausente)</li>
 </ul>
 <h2 id="doc-skills-da-plataforma-disponiveis-nas-sessoes-do-claude">Da plataforma (disponíveis nas sessões do Claude)</h2>
 <table>
@@ -3712,6 +3798,10 @@ O contexto longo da sessão principal (leitura de cache) domina. Isso é dado pa
 <li><strong>Medir o próprio método exige as mesmas cautelas de uma tese.</strong> No primeiro relatório de efeito,
 o commit inicial vazio fazia a complexidade &quot;piorar&quot; 18% depois da adoção; sem ele, caiu 5%. Com 3
 commits depois da adoção, nenhum veredito se sustenta: o mínimo passou a 5 de cada lado.</li>
+<li><strong>O rumo precisa do relógio, não da memória do agente.</strong> Na primeira rodada, o gerente escreveu
+à mão um fim de etapa no futuro (14:12, às 13:53). Datas de etapa só por <code>vcm rumo --etapa … --status …</code>, que grava o instante real.</li>
+<li><strong>Contar tokens exige dizer quais.</strong> A leitura de cache multiplicava os tokens de uma etapa por
+100; o rumo conta os trabalhados (entrada, saída, escrita de cache) e deixa o resto para o custo.</li>
 <li><strong>Worktrees de agentes nasceram da <code>main</code>.</strong> (Resolvido: com o trabalho na <code>main</code>, as worktrees
 já nascem com o projeto.) Os executores precisaram trazer a branch de
 trabalho. Até a branch ir para a <code>main</code>, a especificação de cada tarefa precisa dizer a base.</li>
@@ -3795,6 +3885,15 @@ registrado e pelo menos uma decisão humana pedida e registrada.</p>
 <li class="tarefa"><input type="checkbox" disabled checked> Primeira leitura no <code>projetos_em_camadas</code>: inconclusiva (3 commits depois da adoção), como esperado</li>
 <li class="tarefa"><input type="checkbox" disabled> Repetir a leitura quando houver 5+ iterações depois da adoção, com <code>--com-testes</code></li>
 <li class="tarefa"><input type="checkbox" disabled> Juntar os relatórios de vários projetos numa comparação entre projetos</li>
+</ul>
+<h2 id="doc-plano-rumo-do-desenvolvimento-02-11-2026">Rumo do desenvolvimento (02/11/2026)</h2>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm rumo</code>: <code>rumo.yaml</code> (objetivo, critério de pronto, etapas, histórico), progresso, real × estimado, desvios, Markdown para PR e HTML (Sonnet)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Tempo: início, fim, dias corridos, horas de relógio da IA, horas de agente e paralelismo (Opus, pedido do mantenedor no meio da rodada)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Skill <code>vcm-rumo</code>, instalada pelo <code>vcm iniciar</code>, e regra no <code>CLAUDE.md</code></li>
+<li class="tarefa"><input type="checkbox" disabled checked> Primeira rodada real: o rumo acusou &quot;fora do plano&quot; (o pedido de tempo) e um falso &quot;estouro&quot; de 127× (leitura de cache e etapas simultâneas); ambos tratados</li>
+<li class="tarefa"><input type="checkbox" disabled> Calibrar as estimativas com a razão real/estimado acumulada por tipo de etapa e por agente</li>
+<li class="tarefa"><input type="checkbox" disabled> <strong>Próxima rodada, primeira etapa:</strong> refatorar <code>rumo.carregar</code> (D, 29) e <code>config.carregar_config</code> (D, 23) em tabela de regras; meta: complexidade média ≤ 4,0 e nenhuma função D (compromisso da decisão 6f5586c)</li>
 </ul>
 <h2 id="doc-plano-fase-8-primeiro-programa-experimental">Fase 8 — Primeiro programa experimental</h2>
 <p>Teses T001 (extração de pranchas), T002 (armazenamento espacial), T003 (roteamento) e T004
@@ -3991,7 +4090,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte 5bf47e709d09). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte aea241a1ba06). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";

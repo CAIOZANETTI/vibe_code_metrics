@@ -23,6 +23,11 @@ entra se as métricas permitirem. Antes de mudar algo, leia `docs/estilo.md` (ob
 - Cada execução de agente é registrada em `results/agentes/execucoes.csv` (modelo, tokens,
   ferramentas, duração, aprovado).
 
+## Rumo (objetivo e etapas)
+O objetivo e as etapas da WBS ficam em `rumo.yaml`. Siga a skill `vcm-rumo`
+(`.claude/skills/vcm-rumo/SKILL.md`): no início de cada rodada, diga ao humano o objetivo, o
+progresso e a etapa; no fim, atualize o status, rode `vcm rumo` e comente o resumo no PR.
+
 ## Ciclo de trabalho de cada iteração
 1. **Especificar:** tarefa pequena, com arquivos permitidos e critério de aceite.
 2. **Executar em worktree:** o executor trabalha isolado em `.claude/worktrees/`, com testes.

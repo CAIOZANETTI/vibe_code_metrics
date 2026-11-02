@@ -91,6 +91,10 @@ def iniciar(destino: Path, pacote: str, forcar: bool = False) -> list[tuple[Path
         (destino / "docs" / "estilo.md", copiar("estilo.md")),
         (agentes / "executor-sonnet.md", copiar("agentes/executor-sonnet.md")),
         (agentes / "executor-haiku.md", copiar("agentes/executor-haiku.md")),
+        (
+            destino / ".claude" / "skills" / "vcm-rumo" / "SKILL.md",
+            copiar("skills/vcm-rumo/SKILL.md"),
+        ),
         (pacote_src / "referencia.py", renderizar("referencia.py.j2")),
         (destino / "tests" / "test_referencia.py", renderizar("test_referencia.py.j2")),
         (destino / ".github" / "workflows" / "vcm.yml", copiar("vcm.yml")),

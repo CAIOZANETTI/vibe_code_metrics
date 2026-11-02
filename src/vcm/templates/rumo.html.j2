@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rumo do desenvolvimento</title>
+<!-- Gerado por `uv run vcm rumo`. Valores calculados e formatados em Python. -->
+<style>
+{% include "_estilo.css" %}
+body { display: block; }
+main { margin: 0 auto; max-width: 1000px; padding: 0 16px; }
+.barra { background: var(--line); border-radius: 8px; height: 18px; overflow: hidden; }
+.barra > div { background: var(--accent); height: 100%; }
+.tempo { list-style: none; padding: 0; margin: 12px 0; color: var(--muted); }
+.desvios { background: #fff4e0; color: #8a5300; border-radius: 10px; padding: 12px 18px; margin: 16px 0; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.tabela-rolavel { overflow-x: auto; }
+</style>
+</head>
+<body>
+<main>
+<article>
+  <h1>Rumo do desenvolvimento</h1>
+  <p><strong>Objetivo:</strong> {{ objetivo }}</p>
+  {% if criterios %}<p><strong>Critério de pronto:</strong></p>
+  <ul>{% for c in criterios %}<li>{{ c }}</li>{% endfor %}</ul>{% endif %}
+
+  <p><code>{{ barra }} {{ percentual }}%</code></p>
+  <div class="barra"><div style="width: {{ percentual_largura }}%"></div></div>
+  <ul class="tempo">{% for t in tempo %}<li>{{ t }}</li>{% endfor %}</ul>
+
+  <h2>Etapas</h2>
+  <div class="tabela-rolavel">
+  <table>
+    <thead><tr><th>Etapa</th><th>Nome</th><th>Status</th><th>Agente</th>
+      <th>Est. min</th><th>Est. tokens</th><th>Real min</th><th>IA h</th><th>Real tokens</th><th>Razão</th></tr></thead>
+    <tbody>
+    {% for e in etapas %}
+    <tr><td>{{ e.id }}</td><td>{{ e.nome }}</td><td>{{ e.status }}</td><td>{{ e.agente }}</td>
+      <td class="num">{{ e.est_min }}</td><td class="num">{{ e.est_tokens }}</td>
+      <td class="num">{{ e.real_min }}</td><td class="num">{{ e.ia_h }}</td><td class="num">{{ e.real_tokens }}</td>
+      <td class="num">{{ e.razao }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Desvios</h2>
+  {% if desvios %}
+  <div class="desvios"><ul>
+    {% for d in desvios %}<li><strong>{{ d.tipo }}</strong>{% if d.etapa %} ({{ d.etapa }}){% endif %}: {{ d.detalhe }}</li>{% endfor %}
+  </ul></div>
+  {% else %}<p>Nenhum desvio.</p>{% endif %}
+
+  <p><strong>Próxima etapa:</strong> {{ proxima }}</p>
+  {% if n_mudancas %}
+  <h2>Mudanças de objetivo: {{ n_mudancas }}</h2>
+  <ul>{% for h in historico %}<li>{{ h.data }}: {{ h.mudanca }} ({{ h.motivo }})</li>{% endfor %}</ul>
+  {% endif %}
+
+  <h2>Estimado × real</h2>
+  {{ grafico_barras | safe }}
+  <h2>Linha do tempo</h2>
+  {{ grafico_tempo | safe }}
+</article>
+</main>
+</body>
+</html>

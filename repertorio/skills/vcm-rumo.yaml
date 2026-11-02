@@ -1,0 +1,13 @@
+id: vcm-rumo
+nome: Rumo do desenvolvimento
+origem: projeto
+onde: vibe_code_metrics/.claude/skills/vcm-rumo (instalada em cada projeto pelo vcm iniciar)
+para_que: "Manter objetivo, etapas da WBS, estimado × real e desvios em rumo.yaml e informar o humano a cada rodada, com comentário no PR."
+quando_usar: ["início e fim de toda rodada de trabalho", "humano pergunta como está o desenvolvimento", "mudança de objetivo", "tarefa saindo do plano"]
+quando_evitar: ["correção de uma linha sem etapa própria: registrar só no PR"]
+cuidados: ["estimativa é para calibrar, não para cobrar", "mudar de objetivo é permitido; mudar sem registrar em historico não", "nunca esconder desvio (fora do plano, estouro, parada, entregável ausente)"]
+agente_sugerido: qualquer
+ferramentas_relacionadas: [plotly, jinja2]
+licenca: null
+verificado_em: "2026-11-02"
+status: em_teste
