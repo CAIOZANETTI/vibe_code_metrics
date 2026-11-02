@@ -1,0 +1,19 @@
+id: ext-webapp-testing
+nome: Teste de aplicação web (Anthropic)
+origem: externa
+onde: https://github.com/anthropics/skills/tree/main/skills/webapp-testing
+para_que: Testar e depurar apps web locais com Playwright em Python (capturas de tela, logs do console, servidores auxiliares).
+quando_usar:
+  - Conferir o visualizador HTML (medição, camadas) no navegador headless e capturar o console.
+  - Complementar scripts/testar_visualizador.py com cenários de interface.
+quando_evitar:
+  - Verificar cálculo: este fica em Python com pytest, não em teste de interface.
+cuidados:
+  - Apache-2.0 (LICENSE.txt conferido).
+  - Traz scripts/with_server.py e examples/; ler antes de instalar.
+  - Requer Playwright e Chromium instalados (o SKILL.md não dá passos de instalação).
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: Apache-2.0
+verificado_em: "2026-11-02"
+status: candidato

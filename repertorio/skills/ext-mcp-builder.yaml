@@ -1,0 +1,18 @@
+id: ext-mcp-builder
+nome: Construtor de servidor MCP (Anthropic)
+origem: externa
+onde: https://github.com/anthropics/skills/tree/main/skills/mcp-builder
+para_que: Guia para construir servidores MCP de qualidade (Python FastMCP ou TypeScript) e suas avaliações.
+quando_usar:
+  - Expor funções determinísticas do projeto (cálculos, consulta a cadastros) como ferramentas MCP.
+quando_evitar:
+  - Sem necessidade de integração externa; um CLI Python (vcm) costuma bastar.
+cuidados:
+  - Apache-2.0 (LICENSE.txt conferido).
+  - Traz scripts/ e reference/; ler antes de instalar.
+  - Foco recomendado em TypeScript; exige Node ou o SDK Python.
+agente_sugerido: null
+ferramentas_relacionadas: [pydantic]
+licenca: Apache-2.0
+verificado_em: "2026-11-02"
+status: candidato

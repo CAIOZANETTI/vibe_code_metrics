@@ -1,0 +1,21 @@
+id: ext-docx
+nome: Documentos Word (Anthropic)
+origem: externa
+onde: https://github.com/anthropics/skills/tree/main/skills/docx
+para_que: Criar e editar documentos Word (.docx), incluindo alterações rastreadas e comentários.
+quando_usar:
+  - Memorial ou relatório que o cliente exige em .docx, com revisão rastreada.
+  - Editar modelo .docx existente.
+quando_evitar:
+  - Relatórios HTML do método (já são gerados por Python/Jinja2).
+  - Redistribuir a skill (licença proprietária).
+cuidados:
+  - Licença proprietária (LICENSE.txt, 2025 Anthropic) sem cópia fora dos serviços nem derivados.
+  - Pasta tem scripts/ (OOXML); ler antes de instalar.
+  - Sobrepõe-se à skill embutida docx.
+  - Dependências exatas não verificadas (o SKILL.md não foi lido).
+agente_sugerido: null
+ferramentas_relacionadas: [jinja2]
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

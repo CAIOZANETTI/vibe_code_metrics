@@ -1,0 +1,18 @@
+id: ext-frontend-design
+nome: Design de interface (Anthropic)
+origem: externa
+onde: https://github.com/anthropics/skills/tree/main/skills/frontend-design
+para_que: Orientação para decisões visuais intencionais (tipografia, layout, tokens) ao criar ou reformar interfaces.
+quando_usar:
+  - Melhorar a aparência de relatórios HTML e do visualizador (apresentação, sem cálculo em JS).
+quando_evitar:
+  - Alterar regra de cálculo; HTML/JS só apresentam valores do Python.
+cuidados:
+  - Apache-2.0 (LICENSE.txt conferido).
+  - Só SKILL.md e LICENSE.txt, sem scripts.
+  - Sobrepõe-se às skills embutidas artifact-design e dataviz.
+agente_sugerido: null
+ferramentas_relacionadas: [plotly, jinja2]
+licenca: Apache-2.0
+verificado_em: "2026-11-02"
+status: candidato

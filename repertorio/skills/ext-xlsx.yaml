@@ -1,0 +1,21 @@
+id: ext-xlsx
+nome: Planilhas Excel (Anthropic)
+origem: externa
+onde: https://github.com/anthropics/skills/tree/main/skills/xlsx
+para_que: Criar, editar e converter planilhas com openpyxl/pandas, recalculando fórmulas com LibreOffice e relatando erros.
+quando_usar:
+  - Entregar planilha com fórmulas vivas (quantitativos, orçamentos) e conferir que não há #REF! ou #DIV/0!.
+  - Editar planilha existente preservando formatação.
+quando_evitar:
+  - Cálculo de engenharia do método: o resultado final é calculado em Python (regra do mantenedor); a planilha apenas apresenta.
+  - Quando o entregável principal é HTML, banco de dados ou Google Sheets (a própria skill exclui esses casos).
+cuidados:
+  - Licença proprietária declarada no frontmatter (LICENSE.txt); não redistribuir.
+  - Traz scripts/ (recalc.py usa LibreOffice via soffice); ler antes de instalar.
+  - Exige openpyxl, pandas, markitdown e LibreOffice instalados.
+  - Sobrepõe-se à skill embutida xlsx.
+agente_sugerido: null
+ferramentas_relacionadas: [pandas]
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

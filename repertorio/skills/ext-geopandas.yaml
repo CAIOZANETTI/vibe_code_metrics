@@ -1,0 +1,19 @@
+id: ext-geopandas
+nome: GeoPandas (K-Dense, comunitária)
+origem: externa
+onde: https://github.com/K-Dense-AI/scientific-agent-skills/tree/main/skills/geopandas
+para_que: Fluxo com checagens para dados vetoriais em GeoPandas 1.2.0 (CRS, validade de geometria, junções espaciais, exportação).
+quando_usar:
+  - Trabalho com shapes e UTM: planejar reprojeção, auditar geometrias e junções espaciais.
+quando_evitar:
+  - Tarefas sem dado vetorial; cálculos que já têm função validada no projeto.
+cuidados:
+  - Skill de terceiros; ler SKILL.md e os scripts/ antes de instalar (o README do repositório recomenda escanear skills de terceiros).
+  - Licença MIT declarada no frontmatter da skill e no repositório (LICENSE.md); cada skill do repositório pode ter licença própria.
+  - Instalar a skill não instala dependências; pede ambiente Python 3.12 com uv.
+  - Atividade recente: repositório com 763 commits, versão 2.72.0 e 55,8 mil estrelas; data do último commit não confirmada.
+agente_sugerido: null
+ferramentas_relacionadas: [geopandas, shapely, pyproj]
+licenca: MIT
+verificado_em: "2026-11-02"
+status: candidato
