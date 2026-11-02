@@ -1,0 +1,13 @@
+id: obra-em-camadas
+nome: "Obra em camadas"
+origem: projeto
+onde: projetos_em_camadas/.claude/skills/obra-em-camadas
+para_que: "Orquestrar uma obra inteira do Drive ao HTML em camadas: fotos, 3D, pranchas vetoriais por layer CAD, etapas, escopo de materiais e sondagens."
+quando_usar: ["pedido 'faça o mesmo para a obra X'", "pasta do Drive de obra nova", "pedido de HTML em camadas completo"]
+quando_evitar: ["tarefa de uma etapa só: usar a skill específica da etapa"]
+cuidados: ["inventário primeiro, de todos os arquivos; nunca dizer que um documento não existe sem procurar no inventário", "manter o vetor: nada de rasterizar para o HTML", "escopo sem preço: nenhum valor unitário, total ou fornecedor", "irmãs de pranchas com malha devem ser enraizadas numa prancha absoluta", "relatar lacunas explicitamente (ex.: etapa no desenho que o TR não menciona)", "não deixar dois agentes varrerem tool-results/ ao mesmo tempo", "a divisão Haiku/Sonnet/Opus é por subtarefa, não uma só para a skill"]
+agente_sugerido: null
+ferramentas_relacionadas: ["pycolmap", "pymupdf", "pytesseract"]
+licenca: null
+verificado_em: "2026-11-02"
+status: em_uso

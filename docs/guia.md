@@ -4,6 +4,28 @@
 > cartão de retrospectiva com radar de semáforo. Como funciona por dentro: [arquitetura.md](arquitetura.md).
 > Regras de código: [estilo.md](estilo.md).
 
+## Como usar este repositório
+
+O `vibe_code_metrics` tem dois usos. Escolha o seu:
+
+| Você quer… | Onde trabalha | O que faz |
+|---|---|---|
+| **Medir um projeto seu** (ex.: `projetos_em_camadas`) | na pasta do projeto | instala o `vcm`, roda `vcm iniciar` uma vez e `vcm balanco` a cada iteração |
+| **Escolher ferramenta ou skill** para uma tarefa | nesta documentação | consulta o [repertório](repertorio.md) e as [skills](skills.md) |
+| **Saber se o método está ajudando** | na pasta do projeto | `vcm historico` e `vcm efeito` (antes × depois da adoção) |
+| **Evoluir o próprio método** | neste repositório | segue o [plano](plano.md); cada mudança passa pelo mesmo balanço (tese T000) |
+
+O dia a dia num projeto, com o Claude Code aberto na pasta dele:
+
+1. Você pede uma tarefa em linguagem natural.
+2. O Claude (gerente) consulta o `CLAUDE.md` do projeto, o repertório e as skills, divide a tarefa e
+   chama os executores (Sonnet, Haiku).
+3. Depois do commit, `vcm balanco HEAD~1 HEAD` gera o cartão: radar, semáforo e gasto dos agentes.
+4. `REVERTER` desfaz; `MANTER` segue; troca de métricas, você decide e registra.
+5. De tempos em tempos, `vcm efeito` mostra se o projeto está melhor do que antes da adoção.
+
+Para atualizar o instrumento: `uv tool install --force git+https://github.com/CAIOZANETTI/vibe_code_metrics`.
+
 ## 1. Instalar
 
 O `vcm` é instalado como ferramenta do `uv`, direto do GitHub:

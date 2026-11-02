@@ -1,0 +1,13 @@
+id: obras-lineares
+nome: "Obras lineares"
+origem: projeto
+onde: projetos_em_camadas/.claude/skills/obras-lineares
+para_que: "Calcular a vala de cada trecho de tubo pelo MOS Sanepar (largura, escoramento, escavação, reaterro, bota-fora, supressão e pavimento), com solo e NA da sondagem mais próxima."
+quando_usar: ["obras lineares, vala, escoramento ou esgotamento", "tubulação dentro da ETA", "MND/HDD", "supressão vegetal ou recomposição de pavimento de uma rede"]
+quando_evitar: ["qualquer preço: a skill é só geometria e serviço associado"]
+cuidados: ["largura L = D + SL + X + Y; X = 0,10 m só se escorado", "escoramento acima de 1,25 m de profundidade", "NA mais raso que o fundo da vala indica esgotamento", "diferença acima de 1 % frente à planilha é alerta", "trecho sem profundidade distorce o reaterro", "paver e lajota só pelo usuário", "MND: citar as orientações de HDD, sem dimensionar pelo executor"]
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: em_uso

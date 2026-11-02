@@ -18,7 +18,9 @@ from pathlib import Path
 from jinja2 import Environment, PackageLoader, select_autoescape
 from markdown_it import MarkdownIt
 
-DOCS_PADRAO = ("guia.md", "arquitetura.md", "repertorio.md", "plano.md", "estilo.md")
+DOCS_PADRAO = (
+    "guia.md", "arquitetura.md", "repertorio.md", "skills.md", "plano.md", "estilo.md"
+)  # fmt: skip
 SAIDA_PADRAO = "index.html"
 
 
@@ -171,18 +173,26 @@ def gerar_artefato(pasta: Path, saida: Path) -> Path:
 
 
 def _repertorio_md(pasta: Path, check: bool) -> bool:
-    """Regenera `repertorio.md` a partir de `../repertorio/` (se existir). True se estava em dia."""
+    """Regenera `repertorio.md` e `skills.md` a partir de `../repertorio/` (se existir).
+
+    True se estavam em dia.
+    """
     from vcm import repertorio
 
     origem = pasta.parent / "repertorio"
     if not origem.is_dir():
         return True
-    destino = pasta / "repertorio.md"
-    novo = repertorio.markdown(origem)
-    atual = destino.read_text(encoding="utf-8") if destino.exists() else None
-    if not check and atual != novo:
-        destino.write_text(novo, encoding="utf-8")
-    return atual == novo
+    paginas = {"repertorio.md": repertorio.markdown(origem)}
+    if (origem / "skills").is_dir():
+        paginas["skills.md"] = repertorio.markdown_skills(origem)
+    em_dia = True
+    for nome, novo in paginas.items():
+        destino = pasta / nome
+        atual = destino.read_text(encoding="utf-8") if destino.exists() else None
+        if not check and atual != novo:
+            destino.write_text(novo, encoding="utf-8")
+        em_dia = em_dia and atual == novo
+    return em_dia
 
 
 def gerar(pasta: Path, saida: Path | None = None, check: bool = False) -> bool:

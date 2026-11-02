@@ -1,0 +1,13 @@
+id: drive-ingestao
+nome: "Ingestão do Google Drive"
+origem: projeto
+onde: projetos_em_camadas/.claude/skills/drive-ingestao
+para_que: "Inventariar e baixar pastas de obra do Google Drive (metadados recursivos e download em lote) para dados/<obra>/."
+quando_usar: ["link de pasta do Drive com fotos de drone, PDFs de projeto ou planilhas", "baixar ou organizar arquivos do Drive de uma obra"]
+quando_evitar: ["conteúdo de PDF já baixado: usar ler-prancha"]
+cuidados: ["arquivo acima de 10 MB é recusado pelo conector; de 5,5 a 10 MB costuma derrubar a conexão: usar link direto (camadas/drive.py)", "só um processo varre tool-results/ por vez", "conferir %PDF e tamanho depois do download", "dados/ fica fora do git (material do cliente)"]
+agente_sugerido: "haiku"
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: em_uso

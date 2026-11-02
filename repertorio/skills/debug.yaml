@@ -1,0 +1,13 @@
+id: debug
+nome: "Depuração"
+origem: plugin
+onde: "sessão do Claude Code (skill engineering:debug)"
+para_que: "Conduzir depuração estruturada: reproduzir, isolar, diagnosticar e corrigir."
+quando_usar: ["erro com mensagem ou stack trace", "comportamento diferente do esperado sem causa óbvia"]
+quando_evitar: ["erro de digitação evidente, corrigível direto"]
+cuidados: ["reproduzir antes de corrigir", "corrigir a causa, não o sintoma", "acrescentar teste que falhava antes da correção"]
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

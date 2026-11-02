@@ -1,0 +1,13 @@
+id: code-review
+nome: "Revisão de código"
+origem: embutida
+onde: "sessão do Claude Code (skill code-review)"
+para_que: "Revisar o diff, ou um PR, para bugs de correção, com níveis de esforço."
+quando_usar: ["revisar o diff antes de abrir PR", "procurar bugs de correção em uma mudança"]
+quando_evitar: ["só limpeza de código (reuso, simplificação): usar simplify"]
+cuidados: ["o nível máximo custa mais e só se pede por instrução explícita (CLAUDE.md ou pedido do humano)", "achados são hipóteses: confirmar antes de corrigir", "a revisão não substitui os testes do projeto (uv run pytest)"]
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

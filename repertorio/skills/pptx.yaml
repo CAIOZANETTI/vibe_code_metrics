@@ -1,0 +1,13 @@
+id: pptx
+nome: "Apresentações"
+origem: embutida
+onde: "sessão do Claude Code (skill pptx)"
+para_que: "Criar e editar apresentações PowerPoint (.pptx)."
+quando_usar: ["apresentação de obra para reunião com o cliente", "resumo visual de etapas ou escopo para decisão"]
+quando_evitar: ["dado que precisa ser recalculado: o número sai do Python, a apresentação só mostra"]
+cuidados: ["conferir cada número contra a saída do Python antes de apresentar", "gráficos colados como imagem não podem ser conferidos depois: guardar a fonte"]
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

@@ -1,0 +1,13 @@
+id: georef-pranchas
+nome: "Georreferenciar pranchas"
+origem: projeto
+onde: projetos_em_camadas/.claude/skills/georef-pranchas
+para_que: "Georreferenciar pranchas de projeto em PDF vetorial pela malha impressa, por afim absoluta, por prancha irmã (CAD × CAD) ou por pontos de controle com ICP."
+quando_usar: ["sobrepor pranchas 'sem escala' ou sem malha de coordenadas", "diagnosticar prancha desalinhada, torta, espelhada ou com escala errada"]
+quando_evitar: ["prancha que já tem georreferência aceita no obra.json"]
+cuidados: ["a matriz final contém reflexão: não usar similaridade direta de pt para UTM", "conferir sempre visualmente sobre a ortofoto; número bom com imagem ruim é rejeitado", "escala medida na foto é pouco confiável: preferir prancha irmã ou malha", "folha de detalhe em outra escala não é irmã: conferir a escala do título", "rótulo errado pode existir no próprio desenho: decidir pela continuidade com a folha vizinha", "conferir contra testemunha independente (malha, GEOPLANTA, marcos E/N), não contra a própria foto"]
+agente_sugerido: null
+ferramentas_relacionadas: ["pymupdf", "pytesseract"]
+licenca: null
+verificado_em: "2026-11-02"
+status: em_uso

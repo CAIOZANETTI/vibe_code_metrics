@@ -155,6 +155,9 @@ proposital em teste resulta em `REVERTER`. **Atingido** no teste ponta a ponta (
   conferir toda telemetria contra uma fonte independente antes de confiar nela.
 - **O gerente é o maior custo.** Na rodada da Fase 2, Opus US$ 5,01 × Sonnet US$ 0,33 × Haiku US$ 0,02.
   O contexto longo da sessão principal (leitura de cache) domina. Isso é dado para a T003.
+- **Medir o próprio método exige as mesmas cautelas de uma tese.** No primeiro relatório de efeito,
+  o commit inicial vazio fazia a complexidade "piorar" 18% depois da adoção; sem ele, caiu 5%. Com 3
+  commits depois da adoção, nenhum veredito se sustenta: o mínimo passou a 5 de cada lado.
 - **Worktrees de agentes nasceram da `main`.** (Resolvido: com o trabalho na `main`, as worktrees
   já nascem com o projeto.) Os executores precisaram trazer a branch de
   trabalho. Até a branch ir para a `main`, a especificação de cada tarefa precisa dizer a base.
@@ -228,6 +231,20 @@ registrado e pelo menos uma decisão humana pedida e registrada.
 - [ ] Regressão automática ao incluir um modelo novo no catálogo
 
 **Aceite:** a mesma tarefa roda em três fornecedores, com custo e qualidade comparáveis no mesmo relatório.
+
+## Repertório de skills (02/11/2026)
+
+- [x] Catálogo de skills em `repertorio/skills/` (projeto, plataforma, plugins, externas) e página `skills.md` gerada (Haiku + Sonnet + Opus)
+- [ ] Skills próprias do método, instaladas pelo `vcm iniciar`: `vcm-iteracao` (especificar → executor → balanço → decidir → registrar) e `vcm-diagnostico` (linha de base de um projeto existente)
+- [ ] Tese: medir o efeito de uma skill (mesma tarefa com e sem a skill: custo, retrabalho, aprovação)
+
+## Desempenho do método (02/11/2026)
+
+- [x] `vcm historico` e `vcm efeito`: antes × depois da adoção no histórico do git, com relatório HTML (Sonnet)
+- [x] Mínimo de 5 commits de cada lado e exclusão de commits sem código (Opus, após o primeiro teste real)
+- [x] Primeira leitura no `projetos_em_camadas`: inconclusiva (3 commits depois da adoção), como esperado
+- [ ] Repetir a leitura quando houver 5+ iterações depois da adoção, com `--com-testes`
+- [ ] Juntar os relatórios de vários projetos numa comparação entre projetos
 
 ## Fase 8 — Primeiro programa experimental
 

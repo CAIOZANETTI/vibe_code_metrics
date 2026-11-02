@@ -20,6 +20,8 @@ STATUS = {"em_uso", "em_teste", "candidato", "rejeitado"}
 def _entradas() -> dict[str, dict]:
     entradas = {}
     for arquivo in sorted(RAIZ.glob("*/*.yaml")):
+        if arquivo.parent.name == "skills":
+            continue
         dado = yaml.safe_load(arquivo.read_text(encoding="utf-8"))
         assert dado["id"] not in entradas, f"id repetido: {dado['id']}"
         assert arquivo.parent.name == dado["papel"], f"{arquivo} fora da pasta do papel"
@@ -67,3 +69,38 @@ def test_licenca_e_versao_tem_data_de_verificacao():
     for id_, e in _entradas().items():
         if e["licenca"] or e["ultima_versao"]:
             assert e["verificado_em"], f"{id_}: licença/versão sem data de verificação"
+
+
+CAMPOS_SKILL = [
+    "id", "nome", "origem", "onde", "para_que", "quando_usar", "quando_evitar", "cuidados",
+    "agente_sugerido", "ferramentas_relacionadas", "licenca", "verificado_em", "status",
+]  # fmt: skip
+
+
+def test_esquema_das_skills_e_ligacao_com_ferramentas():
+    from vcm.repertorio import AGENTES, ORIGENS
+
+    ferramentas = set(_entradas())
+    vistos = set()
+    for arquivo in sorted((RAIZ / "skills").glob("*.yaml")):
+        s = yaml.safe_load(arquivo.read_text(encoding="utf-8"))
+        assert list(s) == CAMPOS_SKILL, f"{arquivo.name}: campos {list(s)}"
+        assert arquivo.stem == s["id"] and s["id"] not in vistos
+        vistos.add(s["id"])
+        assert s["origem"] in ORIGENS and s["status"] in STATUS
+        assert s["agente_sugerido"] in (None, *AGENTES)
+        if s["origem"] == "externa":
+            assert s["id"].startswith("ext-") and s["onde"].startswith("https://")
+        for f in s["ferramentas_relacionadas"]:
+            assert f in ferramentas, f"{s['id']}: ferramenta {f} fora do repertório"
+
+
+def test_notas_de_funcionamento_ficam_dentro_da_secao(tmp_path):
+    from vcm.repertorio import markdown_skills
+
+    (tmp_path / "skills").mkdir()
+    (tmp_path / "skills" / "_como_funcionam.md").write_text(
+        "# Título\n\n## Onde ficam\n\ntexto\n", encoding="utf-8"
+    )
+    md = markdown_skills(tmp_path)
+    assert "## Como as skills funcionam\n\n### Onde ficam" in md

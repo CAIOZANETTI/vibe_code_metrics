@@ -1,0 +1,13 @@
+id: tech-debt
+nome: "Dívida técnica"
+origem: plugin
+onde: "sessão do Claude Code (skill engineering:tech-debt)"
+para_que: "Levantar, categorizar e priorizar dívida técnica no repositório."
+quando_usar: ["auditoria de dívida técnica ou de saúde do código", "decidir o que refatorar primeiro"]
+quando_evitar: ["corrigir um bug agora: usar debug"]
+cuidados: ["priorizar com evidência (métricas do balanço do vcm), não só por impressão", "cada item priorizado vira tarefa pequena com arquivos permitidos"]
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: candidato

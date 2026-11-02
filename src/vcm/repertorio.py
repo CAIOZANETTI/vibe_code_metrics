@@ -37,6 +37,7 @@ def carregar(pasta: Path) -> list[dict]:
     entradas = [
         yaml.safe_load(arquivo.read_text(encoding="utf-8"))
         for arquivo in sorted(pasta.glob("*/*.yaml"))
+        if arquivo.parent.name != "skills"  # skills têm catálogo próprio
     ]
     return sorted(entradas, key=lambda e: (ordem.get(e["papel"], len(ordem)), e["nome"].lower()))
 
@@ -107,4 +108,82 @@ def markdown(pasta: Path) -> str:
             linhas += _lista("Cuidados", e.get("cuidados"))
             if e.get("repositorio"):
                 linhas += [f"Repositório: <{e['repositorio']}>", ""]
+    return "\n".join(linhas).rstrip() + "\n"
+
+
+# ---------------------------------------------------------------------------------------------
+# Skills: catálogo próprio em repertorio/skills/, página docs/skills.md
+# ---------------------------------------------------------------------------------------------
+
+ORIGENS = {
+    "projeto": "Do projeto (versionadas no repositório)",
+    "embutida": "Da plataforma (disponíveis nas sessões do Claude)",
+    "plugin": "De plugins instalados",
+    "externa": "Externas (repositórios públicos)",
+}
+AGENTES = {"haiku": "Haiku", "sonnet": "Sonnet", "opus": "Opus", "qualquer": "qualquer"}
+
+
+def carregar_skills(pasta: Path) -> list[dict]:
+    """Entradas `pasta/skills/*.yaml`, em ordem de origem e de nome."""
+    ordem = {origem: i for i, origem in enumerate(ORIGENS)}
+    entradas = [
+        yaml.safe_load(arquivo.read_text(encoding="utf-8"))
+        for arquivo in sorted((pasta / "skills").glob("*.yaml"))
+    ]
+    return sorted(entradas, key=lambda e: (ordem.get(e["origem"], len(ordem)), e["id"]))
+
+
+def markdown_skills(pasta: Path) -> str:
+    """Página das skills: o que são, onde ficam e o catálogo por origem."""
+    entradas = carregar_skills(pasta)
+    nomes_ferramentas = {e["id"]: e["nome"] for e in carregar(pasta)}
+    linhas = [
+        "# Skills",
+        "",
+        "> As ferramentas dizem **com o que** calcular; as skills dizem **como o agente conduz**",
+        "> uma tarefa: o passo a passo, quem executa e os cuidados. Cada skill aponta as",
+        "> ferramentas do [repertório](repertorio.md) que usa.",
+        "> Página gerada a partir de `repertorio/skills/` por `vcm docs`; edite os YAML.",
+        "",
+    ]
+    como = pasta / "skills" / "_como_funcionam.md"
+    if como.exists():
+        texto = como.read_text(encoding="utf-8").strip().splitlines()
+        if texto and texto[0].startswith("# "):
+            texto = texto[1:]  # o título vira seção desta página
+        # Títulos das notas descem um nível, para ficarem dentro de "Como as skills funcionam".
+        texto = ["#" + t if t.startswith("#") else t for t in texto]
+        while texto and not texto[0].strip():
+            texto = texto[1:]
+        linhas += ["## Como as skills funcionam", "", *texto, ""]
+    por_origem: dict[str, list[dict]] = {}
+    for entrada in entradas:
+        por_origem.setdefault(entrada["origem"], []).append(entrada)
+    for origem, grupo in por_origem.items():
+        linhas += [
+            f"## {ORIGENS.get(origem, origem)}",
+            "",
+            "| Skill | Para quê | Agente sugerido | Situação |",
+            "|---|---|---|---|",
+        ]
+        for e in grupo:
+            linhas.append(
+                f"| `{e['id']}` | {_celula(e.get('para_que'))} "
+                f"| {AGENTES.get(e.get('agente_sugerido'), '—')} "
+                f"| {STATUS.get(e.get('status'), _celula(e.get('status')))} |"
+            )
+        linhas.append("")
+        for e in grupo:
+            linhas += [f"### {e['nome']}", "", f"`{e['id']}` · {e.get('onde', '')}", ""]
+            ferramentas = [
+                nomes_ferramentas.get(f, f) for f in e.get("ferramentas_relacionadas") or []
+            ]
+            if ferramentas:
+                linhas += ["_Ferramentas: " + ", ".join(ferramentas) + "._", ""]
+            linhas += _lista("Quando usar", e.get("quando_usar"))
+            linhas += _lista("Quando evitar", e.get("quando_evitar"))
+            linhas += _lista("Cuidados", e.get("cuidados"))
+            if e.get("licenca"):
+                linhas += [f"Licença: {e['licenca']} (verificada em {e.get('verificado_em')})", ""]
     return "\n".join(linhas).rstrip() + "\n"

@@ -1,0 +1,13 @@
+id: escopo-etapas
+nome: "Escopo por etapa"
+origem: projeto
+onde: projetos_em_camadas/.claude/skills/escopo-etapas
+para_que: "Extrair o escopo de materiais e serviços do contrato, com quantidades por etapa e sem preço, conferindo cada código no cadastro de materiais Sanepar."
+quando_usar: ["etapas da obra, recorte de escopo ou quantitativos", "lista de materiais, cotação ou 'o que entra na 1ª etapa'"]
+quando_evitar: ["qualquer valor de preço: a skill não extrai preço (decisão de 28/10/2026)"]
+cuidados: ["itens sem etapa (equipamentos, válvulas, civil global) ficam como 'verificar'", "quantidade do orçamento diferente da 1ª etapa é divergência a listar", "código fora do cadastro Sanepar ou unidade diferente da cadastrada gera alerta", "tabela só da 2ª etapa fica fora do escopo até confirmar com o TR", "serviço sem quantidade: estimativa com premissa declarada, que nunca substitui a quantidade do contrato"]
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: null
+verificado_em: "2026-11-02"
+status: em_uso

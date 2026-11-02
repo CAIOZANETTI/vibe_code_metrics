@@ -87,6 +87,7 @@ Consequências:
 | Componente | O que é | Formato | Pasta |
 |---|---|---|---|
 | **Repertório** | Alternativas classificadas por **papel** (extração, cálculo, armazenamento, intercâmbio, apresentação, orquestração de IA). Só se compara o que cumpre o mesmo papel. | YAML | `repertorio/` |
+| **Catálogo de skills** | Habilidades de agente (pasta com `SKILL.md`): do projeto, da plataforma, de plugins e externas. Dizem **como** conduzir uma tarefa e quais ferramentas do repertório usam. Página: [skills.md](skills.md). | YAML | `repertorio/skills/` |
 | **Catálogo de modelos** | Modelos de IA disponíveis, preço, data de verificação e papéis sugeridos. Atualizado quando um fornecedor lança modelo novo, o que dispara regressão. | YAML | `repertorio/modelos.yaml` |
 | **Tese** | Hipótese falsificável + protocolo (métricas, tolerâncias, orçamento, repetições) + gabarito congelado + decisão. | Markdown + YAML | `theses/Txxx-*/` |
 | **Runner** | Executa alternativas sobre os mesmos casos, com repetições, isolamento em subprocesso, pico de RAM, hash de saída. | Python | `src/vcm/runners/` |
@@ -182,6 +183,34 @@ enquanto SLOC não oscila nada. Uma variação dentro do ruído é declarada "ig
 "melhorou". O critério de parada funciona como num método iterativo: quando o resíduo para de
 cair, insistir só gasta tokens.
 
+### Desempenho do método: o vcm melhora os projetos?
+
+A pergunta final do método é sobre ele mesmo. A resposta vem do histórico do git de cada projeto,
+comparando antes × depois da **adoção** (o commit que criou o `vcm.yaml`):
+
+```bash
+vcm historico --passo 5
+vcm efeito
+```
+
+- `vcm historico` mede commits passados (amostra a cada `passo`, sempre o primeiro e o último),
+  reaproveitando o cache de snapshots.
+- `vcm efeito` compara, por métrica julgada, médias e tendências antes × depois, conta os cartões
+  por decisão (REVERTER = problema pego antes de entrar) e gera `results/efeito.html` com a linha
+  da adoção nos gráficos.
+
+Regras para não enganar a si mesmo:
+
+| Regra | Por quê |
+|---|---|
+| Veredito só com **5 ou mais commits de cada lado** | média e tendência de 3 pontos não sustentam conclusão |
+| Commits **sem código** ficam fora | o commit inicial vazio inverteu a direção da complexidade no primeiro teste real |
+| **Ressalvas antes da tabela** | estudo observacional de um projeto: crescimento de escopo também mexe nas métricas; correlação não é causa |
+| Métricas que só existem depois da adoção (tempo, RAM, reprodutibilidade) | ficam "insuficiente"; servem para a comparação entre iterações, não antes × depois |
+
+Com vários projetos adotando o método, o mesmo relatório por projeto permite comparar efeitos;
+com um só, ele é descritivo.
+
 ## 5. O que é medido passivamente e o que exige protocolo
 
 | Passivo (basta instrumentar) | Exige protocolo de tese |
@@ -219,6 +248,21 @@ dados da tese **T003 (roteamento)**: a tabela acima é hipótese e passa a ser c
 por tarefa aprovada de cada modelo.
 
 Nenhum nome de modelo fica fixo no código: tudo vem de `repertorio/modelos.yaml`.
+
+### Modelo × skill × ferramenta
+
+Três escolhas independentes compõem cada tarefa:
+
+| Escolha | Pergunta | Onde está |
+|---|---|---|
+| **Modelo** | quem executa (custo × capacidade) | `repertorio/modelos.yaml`, tabela acima |
+| **Skill** | como conduzir (passo a passo, cuidados, quando parar) | [skills.md](skills.md) |
+| **Ferramenta** | com o que calcular (biblioteca Python) | [repertorio.md](repertorio.md) |
+
+Uma tarefa repetível de domínio (ler uma prancha, quantificar uma vala) vira **skill do projeto**,
+com o cálculo em código determinístico; a skill orienta o agente e aponta o código. Skills
+externas entram como **candidatas**: lidas antes de instalar, porque podem trazer scripts que
+rodam na máquina.
 
 ## 7. Repertório: uma entrada
 

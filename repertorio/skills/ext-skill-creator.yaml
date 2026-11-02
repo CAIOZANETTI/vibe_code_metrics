@@ -1,0 +1,20 @@
+id: ext-skill-creator
+nome: Criador de skills (Anthropic)
+origem: externa
+onde: https://github.com/anthropics/skills/tree/main/skills/skill-creator
+para_que: Criar, melhorar e avaliar skills (evals com e sem a skill, otimização da descrição, empacotamento).
+quando_usar:
+  - Transformar um procedimento recorrente do mantenedor em skill do projeto com avaliações.
+  - Medir se a descrição aciona a skill (alinha com a medição antes x depois do método).
+quando_evitar:
+  - Skill trivial de poucas linhas; escrever à mão seguindo as boas práticas oficiais basta.
+cuidados:
+  - Apache-2.0 (LICENSE.txt conferido).
+  - Scripts Python (run_eval, run_loop, package_skill, eval-viewer); ler antes de instalar.
+  - Otimização de descrição usa a CLI claude -p (só Claude Code) e subagentes em paralelo, o que consome tokens.
+  - Sobrepõe-se ao skill-creator embutido.
+agente_sugerido: null
+ferramentas_relacionadas: []
+licenca: Apache-2.0
+verificado_em: "2026-11-02"
+status: candidato
