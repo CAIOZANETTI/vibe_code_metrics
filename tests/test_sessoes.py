@@ -260,3 +260,26 @@ def test_custo_iteracao_do_cli_usa_logs_e_precos_empacotados(tmp_path, monkeypat
     assert gasto.loc["claude-sonnet-5-5", "custo_usd"] == 10.0  # 1 MTok de saída × US$ 10
     monkeypatch.setattr(sessoes, "PASTA_PADRAO", tmp_path / "nao_existe")
     assert cli._custo_iteracao(repo, antes, depois) is None
+
+
+def test_tempo_ativo_separa_relogio_de_horas_de_agente():
+    import pandas as pd
+    import pytest
+
+    from vcm.coletores.sessoes import tempo_ativo
+
+    def chamadas(agente, minutos):
+        return pd.DataFrame(
+            {"sessao_id": "s", "agente_id": agente,
+             "inicio": pd.to_datetime("2026-11-02T10:00Z") + pd.to_timedelta(minutos, unit="min")}
+        )  # fmt: skip
+
+    # agente principal: 10:00–10:30 (de 2 em 2 min), pausa de 2 h, 12:30–12:40
+    principal = chamadas(None, [*range(0, 31, 2), *range(150, 161, 2)])
+    # subagente em paralelo: 10:10–10:40
+    sub = chamadas("a1", list(range(10, 41, 2)))
+    t = tempo_ativo(pd.concat([principal, sub], ignore_index=True))
+    assert t["horas_agente"] == pytest.approx((30 + 10 + 30) / 60)
+    assert t["horas_relogio_ia"] == pytest.approx((40 + 10) / 60)  # 10:00–10:40 e 12:30–12:40
+    assert t["dias_corridos"] == pytest.approx(160 / 1440)
+    assert t["paralelismo"] == pytest.approx(70 / 50)

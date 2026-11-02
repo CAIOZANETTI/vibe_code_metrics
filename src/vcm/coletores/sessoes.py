@@ -280,3 +280,68 @@ def custo_da_iteracao(
         tokens_saida=("tokens_saida", "sum"),
         custo_usd=("custo_usd", lambda c: c.sum(min_count=1)),
     )
+
+
+OCIOSIDADE_MAX_MIN = 5.0  # intervalo entre chamadas acima disso é pausa, não trabalho
+
+
+def _intervalos_ativos(instantes: pd.Series, ociosidade_max_min: float) -> list[tuple]:
+    """Intervalos [início, fim] de trabalho contínuo: chamadas a menos de `ociosidade_max_min`
+    uma da outra formam um bloco. Um bloco de chamada única conta 1 minuto (não se sabe a
+    duração da última resposta)."""
+    t = instantes.sort_values().to_numpy()
+    if len(t) == 0:
+        return []
+    limite = np.timedelta64(int(ociosidade_max_min * 60), "s")
+    quebra = np.diff(t) > limite
+    inicios = np.concatenate([[0], np.flatnonzero(quebra) + 1])
+    fins = np.concatenate([np.flatnonzero(quebra), [len(t) - 1]])
+    um_minuto = np.timedelta64(60, "s")
+    return [(t[i], max(t[f], t[i] + um_minuto)) for i, f in zip(inicios, fins, strict=True)]
+
+
+def _uniao_h(intervalos: list[tuple]) -> float:
+    """Horas da união de intervalos (sobreposições contam uma vez)."""
+    if not intervalos:
+        return 0.0
+    ordenados = sorted(intervalos)
+    total = np.timedelta64(0, "s")
+    ini, fim = ordenados[0]
+    for a, b in ordenados[1:]:
+        if a <= fim:
+            fim = max(fim, b)
+        else:
+            total += fim - ini
+            ini, fim = a, b
+    total += fim - ini
+    return float(total / np.timedelta64(1, "h"))
+
+
+def tempo_ativo(chamadas: pd.DataFrame, ociosidade_max_min: float = OCIOSIDADE_MAX_MIN) -> dict:
+    """Tempo de calendário e horas produtivas da IA num conjunto de chamadas.
+
+    - inicio, fim, dias_corridos: do primeiro ao último registro;
+    - horas_relogio_ia: horas em que ALGUM agente estava trabalhando (união dos blocos);
+    - horas_agente: soma das horas de cada agente (agentes em paralelo somam);
+    - paralelismo: horas_agente / horas_relogio_ia.
+    """
+    if chamadas.empty:
+        return {"inicio": None, "fim": None, "dias_corridos": 0.0, "horas_relogio_ia": 0.0,
+                "horas_agente": 0.0, "paralelismo": float("nan")}  # fmt: skip
+    chave = chamadas["sessao_id"].astype(str) + "/" + chamadas["agente_id"].fillna("").astype(str)
+    por_agente = [
+        _intervalos_ativos(grupo["inicio"], ociosidade_max_min)
+        for _, grupo in chamadas.groupby(chave)
+    ]
+    todos = [iv for blocos in por_agente for iv in blocos]
+    horas_agente = sum(_uniao_h(blocos) for blocos in por_agente)
+    horas_relogio = _uniao_h(todos)
+    inicio, fim = chamadas["inicio"].min(), chamadas["inicio"].max()
+    return {
+        "inicio": inicio,
+        "fim": fim,
+        "dias_corridos": (fim - inicio).total_seconds() / 86400.0,
+        "horas_relogio_ia": horas_relogio,
+        "horas_agente": horas_agente,
+        "paralelismo": horas_agente / horas_relogio if horas_relogio else float("nan"),
+    }
