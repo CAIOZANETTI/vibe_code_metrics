@@ -258,6 +258,7 @@ registrado e pelo menos uma decisão humana pedida e registrada.
 - [x] Skill `vcm-rumo`, instalada pelo `vcm iniciar`, e regra no `CLAUDE.md`
 - [x] Primeira rodada real: o rumo acusou "fora do plano" (o pedido de tempo) e um falso "estouro" de 127× (leitura de cache e etapas simultâneas); ambos tratados
 - [ ] Calibrar as estimativas com a razão real/estimado acumulada por tipo de etapa e por agente
+- [ ] **Próxima rodada, primeira etapa:** refatorar `rumo.carregar` (D, 29) e `config.carregar_config` (D, 23) em tabela de regras; meta: complexidade média ≤ 4,0 e nenhuma função D (compromisso da decisão 6f5586c)
 
 ## Fase 8 — Primeiro programa experimental
 
