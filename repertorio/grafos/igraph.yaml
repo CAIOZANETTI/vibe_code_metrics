@@ -1,0 +1,29 @@
+id: igraph
+nome: python-igraph
+papel: grafos
+descricao: Interface Python para a biblioteca igraph em C, com algoritmos de grafos e análise de redes.
+quando_considerar:
+  - análise de redes grandes com algoritmos nativos (centralidade, comunidades, caminhos mínimos)
+  - nós identificados por índices inteiros e atributos guardados em vetores
+  - comparação de desempenho e de resultados com NetworkX e rustworkx em uma tese de benchmark
+quando_evitar:
+  - quando a licença GPL é incompatível com a distribuição do projeto
+  - quando se quer a API mais flexível, com nós por rótulo de domínio; NetworkX é mais direto
+  - ecossistema de integração com geopandas, em que NetworkX tem mais exemplos
+cuidados:
+  - licença GPL (o repositório indica GPL-2.0; a cláusula "ou posterior" não foi verificada em 2026-11-02); avaliar o efeito sobre a distribuição antes de adotar
+  - os nós são índices inteiros de 0 a n-1; reindexados quando vértices são removidos, o que invalida os índices guardados
+  - o nome do pacote no PyPI é igraph, enquanto o repositório se chama python-igraph; instalar pelo nome do PyPI
+  - dependência nativa (biblioteca C); usar rodas binárias e registrar a versão
+  - grafos dirigidos exigem o argumento directed explícito em vários métodos; conferir o padrão de cada função
+  - determinismo de algoritmos aleatórios (por exemplo comunidades) exige fixar a semente do módulo random
+coopera_com: [numpy, pandas]
+compete_com: [networkx, rustworkx]
+pacote_python: igraph
+documentacao: https://python.igraph.org
+repositorio: https://github.com/igraph/python-igraph
+licenca: GPL-2.0
+ultima_versao: "1.0.0 (2025-10)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato

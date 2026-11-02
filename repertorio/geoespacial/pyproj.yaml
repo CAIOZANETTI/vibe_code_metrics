@@ -1,0 +1,30 @@
+id: pyproj
+nome: pyproj
+papel: geoespacial
+descricao: Interface Python para a biblioteca PROJ, para transformar coordenadas entre sistemas de referência.
+quando_considerar:
+  - converter SIRGAS 2000 geográfico (EPSG:4674) para UTM SIRGAS 2000 (zonas EPSG:31978 a 31985 no Brasil) e o inverso
+  - converter coordenadas de EXIF de drone (WGS 84, EPSG:4326) para o UTM do projeto
+  - declarar o sistema de coordenadas de cada camada (ortofoto, pranchas, rede) e transformar entre elas de forma explícita
+  - cálculo geodésico (distância e azimute sobre o elipsoide) com a classe Geod
+quando_evitar:
+  - quando o projeto é puramente local e todas as camadas já estão no mesmo CRS métrico
+  - quando se quer manipular geometrias inteiras; combinar com shapely ou geopandas
+cuidados:
+  - usar Transformer.from_crs(origem, destino, always_xy=True); sem isso, a ordem dos eixos segue a definição da autoridade (latitude, longitude para EPSG:4326 e 4674) e o ponto sai invertido
+  - SIRGAS 2000 e WGS 84 diferem por poucos decímetros; tratar como iguais só se a tolerância do projeto permitir, e declarar a escolha
+  - a transformação depende da base de dados do PROJ (grades, datum shifts); registrar a versão do PROJ embutida na roda para reprodutibilidade
+  - grades de datum opcionais podem não estar instaladas; conferir a operação escolhida (Transformer.description) e se a precisão é a esperada
+  - a zona UTM deve ser escolhida pela longitude ou fixada no projeto; coordenadas fora da zona natural distorcem a escala
+  - a PROJ vem embarcada nas rodas binárias; compilar do código-fonte exige PROJ instalada no sistema
+  - fixar o EPSG como constante nomeada e usar sufixo de unidade nos nomes (leste_m, norte_m)
+coopera_com: [shapely, geopandas, rasterio, numpy]
+compete_com: []
+pacote_python: pyproj
+documentacao: https://pyproj4.github.io/pyproj/
+repositorio: https://github.com/pyproj4/pyproj
+licenca: MIT
+ultima_versao: "3.8.0 (2026-09)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: em_uso

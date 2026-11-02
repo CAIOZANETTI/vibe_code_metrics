@@ -5,13 +5,24 @@ descricao: Formato de dados ligados em JSON, em que um contexto associa termos a
 quando_considerar:
   - intercambiar dados semânticos com vocabulário compartilhado
   - publicar metadados vinculados a outros conjuntos de dados
+  - descrever o projeto, as camadas e os arquivos com identificadores estáveis e vocabulário explícito
+  - manter um JSON legível por pessoas que também possa ser lido como grafo RDF
 quando_evitar:
   - troca interna simples, em que um JSON comum basta
+  - tabelas grandes de dados numéricos; usar parquet
 cuidados:
   - a expansão de contexto pode buscar URLs remotos; usar carregador local e controlado
-coopera_com: []
+  - o pacote Python é pyld; a leitura de JSON-LD em grafo RDF também é possível com rdflib
+  - o resultado da canonicalização (URDNA2015) é determinístico, mas deve ser usado quando se quer comparar bytes ou assinar
+  - coordenadas e unidades precisam de termos explícitos no contexto (por exemplo, o EPSG e a unidade no nome); sem isso, o número perde significado
+  - para dados geográficos, GeoJSON é mais adequado como formato de geometria; o JSON-LD pode apenas descrevê-lo
+coopera_com: [rdflib, pydantic]
 compete_com: []
 pacote_python: pyld
 documentacao: https://json-ld.org/
+repositorio: https://github.com/digitalbazaar/pyld
+licenca: BSD-3-Clause
+ultima_versao: "3.3.0 (2026-09)"
+verificado_em: "2026-11-02"
 evidencias: []
 status: candidato

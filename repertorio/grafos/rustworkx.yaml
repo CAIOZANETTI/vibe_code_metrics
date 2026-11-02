@@ -1,18 +1,29 @@
 id: rustworkx
 nome: rustworkx
 papel: grafos
-descricao: Biblioteca de grafos com núcleo em Rust e API em Python.
+descricao: Biblioteca de grafos com núcleo em Rust e API em Python, originada no projeto Qiskit.
 quando_considerar:
   - grafos grandes
   - algoritmos de grafos com execução em código nativo
+  - redes com muitos trechos em que a lentidão do Python puro se torna o gargalo medido
+  - cargas de trabalho que se beneficiam de índices inteiros contíguos e de arrays NumPy
 quando_evitar:
   - quando os nós precisam ser identificados diretamente por rótulos de domínio
   - quando é preciso o ecossistema mais amplo de algoritmos do NetworkX
+  - redes pequenas, em que a diferença de tempo não compensa a conversão de índices
 cuidados:
   - os nós são referenciados por índices inteiros; mapear os identificadores de domínio para esses índices
-coopera_com: [numpy, pandas]
-compete_com: [networkx]
+  - ao remover nós, os índices livres podem ser reaproveitados; não guardar índices antigos como identificador estável
+  - a API é parecida com a do NetworkX, mas não idêntica; funções de mesmo nome podem ter assinatura ou retorno diferentes
+  - há ponte de conversão para NetworkX, mas ela custa tempo e perde detalhes de atributos; testar o caminho de ida e volta
+  - o desempenho só deve ser afirmado com medição própria (tese de benchmark), não por suposição
+coopera_com: [numpy, pandas, networkx]
+compete_com: [networkx, igraph]
 pacote_python: rustworkx
 documentacao: https://www.rustworkx.org/
+repositorio: https://github.com/Qiskit/rustworkx
+licenca: Apache-2.0
+ultima_versao: "0.18.1 (2026-07)"
+verificado_em: "2026-11-02"
 evidencias: []
 status: candidato

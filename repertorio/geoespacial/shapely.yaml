@@ -1,0 +1,31 @@
+id: shapely
+nome: Shapely
+papel: geoespacial
+descricao: Geometrias planas (pontos, linhas, polígonos) e operações geométricas, sobre a biblioteca GEOS.
+quando_considerar:
+  - área, comprimento, interseção, união, buffer e distância de polígonos e polilinhas em coordenadas métricas (UTM)
+  - recortar trechos de rede (obra linear) por polígono de lote ou de pavimento
+  - operações vetorizadas sobre arrays de geometrias (Shapely 2.x), em vez de laços Python
+  - índice espacial (STRtree) para consultas de vizinhança entre muitas geometrias
+quando_evitar:
+  - quando as coordenadas estão em graus (SIRGAS 2000 geográfico) e a medida deve ser em metros; projetar para UTM antes
+  - quando é preciso 3D de verdade (volumes, interseção de sólidos); a biblioteca é essencialmente 2D
+  - quando a tabela de atributos é o foco; usar geopandas, que embrulha o Shapely
+cuidados:
+  - a ordem das coordenadas é (x, y), isto é, (leste, norte) ou (longitude, latitude); misturar com (latitude, longitude) inverte o ponto
+  - não conhece sistema de coordenadas; guardar o EPSG ao lado (geopandas ou pyproj) e nunca medir área ou comprimento em graus
+  - a coordenada Z é carregada, mas as operações (área, distância, interseção) a ignoram
+  - polígonos inválidos (autointerseção, anel aberto) dão resultado errado ou erro; checar is_valid e corrigir com make_valid
+  - coordenadas UTM têm 6 a 7 dígitos; comparar com tolerância absoluta declarada, não com igualdade exata
+  - set_precision altera a geometria; usar de forma explícita
+  - determinismo: a mesma versão do GEOS dá o mesmo resultado; versões diferentes podem divergir em casos de borda
+coopera_com: [pyproj, geopandas, numpy, rasterio, ezdxf]
+compete_com: []
+pacote_python: shapely
+documentacao: https://shapely.readthedocs.io/
+repositorio: https://github.com/shapely/shapely
+licenca: BSD-3-Clause
+ultima_versao: "2.2.0 (2026-10)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: em_uso
