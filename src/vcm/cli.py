@@ -60,8 +60,9 @@ def _cmd_balanco(args: argparse.Namespace) -> int:
     resultado = snap.retrospectiva(antes, depois, ruido_medido=ruido.carregar())
     if not args.sem_sessoes:
         resultado["custo_iteracao"] = _custo_iteracao(repo, antes, depois)
-    caminhos = cartao.gravar(resultado, snap.PASTA_ITERACOES, limites=config.limites)
-    print(cartao.markdown(resultado, limites=config.limites))
+    raiz = repo.resolve()  # árvore de trabalho: alvos das correções sugeridas
+    caminhos = cartao.gravar(resultado, snap.PASTA_ITERACOES, limites=config.limites, raiz=raiz)
+    print(cartao.markdown(resultado, limites=config.limites, raiz=raiz))
     print(f"Cartão HTML: {caminhos['html']}")
     if args.falhar_se_reverter and resultado["decisao"].value == "REVERTER":
         return 2

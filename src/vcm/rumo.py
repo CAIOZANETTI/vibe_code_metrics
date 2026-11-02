@@ -233,6 +233,11 @@ def real_por_etapa(
     colunas_trabalho = [c for c in sessoes.COLUNAS_TOTAL if c != "tokens_cache_leitura"]
     tokens_total = chamadas[colunas_trabalho].sum(axis=1)
     modelos = chamadas["modelo"].fillna("").astype(str) if "modelo" in chamadas else None
+    descricoes = (
+        chamadas["descricao"].fillna("").astype(str).str.strip()
+        if "descricao" in chamadas
+        else None
+    )
     custo = sessoes.custo_usd(chamadas, precos) if precos and len(chamadas) else None
     linhas = []
     for etapa in rumo["etapas"]:
@@ -252,6 +257,11 @@ def real_por_etapa(
             # modelo do seu agente (ex.: "sonnet" -> claude-sonnet-*).
             if modelos is not None and etapa.get("agente") in ("haiku", "sonnet", "opus", "fable"):
                 na_janela = na_janela & modelos.str.contains(etapa["agente"], regex=False)
+            # Agente nomeado com o id da etapa ("E2: ..."): conta só as chamadas dele, para que
+            # duas etapas do mesmo modelo em paralelo não somem as chamadas uma da outra.
+            if descricoes is not None:
+                da_etapa = na_janela & descricoes.str.startswith(f"{etapa['id']}:")
+                na_janela = da_etapa if da_etapa.any() else na_janela
             linha["chamadas"] = int(na_janela.sum())
             linha["tokens_real"] = int(tokens_total[na_janela].sum())
             if custo is not None:

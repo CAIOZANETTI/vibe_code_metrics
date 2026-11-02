@@ -25,7 +25,27 @@ O dia a dia num projeto, com o Claude Code aberto na pasta dele:
 4. `REVERTER` desfaz; `MANTER` segue; troca de métricas, você decide e registra.
 5. A cada rodada, `vcm rumo` diz onde estamos: progresso, etapa, estimado × real, horas de IA e
    desvios. O mesmo resumo vai como comentário no PR.
-6. De tempos em tempos, `vcm efeito` mostra se o projeto está melhor do que antes da adoção.
+6. Toda resposta do agente segue o **formulário de interação** (abaixo), com os mesmos campos.
+7. De tempos em tempos, `vcm efeito` mostra se o projeto está melhor do que antes da adoção.
+
+### Formulário de interação
+
+Para você saber de relance onde está cada desenvolvimento, todo agente responde no mesmo formato
+(skill `vcm-formulario`, instalada pelo `vcm iniciar` e citada no `CLAUDE.md`). O Python preenche os
+números com `vcm rumo --formulario`, e o agente completa os campos de texto:
+
+| Campo | Quem preenche | Conteúdo |
+|---|---|---|
+| **Objetivo** | `rumo.yaml` | o objetivo da rodada |
+| **O que estou fazendo** | agente | uma ou duas frases sobre a ação desta resposta |
+| **Onde estamos** | `vcm` | barra de progresso, etapas em andamento, próxima, dias, horas de IA e gasto |
+| **Agentes** | `vcm` + agente | quem trabalha em qual etapa (gerente, Sonnet, Haiku) |
+| **Precisa de você** | `vcm` + agente | desvios e decisões que só você pode tomar; "nada" quando não há |
+| **Campo livre** | agente | o resto da resposta: resultado, explicação, pergunta |
+
+Num projeto que já usava o `vcm`, rode `vcm iniciar . --pacote <nome>` de novo para receber a skill
+nova; ele não sobrescreve o que já existe. Depois, acrescente ao `CLAUDE.md` a seção
+"Formulário de interação" do modelo.
 
 Para atualizar o instrumento: `uv tool install --force git+https://github.com/CAIOZANETTI/vibe_code_metrics`.
 

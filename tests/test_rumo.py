@@ -278,6 +278,21 @@ def test_etapas_simultaneas_ficam_com_as_chamadas_do_seu_agente(tmp_path):
     assert real.loc["E2", "tokens_real"] == 200  # só a do Opus, sem a leitura de cache
 
 
+def test_etapas_do_mesmo_modelo_em_paralelo_separam_pela_descricao_do_agente(tmp_path):
+    etapas = [
+        _etapa("E1", agente="sonnet", status="feito", inicio="2026-11-01T10:00:00Z",
+               fim="2026-11-01T11:30:00Z"),
+        _etapa("E2", agente="sonnet", status="feito", inicio="2026-11-01T10:00:00Z",
+               fim="2026-11-01T11:30:00Z"),
+    ]  # fmt: skip
+    rumo = mod.carregar(_gravar(tmp_path, etapas))
+    chamadas = _chamadas(str(tmp_path.resolve()))
+    chamadas["descricao"] = [None, "E1: refatorar", "E2: sugestões", None, None]
+    real = mod.real_por_etapa(rumo, chamadas, tmp_path).set_index("id")
+    assert real.loc["E1", "tokens_real"] == 200
+    assert real.loc["E2", "tokens_real"] == 300
+
+
 def _gravar_texto(tmp_path, texto):
     arquivo = tmp_path / "rumo.yaml"
     arquivo.write_text(texto, encoding="utf-8")

@@ -35,9 +35,9 @@ etapas:
   agente: sonnet
   estimativa_min: 25
   estimativa_tokens: 150000
-  status: fazendo
+  status: feito
   inicio: '2026-11-02T14:32:48Z'
-  fim: null
+  fim: '2026-11-02T14:37:43Z'
 - id: E5
   nome: 'Formulário de interação: skill vcm-formulario, regra no CLAUDE.md, instalação
     pelo vcm iniciar e vcm rumo --formulario'
@@ -55,9 +55,9 @@ etapas:
   agente: opus
   estimativa_min: 20
   estimativa_tokens: 100000
-  status: fazendo
+  status: feito
   inicio: '2026-11-02T14:35:19Z'
-  fim: null
+  fim: '2026-11-02T14:40:04Z'
 - id: E3
   nome: Calibração das estimativas e documentação
   entregaveis:
@@ -74,9 +74,9 @@ etapas:
   agente: opus
   estimativa_min: 10
   estimativa_tokens: 100000
-  status: a_fazer
-  inicio: null
-  fim: null
+  status: feito
+  inicio: '2026-11-02T14:40:11Z'
+  fim: '2026-11-02T14:41:42Z'
 - id: E4
   nome: 'Integração: balanço, rumo no PR, merge e republicação'
   entregaveis:
@@ -88,8 +88,8 @@ etapas:
   agente: opus
   estimativa_min: 10
   estimativa_tokens: 100000
-  status: a_fazer
-  inicio: null
+  status: fazendo
+  inicio: '2026-11-02T14:41:43Z'
   fim: null
 historico:
 - data: '2026-11-02'
