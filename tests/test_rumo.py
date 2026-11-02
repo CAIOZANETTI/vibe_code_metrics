@@ -276,3 +276,114 @@ def test_etapas_simultaneas_ficam_com_as_chamadas_do_seu_agente(tmp_path):
     real = mod.real_por_etapa(rumo, chamadas, tmp_path).set_index("id")
     assert real.loc["E1", "tokens_real"] == 300  # só a do Sonnet (worktree)
     assert real.loc["E2", "tokens_real"] == 200  # só a do Opus, sem a leitura de cache
+
+
+def _gravar_texto(tmp_path, texto):
+    arquivo = tmp_path / "rumo.yaml"
+    arquivo.write_text(texto, encoding="utf-8")
+    return arquivo
+
+
+@pytest.mark.parametrize(
+    ("texto", "mensagem"),
+    [
+        ("a: [\n", "YAML inválido em"),
+        ("- lista\n", "deve conter um mapa com objetivo e etapas"),
+        ("etapas: [{id: E1}]\n", "o rumo precisa de um 'objetivo'"),
+        ("objetivo: '  '\netapas: [{id: E1}]\n", "o rumo precisa de um 'objetivo'"),
+        ("objetivo: X\n", "o rumo precisa de ao menos uma etapa em 'etapas'"),
+        ("objetivo: X\netapas: []\n", "o rumo precisa de ao menos uma etapa em 'etapas'"),
+        ("objetivo: X\netapas: abc\n", "o rumo precisa de ao menos uma etapa em 'etapas'"),
+        ("objetivo: X\netapas: [{nome: A}]\n", "etapa 1 sem 'id'"),
+        ("objetivo: X\netapas: [{id: E1}, texto]\n", "etapa 2 sem 'id'"),
+        ("objetivo: X\netapas: [{id: ''}]\n", "etapa 1 sem 'id'"),
+    ],
+)
+def test_validacao_estrutura_mensagens(tmp_path, texto, mensagem):
+    with pytest.raises(ValueError) as erro:
+        mod.carregar(_gravar_texto(tmp_path, texto))
+    assert mensagem in str(erro.value)
+
+
+@pytest.mark.parametrize(
+    ("etapas", "mensagem"),
+    [
+        ([_etapa("E1"), _etapa("E1")], "id de etapa repetido: E1"),
+        (
+            [_etapa("E1", status="pronto")],
+            (
+                "etapa E1: status 'pronto' inválido (use um de a_fazer, fazendo, feito, "
+                "bloqueado, cancelado)"
+            ),
+        ),
+        (
+            [_etapa("E1", agente="robo")],
+            "etapa E1: agente 'robo' inválido (use um de haiku, sonnet, opus, humano)",
+        ),
+        (
+            [_etapa("E1", estimativa_min=-1)],
+            "etapa E1: 'estimativa_min' deve ser número maior ou igual a 0",
+        ),
+        (
+            [_etapa("E1", estimativa_tokens="muito")],
+            "etapa E1: 'estimativa_tokens' deve ser número maior ou igual a 0",
+        ),
+        (
+            [_etapa("E1", estimativa_min=True)],
+            "etapa E1: 'estimativa_min' deve ser número maior ou igual a 0",
+        ),
+        ([_etapa("E1", inicio="ontem")], "etapa E1: 'inicio' não é uma data ISO 8601"),
+        ([_etapa("E1", fim="amanhã")], "etapa E1: 'fim' não é uma data ISO 8601"),
+        (
+            [_etapa("E1", depende_de=["E9"])],
+            "etapa E1: depende_de 'E9', que não existe",
+        ),
+    ],
+)
+def test_validacao_etapas_mensagens(tmp_path, etapas, mensagem):
+    with pytest.raises(ValueError) as erro:
+        mod.carregar(_gravar(tmp_path, etapas))
+    assert str(erro.value) == mensagem
+
+
+def test_padroes_do_rumo_e_da_etapa(tmp_path):
+    arquivo = _gravar_texto(tmp_path, "objetivo: X\netapas:\n  - id: 7\n")
+    rumo = mod.carregar(arquivo)
+    assert rumo["criterio_de_pronto"] == []
+    assert rumo["base"] is None
+    assert rumo["historico"] == []
+    assert rumo["etapas"][0] == {
+        "id": "7",
+        "nome": "7",
+        "entregaveis": [],
+        "depende_de": [],
+        "agente": "humano",
+        "status": "a_fazer",
+        "inicio": None,
+        "fim": None,
+        "estimativa_min": 0,
+        "estimativa_tokens": 0,
+    }
+
+
+def test_depende_de_vira_texto_e_estimativas_decimais_valem(tmp_path):
+    etapas = [_etapa("1"), _etapa("2", depende_de=[1], estimativa_min=2.5, estimativa_tokens=0)]
+    rumo = mod.carregar(_gravar(tmp_path, etapas))
+    assert rumo["etapas"][1]["depende_de"] == ["1"]
+    assert rumo["etapas"][1]["estimativa_min"] == 2.5
+
+
+def test_ordem_das_chaves_da_etapa_e_estavel(tmp_path):
+    rumo = mod.carregar(_gravar_texto(tmp_path, "objetivo: X\netapas:\n  - id: E1\n"))
+    assert list(rumo["etapas"][0]) == [
+        "id",
+        "nome",
+        "entregaveis",
+        "depende_de",
+        "agente",
+        "status",
+        "inicio",
+        "fim",
+        "estimativa_min",
+        "estimativa_tokens",
+    ]
