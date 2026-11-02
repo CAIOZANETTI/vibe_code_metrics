@@ -34,6 +34,16 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
   <p>{{ explicacao }}</p>
   {% if aviso %}<blockquote>{{ aviso }}</blockquote>{% endif %}
 
+  <h2>Correções sugeridas</h2>
+  {% if sugestoes %}
+  <table>
+    <tr><th>Prioridade</th><th>O quê</th><th>Por quê</th><th>Agente</th></tr>
+    {% for s in sugestoes %}<tr><td>{{ s.prioridade }}</td><td>{{ s.o_que }}</td><td>{{ s.por_que }}</td><td>{{ s.agente_sugerido }}</td></tr>
+    {% endfor %}
+  </table>
+  {% else %}<p>Nenhuma correção sugerida pelas medições.</p>{% endif %}
+  <p><small>{{ frase_sugestoes }}</small></p>
+
   <h2>Radar da iteração</h2>
   <p><small>Índice por dimensão: antes = 1,0 (tracejado); acima de 1,0 é melhor. O rótulo traz a cor do semáforo de estado.</small></p>
   {{ radar_html | safe }}

@@ -52,6 +52,16 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
   </ul></div>
   {% else %}<p>Nenhum desvio.</p>{% endif %}
 
+  <h2>Correções sugeridas</h2>
+  {% if sugestoes %}
+  <table>
+    <tr><th>Prioridade</th><th>O quê</th><th>Por quê</th><th>Agente</th></tr>
+    {% for s in sugestoes %}<tr><td>{{ s.prioridade }}</td><td>{{ s.o_que }}</td><td>{{ s.por_que }}</td><td>{{ s.agente_sugerido }}</td></tr>
+    {% endfor %}
+  </table>
+  {% else %}<p>Nenhuma correção sugerida pelos desvios.</p>{% endif %}
+  <p><small>{{ frase_sugestoes }}</small></p>
+
   <p><strong>Próxima etapa:</strong> {{ proxima }}</p>
   {% if n_mudancas %}
   <h2>Mudanças de objetivo: {{ n_mudancas }}</h2>

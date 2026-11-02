@@ -19,6 +19,7 @@ import yaml
 from jinja2 import Environment, PackageLoader
 
 from vcm import formatacao as fmt
+from vcm import sugestoes
 from vcm.coletores import sessoes
 from vcm.snapshot import _git
 
@@ -484,6 +485,7 @@ def markdown(
     if rumo["historico"]:
         linhas.append("")
         linhas.append(f"Mudanças de objetivo: {len(rumo['historico'])}")
+    linhas += ["", sugestoes.markdown(sugestoes.do_rumo(desv)).rstrip("\n")]
     return "\n".join(linhas) + "\n"
 
 
@@ -557,6 +559,8 @@ def html(
         etapas=_linhas_tabela(rumo, real),
         tempo=_texto_tempo(tempo),
         desvios=desv,
+        sugestoes=sugestoes.do_rumo(desv),
+        frase_sugestoes=sugestoes.FRASE_FIXA,
         proxima=prog["proxima"] or "nenhuma disponível",
         n_mudancas=len(rumo["historico"]),
         historico=rumo["historico"],
