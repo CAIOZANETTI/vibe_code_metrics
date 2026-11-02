@@ -5,16 +5,25 @@ descricao: Banco relacional em arquivo único, embutido, disponível pela biblio
 quando_considerar:
   - armazenar tabelas pequenas e médias com consultas SQL
   - não exigir dependência extra
+  - guardar estado de aplicação web de cálculo (cadastros, execuções, parâmetros) com transações
+  - atualizar linhas no lugar, o que o Parquet não faz
 quando_evitar:
   - volumes analíticos grandes com varreduras de colunas
   - muitos escritores concorrentes
+  - tabelas largas lidas por coluna em grande volume (preferir Parquet)
 cuidados:
   - aceita um escritor por vez
   - os tipos são dinâmicos, não rígidos
   - a verificação de chaves estrangeiras precisa ser ativada explicitamente
-coopera_com: [pandas, duckdb]
+  - a versão do SQLite embutida depende do Python instalado, não do pacote; funcionalidades novas podem faltar em Pythons antigos
+  - a licença é de domínio público (identificador SPDX blessing, usado nos fontes do SQLite); a versão do pacote Python não se aplica, pois sqlite3 é módulo da biblioteca padrão
+coopera_com: [pandas, duckdb, pydantic]
 compete_com: [parquet, geoparquet]
 pacote_python: sqlite3
 documentacao: https://docs.python.org/3/library/sqlite3.html
+repositorio: https://sqlite.org/src
+licenca: blessing
+ultima_versao: "3.54.1 (2026-10)"
+verificado_em: "2026-11-02"
 evidencias: []
 status: candidato

@@ -6,15 +6,25 @@ quando_considerar:
   - dados tabulares com junções e agrupamentos
   - ecossistema maduro e amplamente documentado
   - integração direta com NumPy e Parquet
+  - séries temporais com índice de datas e reamostragem (medições, vazões, precipitação)
+  - bibliotecas de terceiros (Plotly, GeoPandas, pandera) que aceitam DataFrame do pandas
 quando_evitar:
   - volumes que não cabem com folga na memória
   - pipelines que se beneficiam de execução preguiçosa otimizada
+  - junções e agregações muito grandes, em que Polars ou DuckDB tendem a usar melhor a memória (medir antes)
 cuidados:
   - o comportamento de valores ausentes e os tipos dependem do dtype; definir dtype explícito
   - algumas operações copiam os dados
-coopera_com: [numpy, parquet, plotly]
+  - o pandas 3 adotou copy-on-write e removeu a atribuição encadeada; usar df.loc[mascara, coluna] = valor
+  - o pandas 3 infere colunas de texto como dtype str (antes object) e a resolução de datas passou a ser inferida (microssegundos para texto); converter data para inteiro sem fixar a unidade (as_unit) dá valores diferentes
+  - arredondamento e somas em ponto flutuante dependem da ordem das linhas; ordenar de forma explícita antes de agregar quando o resultado precisar ser reprodutível
+coopera_com: [numpy, parquet, plotly, pandera, xarray, scipy]
 compete_com: [polars, duckdb]
 pacote_python: pandas
 documentacao: https://pandas.pydata.org/docs/
+repositorio: https://github.com/pandas-dev/pandas
+licenca: BSD-3-Clause
+ultima_versao: "3.1.0 (2026-10)"
+verificado_em: "2026-11-02"
 evidencias: []
 status: em_uso

@@ -5,14 +5,26 @@ descricao: Arrays N-dimensionais e álgebra linear vetorizada em Python.
 quando_considerar:
   - cálculo matricial e vetorizado
   - álgebra linear
+  - base comum do ecossistema numérico (pandas, SciPy e Plotly trocam dados com arrays NumPy)
+  - cálculo elemento a elemento sobre milhares de seções, trechos ou nós sem laços em Python
+  - dtype explícito (float64, int32) torna o comportamento numérico previsível e documentável
 quando_evitar:
   - dados tabulares heterogêneos com junções e agrupamentos
+  - dados com dimensões nomeadas e coordenadas (tempo, cota, estação), em que o rótulo evita erro de eixo (considerar xarray)
+  - laços escalares que não vetorizam, em que um compilador JIT pode ser mais adequado (considerar numba)
 cuidados:
   - a ordem das somas pode variar com o número de threads do BLAS; medir determinismo
   - medido em 31/10/2026 (vcm.coletores.determinismo, 4 núcleos): produto matricial 500×500 e solve 200×200 mudam de hash entre 1 thread e o padrão; com threads fixas, 100% estável; cumsum não muda. Fixar OPENBLAS_NUM_THREADS quando o resultado precisar ser reprodutível bit a bit
-coopera_com: [pandas, polars, plotly]
+  - float32 acumula erro diferente de float64; declarar o dtype e a tolerância absoluta ou relativa nos testes (np.testing.assert_allclose com atol e rtol explícitos)
+  - o NumPy 2 mudou as regras de promoção de tipos (NEP 50) e removeu aliases antigos; código escrito para 1.x pode mudar de dtype
+  - fatias são vistas, não cópias; alterar uma fatia altera o array original
+coopera_com: [pandas, polars, plotly, scipy, numba, xarray, pint]
 compete_com: []
 pacote_python: numpy
 documentacao: https://numpy.org/doc/stable/
+repositorio: https://github.com/numpy/numpy
+licenca: BSD-3-Clause
+ultima_versao: "2.5.4 (2026-10)"
+verificado_em: "2026-11-02"
 evidencias: []
 status: em_uso

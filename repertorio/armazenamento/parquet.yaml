@@ -6,15 +6,25 @@ quando_considerar:
   - persistir tabelas grandes
   - leitura seletiva de colunas
   - compressão por coluna
+  - trocar tabelas entre pandas, Polars e DuckDB preservando os tipos
+  - guardar resultados de cálculo com esquema explícito (tipos, nulos) e metadados do arquivo
 quando_evitar:
   - edição linha a linha
   - arquivos pequenos que são reescritos com muita frequência
+  - dados que precisam ser lidos por pessoas em editor de texto (usar CSV)
 cuidados:
   - declarar os tipos explicitamente ao gravar
   - o arquivo não é alterado no lugar; ele é reescrito por inteiro
-coopera_com: [pandas, polars, duckdb]
+  - o hash do arquivo pode mudar entre versões do pyarrow ou com metadados e compressão diferentes; para reprodutibilidade, comparar o conteúdo (tabela) e não os bytes, ou fixar versão e opções de escrita
+  - a escrita via pandas grava o índice e metadados do pandas por padrão; declarar index=False quando não for desejado
+  - carimbos de data e hora têm resolução e fuso próprios; declarar a unidade ao gravar
+coopera_com: [pandas, polars, duckdb, geoparquet, pandera]
 compete_com: [sqlite]
 pacote_python: pyarrow
 documentacao: https://arrow.apache.org/docs/python/parquet.html
+repositorio: https://github.com/apache/arrow
+licenca: Apache-2.0
+ultima_versao: "26.0.0 (2026-10)"
+verificado_em: "2026-11-02"
 evidencias: []
 status: em_uso
