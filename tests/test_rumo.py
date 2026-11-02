@@ -105,7 +105,7 @@ def _chamadas(raiz):
             "inicio": pd.to_datetime([x[0] for x in linhas], utc=True),
             "cwd": [x[1] for x in linhas],
             "mensagem_id": [f"m{i}" for i in range(len(linhas))],
-            "modelo": "claude-teste",
+            "modelo": "claude-sonnet-teste",
         }
     )
     for coluna in sessoes.COLUNAS_TOKENS:
@@ -235,3 +235,44 @@ def test_cli_novo_marcar_e_relatorio(tmp_path, capsys):
     assert "Rumo do desenvolvimento" in capsys.readouterr().out
     assert (tmp_path / "results" / "rumo.html").exists()
     assert (tmp_path / "results" / "rumo.md").exists()
+
+
+def test_tempo_do_rumo_calendario_e_horas_da_ia(tmp_path):
+    import pandas as pd
+    import pytest
+
+    from vcm import rumo as mod
+
+    rumo = {
+        "objetivo": "x", "criterio_de_pronto": [], "base": None, "historico": [],
+        "etapas": [
+            {"id": "E1", "nome": "a", "entregaveis": [], "depende_de": [], "agente": "sonnet",
+             "estimativa_min": 30, "estimativa_tokens": 1, "status": "feito",
+             "inicio": "2026-11-01T10:00:00Z", "fim": "2026-11-02T10:00:00Z"},
+        ],
+    }  # fmt: skip
+    chamadas = pd.DataFrame(
+        {"sessao_id": "s", "agente_id": None, "cwd": str(tmp_path.resolve()),
+         "inicio": pd.to_datetime("2026-11-01T10:00Z") + pd.to_timedelta(range(0, 61, 2), unit="min")}
+    )  # fmt: skip
+    t = mod.tempo_do_rumo(rumo, chamadas, tmp_path)
+    assert t["dias_corridos"] == pytest.approx(1.0)
+    assert t["horas_relogio_ia"] == pytest.approx(1.0)
+    texto = " ".join(mod._texto_tempo(t))
+    assert "1,00 dias corridos" in texto and "1,0 h de relógio" in texto
+
+
+def test_etapas_simultaneas_ficam_com_as_chamadas_do_seu_agente(tmp_path):
+    etapas = [
+        _etapa("E1", agente="sonnet", status="feito", inicio="2026-11-01T10:00:00Z",
+               fim="2026-11-01T11:30:00Z"),
+        _etapa("E2", agente="opus", status="feito", inicio="2026-11-01T10:00:00Z",
+               fim="2026-11-01T11:30:00Z"),
+    ]  # fmt: skip
+    rumo = mod.carregar(_gravar(tmp_path, etapas))
+    chamadas = _chamadas(str(tmp_path.resolve()))
+    chamadas.loc[1, "modelo"] = "claude-opus-teste"  # a das 10:30 foi do gerente (Opus)
+    chamadas.loc[1, "tokens_cache_leitura"] = 10_000_000  # releitura de contexto: fora da conta
+    real = mod.real_por_etapa(rumo, chamadas, tmp_path).set_index("id")
+    assert real.loc["E1", "tokens_real"] == 300  # só a do Sonnet (worktree)
+    assert real.loc["E2", "tokens_real"] == 200  # só a do Opus, sem a leitura de cache

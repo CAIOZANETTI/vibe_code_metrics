@@ -328,7 +328,14 @@ def tempo_ativo(chamadas: pd.DataFrame, ociosidade_max_min: float = OCIOSIDADE_M
     if chamadas.empty:
         return {"inicio": None, "fim": None, "dias_corridos": 0.0, "horas_relogio_ia": 0.0,
                 "horas_agente": 0.0, "paralelismo": float("nan")}  # fmt: skip
-    chave = chamadas["sessao_id"].astype(str) + "/" + chamadas["agente_id"].fillna("").astype(str)
+    # Sem identificação de sessão/agente (ex.: dados montados à mão), tudo é um agente só.
+    sessao = (
+        chamadas["sessao_id"] if "sessao_id" in chamadas else pd.Series("", index=chamadas.index)
+    )
+    agente = (
+        chamadas["agente_id"] if "agente_id" in chamadas else pd.Series("", index=chamadas.index)
+    )
+    chave = sessao.astype(str) + "/" + agente.fillna("").astype(str)
     por_agente = [
         _intervalos_ativos(grupo["inicio"], ociosidade_max_min)
         for _, grupo in chamadas.groupby(chave)

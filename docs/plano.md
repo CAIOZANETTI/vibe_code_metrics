@@ -158,6 +158,11 @@ proposital em teste resulta em `REVERTER`. **Atingido** no teste ponta a ponta (
 - **Medir o próprio método exige as mesmas cautelas de uma tese.** No primeiro relatório de efeito,
   o commit inicial vazio fazia a complexidade "piorar" 18% depois da adoção; sem ele, caiu 5%. Com 3
   commits depois da adoção, nenhum veredito se sustenta: o mínimo passou a 5 de cada lado.
+- **O rumo precisa do relógio, não da memória do agente.** Na primeira rodada, o gerente escreveu
+  à mão um fim de etapa no futuro (14:12, às 13:53). Datas de etapa só por `vcm rumo --etapa …
+  --status …`, que grava o instante real.
+- **Contar tokens exige dizer quais.** A leitura de cache multiplicava os tokens de uma etapa por
+  100; o rumo conta os trabalhados (entrada, saída, escrita de cache) e deixa o resto para o custo.
 - **Worktrees de agentes nasceram da `main`.** (Resolvido: com o trabalho na `main`, as worktrees
   já nascem com o projeto.) Os executores precisaram trazer a branch de
   trabalho. Até a branch ir para a `main`, a especificação de cada tarefa precisa dizer a base.
@@ -245,6 +250,14 @@ registrado e pelo menos uma decisão humana pedida e registrada.
 - [x] Primeira leitura no `projetos_em_camadas`: inconclusiva (3 commits depois da adoção), como esperado
 - [ ] Repetir a leitura quando houver 5+ iterações depois da adoção, com `--com-testes`
 - [ ] Juntar os relatórios de vários projetos numa comparação entre projetos
+
+## Rumo do desenvolvimento (02/11/2026)
+
+- [x] `vcm rumo`: `rumo.yaml` (objetivo, critério de pronto, etapas, histórico), progresso, real × estimado, desvios, Markdown para PR e HTML (Sonnet)
+- [x] Tempo: início, fim, dias corridos, horas de relógio da IA, horas de agente e paralelismo (Opus, pedido do mantenedor no meio da rodada)
+- [x] Skill `vcm-rumo`, instalada pelo `vcm iniciar`, e regra no `CLAUDE.md`
+- [x] Primeira rodada real: o rumo acusou "fora do plano" (o pedido de tempo) e um falso "estouro" de 127× (leitura de cache e etapas simultâneas); ambos tratados
+- [ ] Calibrar as estimativas com a razão real/estimado acumulada por tipo de etapa e por agente
 
 ## Fase 8 — Primeiro programa experimental
 

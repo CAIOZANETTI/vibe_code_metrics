@@ -17,12 +17,15 @@ O `vibe_code_metrics` tem dois usos. Escolha o seu:
 
 O dia a dia num projeto, com o Claude Code aberto na pasta dele:
 
-1. Você pede uma tarefa em linguagem natural.
+1. Você pede uma tarefa em linguagem natural. Se é um objetivo novo, o Claude propõe o `rumo.yaml`
+   (objetivo, critério de pronto, etapas com estimativas) e você aprova.
 2. O Claude (gerente) consulta o `CLAUDE.md` do projeto, o repertório e as skills, divide a tarefa e
    chama os executores (Sonnet, Haiku).
 3. Depois do commit, `vcm balanco HEAD~1 HEAD` gera o cartão: radar, semáforo e gasto dos agentes.
 4. `REVERTER` desfaz; `MANTER` segue; troca de métricas, você decide e registra.
-5. De tempos em tempos, `vcm efeito` mostra se o projeto está melhor do que antes da adoção.
+5. A cada rodada, `vcm rumo` diz onde estamos: progresso, etapa, estimado × real, horas de IA e
+   desvios. O mesmo resumo vai como comentário no PR.
+6. De tempos em tempos, `vcm efeito` mostra se o projeto está melhor do que antes da adoção.
 
 Para atualizar o instrumento: `uv tool install --force git+https://github.com/CAIOZANETTI/vibe_code_metrics`.
 

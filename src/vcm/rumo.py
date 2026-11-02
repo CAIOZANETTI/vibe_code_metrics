@@ -192,7 +192,11 @@ def real_por_etapa(
     raiz = str(Path(raiz_repo).resolve())
     cwd = chamadas["cwd"].fillna("").astype(str)
     dentro = (cwd == raiz) | cwd.str.startswith(raiz + "/")
-    tokens_total = chamadas[sessoes.COLUNAS_TOTAL].sum(axis=1)
+    # Tokens "trabalhados": entrada, saída e escrita de cache. A leitura de cache (o contexto
+    # relido a cada resposta) fica de fora: domina a contagem, custa pouco e já entra no custo.
+    colunas_trabalho = [c for c in sessoes.COLUNAS_TOTAL if c != "tokens_cache_leitura"]
+    tokens_total = chamadas[colunas_trabalho].sum(axis=1)
+    modelos = chamadas["modelo"].fillna("").astype(str) if "modelo" in chamadas else None
     custo = sessoes.custo_usd(chamadas, precos) if precos and len(chamadas) else None
     linhas = []
     for etapa in rumo["etapas"]:
@@ -204,14 +208,20 @@ def real_por_etapa(
             "tokens_real": np.nan,
             "custo_usd": np.nan,
             "duracao_min": np.nan,
+            "horas_ia": np.nan,
         }
         if inicio is not None:
             na_janela = dentro & (chamadas["inicio"] >= inicio) & (chamadas["inicio"] <= fim)
+            # Etapas simultâneas não dividem as mesmas chamadas: cada etapa fica com as do
+            # modelo do seu agente (ex.: "sonnet" -> claude-sonnet-*).
+            if modelos is not None and etapa.get("agente") in ("haiku", "sonnet", "opus", "fable"):
+                na_janela = na_janela & modelos.str.contains(etapa["agente"], regex=False)
             linha["chamadas"] = int(na_janela.sum())
             linha["tokens_real"] = int(tokens_total[na_janela].sum())
             if custo is not None:
                 linha["custo_usd"] = float(custo[na_janela].sum(min_count=1))
             linha["duracao_min"] = (fim - inicio).total_seconds() / 60
+            linha["horas_ia"] = sessoes.tempo_ativo(chamadas[na_janela])["horas_relogio_ia"]
         linhas.append(linha)
     real = pd.DataFrame(linhas)
     estimado_tokens = pd.Series(
@@ -223,6 +233,64 @@ def real_por_etapa(
     real["razao_tokens"] = real["tokens_real"] / estimado_tokens.where(estimado_tokens > 0)
     real["razao_tempo"] = real["duracao_min"] / estimado_min.where(estimado_min > 0)
     return real
+
+
+def tempo_do_rumo(
+    rumo: dict, chamadas: pd.DataFrame, raiz_repo: Path, agora: datetime | None = None
+) -> dict | None:
+    """Tempo do objetivo: calendário (do primeiro início ao último fim, ou agora se há etapa
+    aberta) e horas produtivas da IA nas chamadas feitas no repositório nesse período."""
+    inicios = [_para_utc(e["inicio"]) for e in rumo["etapas"] if e["inicio"]]
+    if not inicios:
+        return None
+    agora_ts = pd.Timestamp(agora or datetime.now(UTC))
+    agora_ts = (
+        agora_ts.tz_localize("UTC") if agora_ts.tzinfo is None else agora_ts.tz_convert("UTC")
+    )
+    abertas = any(e["status"] in ("a_fazer", "fazendo", "bloqueado") for e in rumo["etapas"])
+    fins = [_para_utc(e["fim"]) for e in rumo["etapas"] if e["fim"]]
+    inicio = min(inicios)
+    fim = agora_ts if abertas or not fins else max(fins)
+    raiz = str(Path(raiz_repo).resolve())
+    cwd = chamadas["cwd"].fillna("").astype(str)
+    dentro = (cwd == raiz) | cwd.str.startswith(raiz + "/")
+    janela = dentro & (chamadas["inicio"] >= inicio) & (chamadas["inicio"] <= fim)
+    ativo = sessoes.tempo_ativo(chamadas[janela])
+    return {
+        "inicio": inicio,
+        "fim": fim,
+        "em_andamento": abertas,
+        "dias_corridos": (fim - inicio).total_seconds() / 86400,
+        "horas_corridas": (fim - inicio).total_seconds() / 3600,
+        "horas_relogio_ia": ativo["horas_relogio_ia"],
+        "horas_agente": ativo["horas_agente"],
+        "paralelismo": ativo["paralelismo"],
+    }
+
+
+def _texto_tempo(tempo: dict | None) -> list[str]:
+    """Linhas de texto (pt-BR) do bloco de tempo, para Markdown e HTML."""
+    if not tempo:
+        return ["Nenhuma etapa iniciada."]
+    fim = (
+        "agora (em andamento)" if tempo["em_andamento"] else tempo["fim"].strftime("%d/%m/%Y %H:%M")
+    )
+    paralelismo = (
+        f" · paralelismo {fmt.numero(tempo['paralelismo'], 1)}×"
+        if pd.notna(tempo["paralelismo"])
+        else ""
+    )
+    return [
+        f"Início {tempo['inicio'].strftime('%d/%m/%Y %H:%M')} UTC · fim {fim}",
+        (
+            f"{fmt.numero(tempo['dias_corridos'], 2)} dias corridos "
+            f"({fmt.numero(tempo['horas_corridas'], 1)} h de calendário)"
+        ),
+        (
+            f"IA trabalhando: {fmt.numero(tempo['horas_relogio_ia'], 1)} h de relógio · "
+            f"{fmt.numero(tempo['horas_agente'], 1)} h de agente{paralelismo}"
+        ),
+    ]
 
 
 def _arquivos_alterados(raiz_repo: Path, base: str | None) -> list[str]:
@@ -335,13 +403,16 @@ def _linhas_tabela(rumo: dict, real: pd.DataFrame) -> list[dict]:
                 "est_tokens": _numero(etapa["estimativa_tokens"]),
                 "real_min": _numero(r["duracao_min"]),
                 "real_tokens": _numero(r["tokens_real"]),
+                "ia_h": _numero(r["horas_ia"], 1) if "horas_ia" in r else "—",
                 "razao": _numero(max(razoes), 1) + "×" if razoes else "—",
             }
         )
     return linhas
 
 
-def markdown(rumo: dict, prog: dict, real: pd.DataFrame, desv: list[dict]) -> str:
+def markdown(
+    rumo: dict, prog: dict, real: pd.DataFrame, desv: list[dict], tempo: dict | None = None
+) -> str:
     """Resumo compacto para comentário de PR."""
     pct = prog["percentual"]
     linhas = [
@@ -351,13 +422,19 @@ def markdown(rumo: dict, prog: dict, real: pd.DataFrame, desv: list[dict]) -> st
         "",
         f"`{_barra(pct)} {fmt.numero(pct, 0)}%`",
         "",
-        "| Etapa | Nome | Status | Agente | Est. min | Est. tokens | Real min | Real tokens | Razão |",
-        "|---|---|---|---|--:|--:|--:|--:|--:|",
+        "**Tempo:** " + " · ".join(_texto_tempo(tempo)),
+        "",
+        (
+            "| Etapa | Nome | Status | Agente | Est. min | Est. tokens | Real min | IA h "
+            "| Real tokens | Razão |"
+        ),
+        "|---|---|---|---|--:|--:|--:|--:|--:|--:|",
     ]
     for t in _linhas_tabela(rumo, real):
         linhas.append(
             f"| {t['id']} | {t['nome']} | {t['status']} | {t['agente']} | {t['est_min']} "
-            f"| {t['est_tokens']} | {t['real_min']} | {t['real_tokens']} | {t['razao']} |"
+            f"| {t['est_tokens']} | {t['real_min']} | {t['ia_h']} | {t['real_tokens']} "
+            f"| {t['razao']} |"
         )
     linhas.append("")
     if desv:
@@ -430,7 +507,9 @@ def _graficos(rumo: dict, real: pd.DataFrame) -> tuple[str, str]:
     return barras, linha_tempo
 
 
-def html(rumo: dict, prog: dict, real: pd.DataFrame, desv: list[dict]) -> str:
+def html(
+    rumo: dict, prog: dict, real: pd.DataFrame, desv: list[dict], tempo: dict | None = None
+) -> str:
     """Página HTML do rumo (valores formatados em Python)."""
     barras, linha_tempo = _graficos(rumo, real)
     env = Environment(loader=PackageLoader("vcm", "templates"), autoescape=True)
@@ -441,6 +520,7 @@ def html(rumo: dict, prog: dict, real: pd.DataFrame, desv: list[dict]) -> str:
         percentual_largura=f"{prog['percentual']:.0f}",
         barra=_barra(prog["percentual"]),
         etapas=_linhas_tabela(rumo, real),
+        tempo=_texto_tempo(tempo),
         desvios=desv,
         proxima=prog["proxima"] or "nenhuma disponível",
         n_mudancas=len(rumo["historico"]),

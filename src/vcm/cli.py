@@ -286,9 +286,10 @@ def _cmd_rumo(args: argparse.Namespace) -> int:
     real = mod.real_por_etapa(rumo, chamadas, repo, precos=precos)
     prog = mod.progresso(rumo)
     desv = mod.desvios(rumo, repo, real)
-    texto = mod.markdown(rumo, prog, real, desv)
+    tempo = mod.tempo_do_rumo(rumo, chamadas, repo)
+    texto = mod.markdown(rumo, prog, real, desv, tempo)
     for destino, conteudo in (
-        (Path(args.saida), mod.html(rumo, prog, real, desv)),
+        (Path(args.saida), mod.html(rumo, prog, real, desv, tempo)),
         (Path(args.markdown), texto),
     ):
         destino = destino if destino.is_absolute() else repo / destino
