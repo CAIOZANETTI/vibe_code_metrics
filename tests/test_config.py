@@ -100,3 +100,67 @@ def test_dependencias_extras_invalidas(tmp_path, valor):
     (tmp_path / "vcm.yaml").write_text(f"dependencias_extras: {valor}\n")
     with pytest.raises(ValueError, match="dependencias_extras"):
         carregar_config(tmp_path)
+
+
+@pytest.mark.parametrize(
+    ("conteudo", "mensagem"),
+    [
+        ("a: [\n", "vcm.yaml: YAML inválido:"),
+        ("- lista\n", "vcm.yaml: o conteúdo deve ser um mapeamento (chave: valor)"),
+        ("projeto: ''\n", "vcm.yaml: 'projeto' deve ser um texto não vazio"),
+        ("projeto: 7\n", "vcm.yaml: 'projeto' deve ser um texto não vazio"),
+        ("pastas_fonte: [1]\n", "vcm.yaml: 'pastas_fonte' deve ser uma lista não vazia de textos"),
+        ("pastas_fonte: []\n", "vcm.yaml: 'pastas_fonte' deve ser uma lista não vazia de textos"),
+        ("pasta_testes: ''\n", "vcm.yaml: 'pasta_testes' deve ser um texto não vazio"),
+        ("referencia: [1]\n", "vcm.yaml: 'referencia' deve ser um mapeamento"),
+        (
+            "referencia: {comando: []}\n",
+            "vcm.yaml: 'referencia.comando' deve ser uma lista não vazia de textos",
+        ),
+        (
+            "referencia: {repeticoes: true}\n",
+            "vcm.yaml: 'referencia.repeticoes' deve ser um inteiro >= 1",
+        ),
+        (
+            "referencia: {repeticoes: 2.5}\n",
+            "vcm.yaml: 'referencia.repeticoes' deve ser um inteiro >= 1",
+        ),
+        ("limites: texto\n", "vcm.yaml: 'limites' deve ser um mapeamento"),
+        (
+            "dependencias_extras: [a, 3]\n",
+            "vcm.yaml: 'dependencias_extras' deve ser uma lista de textos",
+        ),
+    ],
+)
+def test_mensagens_exatas_de_erro(tmp_path, conteudo, mensagem):
+    (tmp_path / "vcm.yaml").write_text(conteudo, encoding="utf-8")
+    with pytest.raises(ValueError) as erro:
+        carregar_config(tmp_path)
+    assert mensagem in str(erro.value)
+
+
+def test_arquivo_vazio_e_valores_nulos_usam_padroes(tmp_path):
+    (tmp_path / "vcm.yaml").write_text("", encoding="utf-8")
+    vazio = carregar_config(tmp_path)
+    assert vazio.projeto == tmp_path.resolve().name
+    assert vazio.pasta_testes == "tests"
+    assert vazio.comando_referencia is None
+    assert vazio.repeticoes == 5
+    assert vazio.limites == {}
+    assert vazio.dependencias_extras == ()
+    (tmp_path / "vcm.yaml").write_text("referencia:\nlimites:\npastas_fonte:\n", encoding="utf-8")
+    assert carregar_config(tmp_path) == vazio
+
+
+def test_valores_validos_sao_convertidos(tmp_path):
+    (tmp_path / "vcm.yaml").write_text(
+        "pastas_fonte: [a, b]\nreferencia: {comando: [x, y], repeticoes: 3}\n"
+        "limites: {cobertura: 1}\ndependencias_extras: []\n",
+        encoding="utf-8",
+    )
+    config = carregar_config(tmp_path)
+    assert config.pastas_fonte == ("a", "b")
+    assert config.comando_referencia == ("x", "y")
+    assert config.repeticoes == 3
+    assert config.limites == {"cobertura": 1}
+    assert config.dependencias_extras == ()

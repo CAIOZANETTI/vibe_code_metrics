@@ -257,8 +257,16 @@ registrado e pelo menos uma decisão humana pedida e registrada.
 - [x] Tempo: início, fim, dias corridos, horas de relógio da IA, horas de agente e paralelismo (Opus, pedido do mantenedor no meio da rodada)
 - [x] Skill `vcm-rumo`, instalada pelo `vcm iniciar`, e regra no `CLAUDE.md`
 - [x] Primeira rodada real: o rumo acusou "fora do plano" (o pedido de tempo) e um falso "estouro" de 127× (leitura de cache e etapas simultâneas); ambos tratados
-- [ ] Calibrar as estimativas com a razão real/estimado acumulada por tipo de etapa e por agente
-- [ ] **Próxima rodada, primeira etapa:** refatorar `rumo.carregar` (D, 29) e `config.carregar_config` (D, 23) em tabela de regras; meta: complexidade média ≤ 4,0 e nenhuma função D (compromisso da decisão 6f5586c)
+- [x] Calibrar as estimativas com a razão real/estimado (rodada autônoma de 02/11: Sonnet com testes 0,9× em tokens e cerca de 0,2× em tempo; referência gravada na skill `vcm-rumo`)
+- [x] Refatorar `rumo.carregar` (D, 29 → A, 5) e `config.carregar_config` (D, 23 → A, 3) em tabela de regras; nenhuma função D. A média ficou em 4,10, acima da meta de 4,0: as funções C que restam estão listadas nas correções sugeridas do cartão
+- [x] Etapas do mesmo modelo em paralelo separadas pela descrição do agente (`E2: …`); antes contavam as chamadas uma da outra (falso estouro de 2,0×)
+
+## Correções sugeridas e formulário de interação (02/11/2026)
+
+- [x] `vcm.sugestoes`: o cartão e o rumo trazem "Correções sugeridas" (o quê, por quê, agente), geradas das medições; o vcm **sugere e não aplica**, porque aplicar exige aprovação humana (Sonnet)
+- [x] Formulário padrão de interação: skill `vcm-formulario`, `vcm rumo --formulario` e regra no `CLAUDE.md`, instalados em todo projeto pelo `vcm iniciar` (pedido do mantenedor no meio da rodada, registrado no `historico`)
+- [ ] Levar a skill `vcm-formulario` ao `projetos_em_camadas` (precisa de aprovação: muda o `CLAUDE.md` do projeto)
+- [ ] Baixar a complexidade média para ≤ 4,0 a partir das funções C listadas no cartão
 
 ## Fase 8 — Primeiro programa experimental
 

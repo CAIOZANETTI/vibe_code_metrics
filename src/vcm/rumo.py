@@ -19,6 +19,7 @@ import yaml
 from jinja2 import Environment, PackageLoader
 
 from vcm import formatacao as fmt
+from vcm import sugestoes
 from vcm.coletores import sessoes
 from vcm.snapshot import _git
 
@@ -44,9 +45,20 @@ def _iso(instante: datetime) -> str:
     return instante.astimezone(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def carregar(arquivo: Path) -> dict:
-    """Lê e valida o `rumo.yaml`; erros em português com o id da etapa."""
-    arquivo = Path(arquivo)
+_PADROES_ETAPA = {
+    "agente": "humano",
+    "status": "a_fazer",
+    "inicio": None,
+    "fim": None,
+}
+# (campo, valores aceitos): validados na ordem, com a mesma mensagem de erro
+_ESCOLHAS_ETAPA = (("status", STATUS_VALIDOS), ("agente", AGENTES_VALIDOS))
+_CAMPOS_NUMERICOS_ETAPA = ("estimativa_min", "estimativa_tokens")
+_CAMPOS_DATA_ETAPA = ("inicio", "fim")
+
+
+def _ler_yaml_do_rumo(arquivo: Path) -> dict:
+    """Lê o YAML e garante que a raiz é um mapa."""
     if not arquivo.exists():
         raise ValueError(f"arquivo de rumo não encontrado: {arquivo}")
     try:
@@ -55,6 +67,11 @@ def carregar(arquivo: Path) -> dict:
         raise ValueError(f"YAML inválido em {arquivo}: {erro}") from erro
     if not isinstance(rumo, dict):
         raise ValueError(f"{arquivo} deve conter um mapa com objetivo e etapas")  # noqa: TRY004
+    return rumo
+
+
+def _validar_raiz_do_rumo(rumo: dict) -> list:
+    """Valida objetivo e etapas, aplica os padrões da raiz e devolve a lista de etapas."""
     if not str(rumo.get("objetivo") or "").strip():
         raise ValueError("o rumo precisa de um 'objetivo'")
     etapas = rumo.get("etapas")
@@ -63,42 +80,61 @@ def carregar(arquivo: Path) -> dict:
     rumo["criterio_de_pronto"] = rumo.get("criterio_de_pronto") or []
     rumo.setdefault("base", None)
     rumo["historico"] = rumo.get("historico") or []
+    return etapas
+
+
+def _aplicar_padroes_da_etapa(etapa: dict, etapa_id: str) -> None:
+    """Preenche os campos opcionais da etapa e normaliza as listas."""
+    etapa["id"] = etapa_id
+    etapa.setdefault("nome", etapa_id)
+    etapa["entregaveis"] = list(etapa.get("entregaveis") or [])
+    etapa["depende_de"] = [str(d) for d in (etapa.get("depende_de") or [])]
+    for campo, padrao in _PADROES_ETAPA.items():
+        etapa.setdefault(campo, padrao)
+
+
+def _validar_numeros_da_etapa(etapa: dict) -> None:
+    for campo in _CAMPOS_NUMERICOS_ETAPA:
+        valor = etapa.get(campo, 0)
+        if isinstance(valor, bool) or not isinstance(valor, (int, float)) or valor < 0:
+            raise ValueError(f"etapa {etapa['id']}: '{campo}' deve ser número maior ou igual a 0")
+        etapa[campo] = valor
+
+
+def _validar_datas_da_etapa(etapa: dict) -> None:
+    for campo in _CAMPOS_DATA_ETAPA:
+        try:
+            _para_utc(etapa[campo])
+        except (ValueError, TypeError) as erro:
+            raise ValueError(f"etapa {etapa['id']}: '{campo}' não é uma data ISO 8601") from erro
+
+
+def _validar_etapa(etapa: object, posicao: int, ids_vistos: list[str]) -> None:
+    """Valida uma etapa na ordem: id, repetição, padrões, escolhas, números e datas."""
+    if not isinstance(etapa, dict) or not str(etapa.get("id") or "").strip():
+        raise ValueError(f"etapa {posicao} sem 'id'")
+    etapa_id = str(etapa["id"])
+    if etapa_id in ids_vistos:
+        raise ValueError(f"id de etapa repetido: {etapa_id}")
+    ids_vistos.append(etapa_id)
+    _aplicar_padroes_da_etapa(etapa, etapa_id)
+    for campo, validos in _ESCOLHAS_ETAPA:
+        if etapa[campo] not in validos:
+            raise ValueError(
+                f"etapa {etapa_id}: {campo} '{etapa[campo]}' inválido "
+                f"(use um de {', '.join(validos)})"
+            )
+    _validar_numeros_da_etapa(etapa)
+    _validar_datas_da_etapa(etapa)
+
+
+def carregar(arquivo: Path) -> dict:
+    """Lê e valida o `rumo.yaml`; erros em português com o id da etapa."""
+    rumo = _ler_yaml_do_rumo(Path(arquivo))
+    etapas = _validar_raiz_do_rumo(rumo)
     ids: list[str] = []
     for posicao, etapa in enumerate(etapas, start=1):
-        if not isinstance(etapa, dict) or not str(etapa.get("id") or "").strip():
-            raise ValueError(f"etapa {posicao} sem 'id'")
-        etapa_id = str(etapa["id"])
-        etapa["id"] = etapa_id
-        if etapa_id in ids:
-            raise ValueError(f"id de etapa repetido: {etapa_id}")
-        ids.append(etapa_id)
-        etapa.setdefault("nome", etapa_id)
-        etapa["entregaveis"] = list(etapa.get("entregaveis") or [])
-        etapa["depende_de"] = [str(d) for d in (etapa.get("depende_de") or [])]
-        etapa.setdefault("agente", "humano")
-        etapa.setdefault("status", "a_fazer")
-        etapa.setdefault("inicio", None)
-        etapa.setdefault("fim", None)
-        if etapa["status"] not in STATUS_VALIDOS:
-            raise ValueError(
-                f"etapa {etapa_id}: status '{etapa['status']}' inválido "
-                f"(use um de {', '.join(STATUS_VALIDOS)})"
-            )
-        if etapa["agente"] not in AGENTES_VALIDOS:
-            raise ValueError(
-                f"etapa {etapa_id}: agente '{etapa['agente']}' inválido "
-                f"(use um de {', '.join(AGENTES_VALIDOS)})"
-            )
-        for campo in ("estimativa_min", "estimativa_tokens"):
-            valor = etapa.get(campo, 0)
-            if isinstance(valor, bool) or not isinstance(valor, (int, float)) or valor < 0:
-                raise ValueError(f"etapa {etapa_id}: '{campo}' deve ser número maior ou igual a 0")
-            etapa[campo] = valor
-        for campo in ("inicio", "fim"):
-            try:
-                _para_utc(etapa[campo])
-            except (ValueError, TypeError) as erro:
-                raise ValueError(f"etapa {etapa_id}: '{campo}' não é uma data ISO 8601") from erro
+        _validar_etapa(etapa, posicao, ids)
     for etapa in etapas:
         for dependencia in etapa["depende_de"]:
             if dependencia not in ids:
@@ -197,6 +233,11 @@ def real_por_etapa(
     colunas_trabalho = [c for c in sessoes.COLUNAS_TOTAL if c != "tokens_cache_leitura"]
     tokens_total = chamadas[colunas_trabalho].sum(axis=1)
     modelos = chamadas["modelo"].fillna("").astype(str) if "modelo" in chamadas else None
+    descricoes = (
+        chamadas["descricao"].fillna("").astype(str).str.strip()
+        if "descricao" in chamadas
+        else None
+    )
     custo = sessoes.custo_usd(chamadas, precos) if precos and len(chamadas) else None
     linhas = []
     for etapa in rumo["etapas"]:
@@ -216,6 +257,11 @@ def real_por_etapa(
             # modelo do seu agente (ex.: "sonnet" -> claude-sonnet-*).
             if modelos is not None and etapa.get("agente") in ("haiku", "sonnet", "opus", "fable"):
                 na_janela = na_janela & modelos.str.contains(etapa["agente"], regex=False)
+            # Agente nomeado com o id da etapa ("E2: ..."): conta só as chamadas dele, para que
+            # duas etapas do mesmo modelo em paralelo não somem as chamadas uma da outra.
+            if descricoes is not None:
+                da_etapa = na_janela & descricoes.str.startswith(f"{etapa['id']}:")
+                na_janela = da_etapa if da_etapa.any() else na_janela
             linha["chamadas"] = int(na_janela.sum())
             linha["tokens_real"] = int(tokens_total[na_janela].sum())
             if custo is not None:
@@ -449,6 +495,7 @@ def markdown(
     if rumo["historico"]:
         linhas.append("")
         linhas.append(f"Mudanças de objetivo: {len(rumo['historico'])}")
+    linhas += ["", sugestoes.markdown(sugestoes.do_rumo(desv)).rstrip("\n")]
     return "\n".join(linhas) + "\n"
 
 
@@ -522,6 +569,8 @@ def html(
         etapas=_linhas_tabela(rumo, real),
         tempo=_texto_tempo(tempo),
         desvios=desv,
+        sugestoes=sugestoes.do_rumo(desv),
+        frase_sugestoes=sugestoes.FRASE_FIXA,
         proxima=prog["proxima"] or "nenhuma disponível",
         n_mudancas=len(rumo["historico"]),
         historico=rumo["historico"],

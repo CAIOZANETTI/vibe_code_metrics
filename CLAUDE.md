@@ -25,6 +25,11 @@ Este repositório é desenvolvido com o próprio método (tese T000). Antes de m
 O objetivo e as etapas da rodada ficam em `rumo.yaml`; siga a skill `vcm-rumo`
 (`.claude/skills/vcm-rumo/SKILL.md`). O resumo de `vcm rumo` vai ao humano e como comentário no PR.
 
+## Formulário de interação
+Toda resposta que relata trabalho segue o formulário padrão da skill `vcm-formulario`
+(`.claude/skills/vcm-formulario/SKILL.md`): Objetivo, O que estou fazendo, Onde estamos, Agentes,
+Precisa de você e Campo livre. Os números vêm de `vcm rumo --formulario`.
+
 ## Regras de processo
 1. **Documentação viva:** ao editar `docs/*.md`, rode `uv run vcm docs` e faça commit do
    `docs/index.html` junto. Nunca edite `docs/index.html` à mão. O CI roda `vcm docs --check`.

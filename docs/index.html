@@ -77,11 +77,12 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash 41e525f81d24</div>
+  <div class="sub">fonte: docs/*.md · hash aafaf2350b1a</div>
   
   <h4>Guia rápido: usar o vcm num protótipo</h4>
   <a href="#doc-guia">Início</a>
   <a class="n2" href="#doc-guia-como-usar-este-repositorio">Como usar este repositório</a>
+  <a class="n3" href="#doc-guia-formulario-de-interacao">Formulário de interação</a>
   <a class="n2" href="#doc-guia-1-instalar">1. Instalar</a>
   <a class="n2" href="#doc-guia-2-preparar-o-prototipo">2. Preparar o protótipo</a>
   <a class="n2" href="#doc-guia-3-o-conjunto-de-referencia">3. O conjunto de referência</a>
@@ -186,6 +187,7 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n3" href="#doc-skills-obra-em-camadas">Obra em camadas</a>
   <a class="n3" href="#doc-skills-obras-lineares">Obras lineares</a>
   <a class="n3" href="#doc-skills-projeto-em-camadas">Projeto em camadas</a>
+  <a class="n3" href="#doc-skills-formulario-padrao-de-interacao">Formulário padrão de interação</a>
   <a class="n3" href="#doc-skills-rumo-do-desenvolvimento">Rumo do desenvolvimento</a>
   <a class="n2" href="#doc-skills-da-plataforma-disponiveis-nas-sessoes-do-claude">Da plataforma (disponíveis nas sessões do Claude)</a>
   <a class="n3" href="#doc-skills-revisao-de-codigo">Revisão de código</a>
@@ -235,6 +237,7 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n2" href="#doc-plano-repertorio-de-skills-02-11-2026">Repertório de skills (02/11/2026)</a>
   <a class="n2" href="#doc-plano-desempenho-do-metodo-02-11-2026">Desempenho do método (02/11/2026)</a>
   <a class="n2" href="#doc-plano-rumo-do-desenvolvimento-02-11-2026">Rumo do desenvolvimento (02/11/2026)</a>
+  <a class="n2" href="#doc-plano-correcoes-sugeridas-e-formulario-de-interacao-02-11-2026">Correções sugeridas e formulário de interação (02/11/2026)</a>
   <a class="n2" href="#doc-plano-fase-8-primeiro-programa-experimental">Fase 8 — Primeiro programa experimental</a>
   <a class="n2" href="#doc-plano-regras-de-execucao-deste-plano">Regras de execução deste plano</a>
   <a class="n2" href="#doc-plano-decisoes-em-aberto-para-o-humano">Decisões em aberto (para o humano)</a>
@@ -307,8 +310,57 @@ chama os executores (Sonnet, Haiku).</li>
 <li><code>REVERTER</code> desfaz; <code>MANTER</code> segue; troca de métricas, você decide e registra.</li>
 <li>A cada rodada, <code>vcm rumo</code> diz onde estamos: progresso, etapa, estimado × real, horas de IA e
 desvios. O mesmo resumo vai como comentário no PR.</li>
+<li>Toda resposta do agente segue o <strong>formulário de interação</strong> (abaixo), com os mesmos campos.</li>
 <li>De tempos em tempos, <code>vcm efeito</code> mostra se o projeto está melhor do que antes da adoção.</li>
 </ol>
+<h3 id="doc-guia-formulario-de-interacao">Formulário de interação</h3>
+<p>Para você saber de relance onde está cada desenvolvimento, todo agente responde no mesmo formato
+(skill <code>vcm-formulario</code>, instalada pelo <code>vcm iniciar</code> e citada no <code>CLAUDE.md</code>). O Python preenche os
+números com <code>vcm rumo --formulario</code>, e o agente completa os campos de texto:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Quem preenche</th>
+<th>Conteúdo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Objetivo</strong></td>
+<td><code>rumo.yaml</code></td>
+<td>o objetivo da rodada</td>
+</tr>
+<tr>
+<td><strong>O que estou fazendo</strong></td>
+<td>agente</td>
+<td>uma ou duas frases sobre a ação desta resposta</td>
+</tr>
+<tr>
+<td><strong>Onde estamos</strong></td>
+<td><code>vcm</code></td>
+<td>barra de progresso, etapas em andamento, próxima, dias, horas de IA e gasto</td>
+</tr>
+<tr>
+<td><strong>Agentes</strong></td>
+<td><code>vcm</code> + agente</td>
+<td>quem trabalha em qual etapa (gerente, Sonnet, Haiku)</td>
+</tr>
+<tr>
+<td><strong>Precisa de você</strong></td>
+<td><code>vcm</code> + agente</td>
+<td>desvios e decisões que só você pode tomar; &quot;nada&quot; quando não há</td>
+</tr>
+<tr>
+<td><strong>Campo livre</strong></td>
+<td>agente</td>
+<td>o resto da resposta: resultado, explicação, pergunta</td>
+</tr>
+</tbody>
+</table>
+<p>Num projeto que já usava o <code>vcm</code>, rode <code>vcm iniciar . --pacote &lt;nome&gt;</code> de novo para receber a skill
+nova; ele não sobrescreve o que já existe. Depois, acrescente ao <code>CLAUDE.md</code> a seção
+&quot;Formulário de interação&quot; do modelo.</p>
 <p>Para atualizar o instrumento: <code>uv tool install --force git+https://github.com/CAIOZANETTI/vibe_code_metrics</code>.</p>
 <h2 id="doc-guia-1-instalar">1. Instalar</h2>
 <p>O <code>vcm</code> é instalado como ferramenta do <code>uv</code>, direto do GitHub:</p>
@@ -860,6 +912,8 @@ relido a cada resposta) fica de fora: ela chegou a 19 milhões de tokens em 14 m
 e já entra no custo.</li>
 <li><strong>Etapas simultâneas</strong> não dividem as mesmas chamadas: cada etapa conta só as do modelo do seu
 agente.</li>
+<li><strong>Etapas do mesmo modelo em paralelo</strong> se separam pela descrição do agente: a que começa com o
+id da etapa (<code>E2: …</code>) fica só com as chamadas dele.</li>
 <li><strong>Horas de relógio da IA</strong> juntam os agentes em paralelo (sobreposição conta uma vez); <strong>horas de
 agente</strong> somam cada um. Intervalos sem chamada por mais de 5 minutos são pausa.</li>
 </ul>
@@ -2721,6 +2775,12 @@ Página gerada a partir de <code>repertorio/skills/</code> por <code>vcm docs</c
 <td>em uso</td>
 </tr>
 <tr>
+<td><code>vcm-formulario</code></td>
+<td>Toda resposta do agente ao humano segue o mesmo formulário (objetivo, o que estou fazendo, onde estamos, agentes, precisa de você, campo livre), com os números preenchidos por vcm rumo --formulario.</td>
+<td>qualquer</td>
+<td>em teste</td>
+</tr>
+<tr>
 <td><code>vcm-rumo</code></td>
 <td>Manter objetivo, etapas da WBS, estimado × real e desvios em rumo.yaml e informar o humano a cada rodada, com comentário no PR.</td>
 <td>qualquer</td>
@@ -2914,6 +2974,26 @@ Página gerada a partir de <code>repertorio/skills/</code> por <code>vcm docs</c
 <li>PDF chapado: renderizar, separar por cor e gravar webp sem perdas</li>
 <li>conferir no Chromium: sem erros de console e folha alinhada à foto em zoom alto</li>
 <li>para publicar como Artifact, usar a versão CDN sem documento</li>
+</ul>
+<h3 id="doc-skills-formulario-padrao-de-interacao">Formulário padrão de interação</h3>
+<p><code>vcm-formulario</code> · vibe_code_metrics/.claude/skills/vcm-formulario (instalada em cada projeto pelo vcm iniciar)</p>
+<p><em>Ferramentas: Jinja2.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>toda resposta que relata trabalho</li>
+<li>início e fim de etapa</li>
+<li>ao chamar executores</li>
+<li>humano pergunta onde estamos</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>resposta curta sem trabalho feito: só cabeçalho, objetivo e campo livre</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>números vêm do vcm, nunca de cabeça</li>
+<li>campos fixos não mudam de nome nem de ordem</li>
+<li>desvios e decisões pendentes sempre em Precisa de você</li>
 </ul>
 <h3 id="doc-skills-rumo-do-desenvolvimento">Rumo do desenvolvimento</h3>
 <p><code>vcm-rumo</code> · vibe_code_metrics/.claude/skills/vcm-rumo (instalada em cada projeto pelo vcm iniciar)</p>
@@ -3892,8 +3972,16 @@ registrado e pelo menos uma decisão humana pedida e registrada.</p>
 <li class="tarefa"><input type="checkbox" disabled checked> Tempo: início, fim, dias corridos, horas de relógio da IA, horas de agente e paralelismo (Opus, pedido do mantenedor no meio da rodada)</li>
 <li class="tarefa"><input type="checkbox" disabled checked> Skill <code>vcm-rumo</code>, instalada pelo <code>vcm iniciar</code>, e regra no <code>CLAUDE.md</code></li>
 <li class="tarefa"><input type="checkbox" disabled checked> Primeira rodada real: o rumo acusou &quot;fora do plano&quot; (o pedido de tempo) e um falso &quot;estouro&quot; de 127× (leitura de cache e etapas simultâneas); ambos tratados</li>
-<li class="tarefa"><input type="checkbox" disabled> Calibrar as estimativas com a razão real/estimado acumulada por tipo de etapa e por agente</li>
-<li class="tarefa"><input type="checkbox" disabled> <strong>Próxima rodada, primeira etapa:</strong> refatorar <code>rumo.carregar</code> (D, 29) e <code>config.carregar_config</code> (D, 23) em tabela de regras; meta: complexidade média ≤ 4,0 e nenhuma função D (compromisso da decisão 6f5586c)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Calibrar as estimativas com a razão real/estimado (rodada autônoma de 02/11: Sonnet com testes 0,9× em tokens e cerca de 0,2× em tempo; referência gravada na skill <code>vcm-rumo</code>)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Refatorar <code>rumo.carregar</code> (D, 29 → A, 5) e <code>config.carregar_config</code> (D, 23 → A, 3) em tabela de regras; nenhuma função D. A média ficou em 4,10, acima da meta de 4,0: as funções C que restam estão listadas nas correções sugeridas do cartão</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Etapas do mesmo modelo em paralelo separadas pela descrição do agente (<code>E2: …</code>); antes contavam as chamadas uma da outra (falso estouro de 2,0×)</li>
+</ul>
+<h2 id="doc-plano-correcoes-sugeridas-e-formulario-de-interacao-02-11-2026">Correções sugeridas e formulário de interação (02/11/2026)</h2>
+<ul>
+<li class="tarefa"><input type="checkbox" disabled checked> <code>vcm.sugestoes</code>: o cartão e o rumo trazem &quot;Correções sugeridas&quot; (o quê, por quê, agente), geradas das medições; o vcm <strong>sugere e não aplica</strong>, porque aplicar exige aprovação humana (Sonnet)</li>
+<li class="tarefa"><input type="checkbox" disabled checked> Formulário padrão de interação: skill <code>vcm-formulario</code>, <code>vcm rumo --formulario</code> e regra no <code>CLAUDE.md</code>, instalados em todo projeto pelo <code>vcm iniciar</code> (pedido do mantenedor no meio da rodada, registrado no <code>historico</code>)</li>
+<li class="tarefa"><input type="checkbox" disabled> Levar a skill <code>vcm-formulario</code> ao <code>projetos_em_camadas</code> (precisa de aprovação: muda o <code>CLAUDE.md</code> do projeto)</li>
+<li class="tarefa"><input type="checkbox" disabled> Baixar a complexidade média para ≤ 4,0 a partir das funções C listadas no cartão</li>
 </ul>
 <h2 id="doc-plano-fase-8-primeiro-programa-experimental">Fase 8 — Primeiro programa experimental</h2>
 <p>Teses T001 (extração de pranchas), T002 (armazenamento espacial), T003 (roteamento) e T004
@@ -4090,7 +4178,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte 41e525f81d24). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte aafaf2350b1a). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";

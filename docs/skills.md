@@ -60,6 +60,7 @@ Fonte: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-pr
 | `obra-em-camadas` | Orquestrar uma obra inteira do Drive ao HTML em camadas: fotos, 3D, pranchas vetoriais por layer CAD, etapas, escopo de materiais e sondagens. | — | em uso |
 | `obras-lineares` | Calcular a vala de cada trecho de tubo pelo MOS Sanepar (largura, escoramento, escavação, reaterro, bota-fora, supressão e pavimento), com solo e NA da sondagem mais próxima. | — | em uso |
 | `projeto-em-camadas` | Gerar o visualizador HTML único que sobrepõe mosaico de drone, satélite e pranchas de projeto (civil, hidromecânica, elétrica) em camadas, com medições em UTM e anotações. | — | em uso |
+| `vcm-formulario` | Toda resposta do agente ao humano segue o mesmo formulário (objetivo, o que estou fazendo, onde estamos, agentes, precisa de você, campo livre), com os números preenchidos por vcm rumo --formulario. | qualquer | em teste |
 | `vcm-rumo` | Manter objetivo, etapas da WBS, estimado × real e desvios em rumo.yaml e informar o humano a cada rodada, com comentário no PR. | qualquer | em teste |
 
 ### Ingestão do Google Drive
@@ -271,6 +272,29 @@ _Ferramentas: ezdxf._
 - PDF chapado: renderizar, separar por cor e gravar webp sem perdas
 - conferir no Chromium: sem erros de console e folha alinhada à foto em zoom alto
 - para publicar como Artifact, usar a versão CDN sem documento
+
+### Formulário padrão de interação
+
+`vcm-formulario` · vibe_code_metrics/.claude/skills/vcm-formulario (instalada em cada projeto pelo vcm iniciar)
+
+_Ferramentas: Jinja2._
+
+**Quando usar**
+
+- toda resposta que relata trabalho
+- início e fim de etapa
+- ao chamar executores
+- humano pergunta onde estamos
+
+**Quando evitar**
+
+- resposta curta sem trabalho feito: só cabeçalho, objetivo e campo livre
+
+**Cuidados**
+
+- números vêm do vcm, nunca de cabeça
+- campos fixos não mudam de nome nem de ordem
+- desvios e decisões pendentes sempre em Precisa de você
 
 ### Rumo do desenvolvimento
 

@@ -13,6 +13,7 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 
 from vcm import formatacao as fmt
 from vcm import semaforo as sem
+from vcm import sugestoes as sug
 from vcm.balanco import Decisao
 
 PERGUNTAS = {
@@ -104,7 +105,7 @@ def _semaforo(
     return {"metricas": metricas, "dimensoes": dimensoes}, radar_html
 
 
-def contexto(resultado: dict, limites: dict | None = None) -> dict:
+def contexto(resultado: dict, limites: dict | None = None, raiz: Path | None = None) -> dict:
     tabela = resultado["tabela"]
     respostas = resultado["respostas"]
     perdas = _perdas(tabela)
@@ -130,6 +131,8 @@ def contexto(resultado: dict, limites: dict | None = None) -> dict:
         "gasto": _gasto(resultado.get("custo_iteracao")),
         "semaforo": semaforo,
         "radar_html": radar_html,
+        "sugestoes": sug.do_balanco(resultado, raiz=raiz, limites=limites),
+        "frase_sugestoes": sug.FRASE_FIXA,
     }
 
 
@@ -161,8 +164,8 @@ def _gasto(custo: pd.DataFrame | None) -> dict | None:
     }
 
 
-def markdown(resultado: dict, limites: dict | None = None) -> str:
-    c = contexto(resultado, limites)
+def markdown(resultado: dict, limites: dict | None = None, raiz: Path | None = None) -> str:
+    c = contexto(resultado, limites, raiz)
     partes = [
         f"## Retrospectiva da iteração `{c['base']}` → `{c['alvo']}`",
         "",
@@ -176,6 +179,7 @@ def markdown(resultado: dict, limites: dict | None = None) -> str:
         *[f"| {p['pergunta']} | {p['resposta']} |" for p in c["perguntas"]],
         "| Vale continuar nessa linha? | decisão humana, ver histórico |",
         "",
+        sug.markdown(c["sugestoes"]),
         "### Semáforo de estado (depois)",
         "",
         "| Dimensão | Cor | Índice da iteração (antes = 1,0) |",
@@ -221,14 +225,16 @@ def markdown(resultado: dict, limites: dict | None = None) -> str:
     return "\n".join(partes)
 
 
-def html(resultado: dict, limites: dict | None = None) -> str:
+def html(resultado: dict, limites: dict | None = None, raiz: Path | None = None) -> str:
     env = Environment(
         loader=PackageLoader("vcm", "templates"), autoescape=select_autoescape(["html"])
     )
-    return env.get_template("cartao.html.j2").render(**contexto(resultado, limites))
+    return env.get_template("cartao.html.j2").render(**contexto(resultado, limites, raiz))
 
 
-def gravar(resultado: dict, pasta: Path, limites: dict | None = None) -> dict[str, Path]:
+def gravar(
+    resultado: dict, pasta: Path, limites: dict | None = None, raiz: Path | None = None
+) -> dict[str, Path]:
     """Grava tabela (Parquet), cartão Markdown e cartão HTML da iteração."""
     pasta.mkdir(parents=True, exist_ok=True)
     nome = f"{str(resultado['base'])[:7]}_{str(resultado['alvo'])[:7]}"
@@ -239,6 +245,6 @@ def gravar(resultado: dict, pasta: Path, limites: dict | None = None) -> dict[st
     }
     tabela = resultado["tabela"].assign(decisao=resultado["decisao"].value)
     tabela.to_parquet(caminhos["parquet"])
-    caminhos["md"].write_text(markdown(resultado, limites), encoding="utf-8")
-    caminhos["html"].write_text(html(resultado, limites), encoding="utf-8")
+    caminhos["md"].write_text(markdown(resultado, limites, raiz), encoding="utf-8")
+    caminhos["html"].write_text(html(resultado, limites, raiz), encoding="utf-8")
     return caminhos

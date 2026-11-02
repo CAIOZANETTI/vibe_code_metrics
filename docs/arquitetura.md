@@ -215,6 +215,8 @@ Duas regras de contagem, aprendidas na primeira rodada real:
   e já entra no custo.
 - **Etapas simultâneas** não dividem as mesmas chamadas: cada etapa conta só as do modelo do seu
   agente.
+- **Etapas do mesmo modelo em paralelo** se separam pela descrição do agente: a que começa com o
+  id da etapa (`E2: …`) fica só com as chamadas dele.
 - **Horas de relógio da IA** juntam os agentes em paralelo (sobreposição conta uma vez); **horas de
   agente** somam cada um. Intervalos sem chamada por mais de 5 minutos são pausa.
 

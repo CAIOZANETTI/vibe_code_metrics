@@ -60,8 +60,9 @@ def _cmd_balanco(args: argparse.Namespace) -> int:
     resultado = snap.retrospectiva(antes, depois, ruido_medido=ruido.carregar())
     if not args.sem_sessoes:
         resultado["custo_iteracao"] = _custo_iteracao(repo, antes, depois)
-    caminhos = cartao.gravar(resultado, snap.PASTA_ITERACOES, limites=config.limites)
-    print(cartao.markdown(resultado, limites=config.limites))
+    raiz = repo.resolve()  # árvore de trabalho: alvos das correções sugeridas
+    caminhos = cartao.gravar(resultado, snap.PASTA_ITERACOES, limites=config.limites, raiz=raiz)
+    print(cartao.markdown(resultado, limites=config.limites, raiz=raiz))
     print(f"Cartão HTML: {caminhos['html']}")
     if args.falhar_se_reverter and resultado["decisao"].value == "REVERTER":
         return 2
@@ -287,6 +288,11 @@ def _cmd_rumo(args: argparse.Namespace) -> int:
     prog = mod.progresso(rumo)
     desv = mod.desvios(rumo, repo, real)
     tempo = mod.tempo_do_rumo(rumo, chamadas, repo)
+    if args.formulario:
+        from vcm import formulario
+
+        print(formulario.preencher(rumo, prog, real, desv, tempo, projeto=repo.name), end="")
+        return 0
     texto = mod.markdown(rumo, prog, real, desv, tempo)
     for destino, conteudo in (
         (Path(args.saida), mod.html(rumo, prog, real, desv, tempo)),
@@ -361,6 +367,11 @@ def main(argv: list[str] | None = None) -> int:
     ru.add_argument("--etapa", default=None, help="id da etapa a marcar (com --status)")
     ru.add_argument("--status", default=None, help="novo status da etapa")
     ru.add_argument("--sem-sessoes", action="store_true", help="não lê os logs locais de sessão")
+    ru.add_argument(
+        "--formulario",
+        action="store_true",
+        help="imprime o formulário padrão de interação (sem gravar arquivos)",
+    )
     ru.add_argument("--saida", default="results/rumo.html")
     ru.add_argument("--markdown", default="results/rumo.md")
     ru.set_defaults(func=_cmd_rumo)
