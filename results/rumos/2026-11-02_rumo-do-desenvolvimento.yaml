@@ -1,0 +1,93 @@
+objetivo: 'Rumo do desenvolvimento: WBS com estimado × real e desvios, informada ao
+  humano e no PR a cada rodada'
+criterio_de_pronto:
+- vcm rumo gera o resumo em Markdown (PR) e HTML a partir de rumo.yaml, logs e git
+- skill vcm-rumo instalada pelo vcm iniciar e seguida pelo gerente nesta rodada
+- comentário de rumo publicado no PR desta rodada
+- testes, lint e vcm docs --check verdes; merge na main
+base: 6f5586c
+etapas:
+- id: E1
+  nome: 'vcm rumo: rumo.yaml, progresso, real por etapa, desvios, Markdown e HTML'
+  entregaveis:
+  - src/vcm/rumo.py
+  - src/vcm/templates/rumo.html.j2
+  - src/vcm/cli.py
+  - tests/test_rumo.py
+  depende_de: []
+  agente: sonnet
+  estimativa_min: 25
+  estimativa_tokens: 150000
+  status: feito
+  inicio: '2026-11-02T13:38:00Z'
+  fim: '2026-11-02T13:51:40Z'
+- id: E2
+  nome: Skill vcm-rumo, instalação pelo vcm iniciar e regras no CLAUDE.md
+  entregaveis:
+  - src/vcm/modelos_projeto/skills/vcm-rumo/SKILL.md
+  - .claude/skills/vcm-rumo/SKILL.md
+  - src/vcm/iniciar.py
+  - src/vcm/modelos_projeto/CLAUDE.md.j2
+  - CLAUDE.md
+  - tests/test_iniciar.py
+  - repertorio/skills/vcm-rumo.yaml
+  - rumo.yaml
+  depende_de: []
+  agente: opus
+  estimativa_min: 15
+  estimativa_tokens: 400000
+  status: feito
+  inicio: '2026-11-02T13:38:00Z'
+  fim: '2026-11-02T13:51:41Z'
+- id: E5
+  nome: Tempo ativo da IA (dias corridos, horas de relógio e de agente) e correção
+    da atribuição de tokens
+  entregaveis:
+  - src/vcm/coletores/sessoes.py
+  - tests/test_sessoes.py
+  - src/vcm/rumo.py
+  - src/vcm/templates/rumo.html.j2
+  - tests/test_rumo.py
+  - src/vcm/cli.py
+  depende_de:
+  - E1
+  agente: opus
+  estimativa_min: 20
+  estimativa_tokens: 300000
+  status: feito
+  inicio: '2026-11-02T13:46:00Z'
+  fim: '2026-11-02T13:53:09Z'
+- id: E3
+  nome: 'Documentação: arquitetura, guia, plano e página publicada'
+  entregaveis:
+  - docs/*.md
+  - docs/index.html
+  depende_de:
+  - E1
+  - E2
+  - E5
+  agente: opus
+  estimativa_min: 15
+  estimativa_tokens: 400000
+  status: feito
+  inicio: '2026-11-02T13:51:41Z'
+  fim: '2026-11-02T13:53:56Z'
+- id: E4
+  nome: 'Integração: balanço, rumo no PR, merge e republicação'
+  entregaveis:
+  - results/iteracoes/*
+  - results/agentes/execucoes.csv
+  depende_de:
+  - E3
+  agente: opus
+  estimativa_min: 10
+  estimativa_tokens: 300000
+  status: feito
+  inicio: '2026-11-02T13:53:57Z'
+  fim: '2026-11-02T13:55:22Z'
+historico:
+- data: '2026-11-02'
+  mudanca: 'nova etapa E5: rastreio de tempo (início, fim, dias corridos, horas produtivas
+    da IA)'
+  motivo: pedido do mantenedor no meio da rodada; detectado pelo próprio vcm rumo
+    como 'fora do plano'
