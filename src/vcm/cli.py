@@ -262,7 +262,14 @@ def _cmd_rumo(args: argparse.Namespace) -> int:
             if not (args.etapa and args.status):
                 print("erro: use --etapa e --status juntos", file=sys.stderr)
                 return 1
-            mod.marcar(arquivo, args.etapa, args.status)
+            mod.marcar(
+                arquivo,
+                args.etapa,
+                args.status,
+                forcar=args.forcar,
+                motivo=args.motivo,
+                raiz_repo=repo,
+            )
             print(f"etapa {args.etapa} -> {args.status}")
             return 0
         rumo = mod.carregar(arquivo)
@@ -366,6 +373,12 @@ def main(argv: list[str] | None = None) -> int:
     ru.add_argument("--novo", metavar="OBJETIVO", default=None, help="cria o rumo.yaml inicial")
     ru.add_argument("--etapa", default=None, help="id da etapa a marcar (com --status)")
     ru.add_argument("--status", default=None, help="novo status da etapa")
+    ru.add_argument(
+        "--forcar",
+        action="store_true",
+        help="marca 'feito' mesmo com pendências (exige --motivo; vira desvio)",
+    )
+    ru.add_argument("--motivo", default=None, help="justificativa de --forcar")
     ru.add_argument("--sem-sessoes", action="store_true", help="não lê os logs locais de sessão")
     ru.add_argument(
         "--formulario",

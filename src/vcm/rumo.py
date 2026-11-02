@@ -20,6 +20,7 @@ from jinja2 import Environment, PackageLoader
 
 from vcm import formatacao as fmt
 from vcm import sugestoes
+from vcm.balanco import Decisao
 from vcm.coletores import sessoes
 from vcm.snapshot import _git
 
@@ -50,6 +51,7 @@ _PADROES_ETAPA = {
     "status": "a_fazer",
     "inicio": None,
     "fim": None,
+    "forcado": None,
 }
 # (campo, valores aceitos): validados na ordem, com a mesma mensagem de erro
 _ESCOLHAS_ETAPA = (("status", STATUS_VALIDOS), ("agente", AGENTES_VALIDOS))
@@ -167,15 +169,66 @@ def modelo(objetivo: str) -> str:
     return yaml.safe_dump(rumo, sort_keys=False, allow_unicode=True)
 
 
-def marcar(arquivo: Path, etapa_id: str, status: str, agora: datetime | None = None) -> dict:
-    """Muda o status de uma etapa, preenche `inicio`/`fim` (UTC) e regrava o YAML."""
-    if status not in STATUS_VALIDOS:
-        raise ValueError(f"status '{status}' inválido (use um de {', '.join(STATUS_VALIDOS)})")
-    rumo = carregar(arquivo)
-    etapa = next((e for e in rumo["etapas"] if e["id"] == etapa_id), None)
-    if etapa is None:
-        raise ValueError(f"etapa '{etapa_id}' não existe no rumo")
-    agora = agora or datetime.now(UTC)
+def _ultimo_balanco(raiz_repo: Path) -> Path | None:
+    """Cartão (Parquet) mais recente em `results/iteracoes`, pela data de modificação."""
+    cartoes = sorted(
+        (Path(raiz_repo) / "results" / "iteracoes").glob("*.parquet"),
+        key=lambda c: (c.stat().st_mtime, c.name),
+    )
+    return cartoes[-1] if cartoes else None
+
+
+def _pendencias_do_balanco(cartao: Path) -> list[str]:
+    """Pendências de um cartão: testes falhando e decisão REVERTER."""
+    tabela = pd.read_parquet(cartao)
+    pendencias: list[str] = []
+    if "testes_falhando" in tabela.index:
+        falhando = pd.to_numeric(tabela.loc["testes_falhando", "depois"], errors="coerce")
+        if pd.notna(falhando) and falhando > 0:
+            pendencias.append(
+                f"último balanço com {int(falhando)} teste(s) falhando ({cartao.name})"
+            )
+    if "decisao" in tabela.columns and (tabela["decisao"] == Decisao.REVERTER.value).any():
+        pendencias.append(f"último balanço com decisão REVERTER ({cartao.name})")
+    return pendencias
+
+
+def provas_de_feito(etapa: dict, raiz_repo: Path) -> list[str]:
+    """Pendências que impedem marcar a etapa como feita; lista vazia quando pode."""
+    raiz_repo = Path(raiz_repo)
+    pendencias = [
+        f"entregável ausente: {p}"
+        for p in etapa["entregaveis"]
+        if not _entregavel_existe(raiz_repo, p)
+    ]
+    cartao = _ultimo_balanco(raiz_repo)
+    if cartao is None:
+        return pendencias
+    inicio = _para_utc(etapa.get("inicio"))
+    feito_em = pd.Timestamp(cartao.stat().st_mtime, unit="s", tz="UTC")
+    if inicio is None or feito_em >= inicio:
+        pendencias += _pendencias_do_balanco(cartao)
+    return pendencias
+
+
+def _exigir_prova(etapa: dict, raiz_repo: Path, forcar: bool, motivo: str | None) -> None:
+    """Bloqueia o `feito` sem prova; com `forcar`, exige o motivo e o registra na etapa."""
+    pendencias = provas_de_feito(etapa, raiz_repo)
+    if not pendencias:
+        return
+    if not forcar:
+        raise ValueError(
+            f"etapa {etapa['id']} não pode ficar 'feito': "
+            + "; ".join(pendencias)
+            + ' (para forçar: --forcar --motivo "...")'
+        )
+    if not (motivo or "").strip():
+        raise ValueError("para forçar o 'feito' sem prova, informe o motivo")
+    etapa["forcado"] = motivo.strip()
+
+
+def _registrar_datas(etapa: dict, status: str, agora: datetime) -> None:
+    """Preenche `inicio`/`fim` da etapa conforme o novo status."""
     if status == "fazendo":
         if not etapa["inicio"]:
             etapa["inicio"] = _iso(agora)
@@ -184,6 +237,31 @@ def marcar(arquivo: Path, etapa_id: str, status: str, agora: datetime | None = N
         if not etapa["inicio"] and status == "feito":
             etapa["inicio"] = _iso(agora)
         etapa["fim"] = _iso(agora)
+
+
+def marcar(
+    arquivo: Path,
+    etapa_id: str,
+    status: str,
+    agora: datetime | None = None,
+    forcar: bool = False,
+    motivo: str | None = None,
+    raiz_repo: Path | None = None,
+) -> dict:
+    """Muda o status de uma etapa, preenche `inicio`/`fim` (UTC) e regrava o YAML.
+
+    Para `feito`, exige prova (`provas_de_feito`); `forcar` com `motivo` passa por cima e
+    registra o motivo em `forcado`.
+    """
+    if status not in STATUS_VALIDOS:
+        raise ValueError(f"status '{status}' inválido (use um de {', '.join(STATUS_VALIDOS)})")
+    rumo = carregar(arquivo)
+    etapa = next((e for e in rumo["etapas"] if e["id"] == etapa_id), None)
+    if etapa is None:
+        raise ValueError(f"etapa '{etapa_id}' não existe no rumo")
+    if status == "feito":
+        _exigir_prova(etapa, raiz_repo or Path(arquivo).parent, forcar, motivo)
+    _registrar_datas(etapa, status, agora or datetime.now(UTC))
     etapa["status"] = status
     Path(arquivo).write_text(
         yaml.safe_dump(rumo, sort_keys=False, allow_unicode=True), encoding="utf-8"
@@ -398,6 +476,14 @@ def desvios(rumo: dict, raiz_repo: Path, real: pd.DataFrame) -> list[dict]:
                         "detalhe": f"{rotulo} real é {fmt.numero(float(razao), 1)}× o estimado",
                     }
                 )
+        if etapa.get("forcado"):
+            achados.append(
+                {
+                    "tipo": "feito sem prova",
+                    "etapa": etapa["id"],
+                    "detalhe": f"marcada como feita à força: {etapa['forcado']}",
+                }
+            )
         if etapa["status"] == "fazendo":
             razao = r["razao_tempo"]
             if pd.notna(razao) and razao > LIMITE_PARADA:
