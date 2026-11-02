@@ -154,8 +154,26 @@ def _cmd_sessoes(args: argparse.Namespace) -> int:
         print(f"Linhas inválidas ignoradas: {invalidas}")
     if com_custo:
         print("Aviso: custo equivalente de API; em plano de assinatura não é o gasto real.")
+    _imprimir_adesao(sessoes.adesao_formulario(Path(args.pasta), args.projeto), saida)
     print(f"Gravado em {saida}")
     return 0
+
+
+def _imprimir_adesao(turnos, saida: Path) -> None:
+    """Adesão ao formulário de interação nos turnos que mexeram em arquivos."""
+    from vcm import formatacao
+    from vcm.coletores import sessoes
+
+    turnos.to_parquet(saida / "adesao_formulario.parquet", index=False)
+    r = sessoes.resumo_adesao(turnos)
+    if not r["turnos_com_trabalho"]:
+        return
+    print(
+        f"\nFormulário de interação: {formatacao.numero(100 * r['frac_com_formulario'], 0)}% "
+        f"de {r['turnos_com_trabalho']} turnos com trabalho · tokens de saída da resposta: "
+        f"{formatacao.numero(r['tokens_saida_com_formulario'], 0)} com formulário, "
+        f"{formatacao.numero(r['tokens_saida_sem_formulario'], 0)} sem"
+    )
 
 
 def _cmd_iniciar(args: argparse.Namespace) -> int:

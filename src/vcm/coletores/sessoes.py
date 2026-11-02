@@ -352,3 +352,49 @@ def tempo_ativo(chamadas: pd.DataFrame, ociosidade_max_min: float = OCIOSIDADE_M
         "horas_agente": horas_agente,
         "paralelismo": horas_agente / horas_relogio if horas_relogio else float("nan"),
     }
+
+
+def adesao_formulario(
+    pasta: Path = PASTA_PADRAO, filtro_projeto: str | None = None
+) -> pd.DataFrame:
+    """Um registro por turno das sessões principais: mexeu em arquivos, formulário completo e
+    tamanho da resposta final. Mede a adesão ao formulário de interação (sem julgar conteúdo)."""
+    from vcm import gancho
+
+    pasta = Path(pasta)
+    projetos = sorted(p for p in pasta.iterdir() if p.is_dir()) if pasta.is_dir() else []
+    registros = [
+        {"projeto": p.name, "sessao_id": arquivo.stem, **turno}
+        for p in projetos
+        if not filtro_projeto or filtro_projeto in p.name
+        for arquivo in sorted(p.glob("*.jsonl"))
+        for turno in gancho.adesao(arquivo)
+    ]
+    colunas = [
+        "projeto",
+        "sessao_id",
+        "mexeu_em_arquivos",
+        "com_formulario",
+        "caracteres_resposta",
+        "tokens_saida_resposta",
+    ]
+    return pd.DataFrame(registros, columns=colunas)
+
+
+def resumo_adesao(turnos: pd.DataFrame) -> dict:
+    """Adesão nos turnos que mexeram em arquivos e tokens de saída médios com e sem formulário.
+
+    A diferença de tokens é uma associação, não um efeito causal: respostas com formulário tendem
+    a ser as de turnos maiores."""
+    trabalho = turnos[turnos["mexeu_em_arquivos"].astype(bool)]
+    com = trabalho["com_formulario"].astype(bool)
+    tokens = trabalho["tokens_saida_resposta"].astype("float64")
+    return {
+        "turnos": len(turnos),
+        "turnos_com_trabalho": len(trabalho),
+        "frac_com_formulario": float(com.mean()) if len(trabalho) else float("nan"),
+        "tokens_saida_com_formulario": float(tokens[com].mean()) if com.any() else float("nan"),
+        "tokens_saida_sem_formulario": (
+            float(tokens[~com].mean()) if (~com).any() else float("nan")
+        ),
+    }

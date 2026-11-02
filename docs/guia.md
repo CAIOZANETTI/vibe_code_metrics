@@ -43,6 +43,17 @@ números com `vcm rumo --formulario`, e o agente completa os campos de texto:
 | **Precisa de você** | `vcm` + agente | desvios e decisões que só você pode tomar; "nada" quando não há |
 | **Campo livre** | agente | o resto da resposta: resultado, explicação, pergunta |
 
+Duas proteções acompanham o formulário:
+
+- **Gancho que confere:** o `vcm iniciar` instala em `.claude/settings.json` um gancho `Stop`
+  (`vcm formulario --verificar`). Se a resposta mexeu em arquivos e faltam campos, o agente
+  recebe a resposta de volta para completar. Pergunta curta, sem edição, passa livre.
+- **"Feito" só com prova:** `vcm rumo --etapa E2 --status feito` recusa se faltar entregável ou se
+  o último balanço tiver teste falhando ou `REVERTER`. Forçar exige motivo e vira desvio.
+
+`vcm sessoes` mostra a adesão: a fração de respostas com trabalho que vieram no formulário e os
+tokens de saída com e sem ele.
+
 Num projeto que já usava o `vcm`, rode `vcm iniciar . --pacote <nome>` de novo para receber a skill
 nova; ele não sobrescreve o que já existe. Depois, acrescente ao `CLAUDE.md` a seção
 "Formulário de interação" do modelo.

@@ -106,3 +106,51 @@ def avaliar_parada(entrada: dict) -> dict | None:
     if not faltando:
         return None
     return {"decision": "block", "reason": _mensagem_de_bloqueio(faltando)}
+
+
+# --- Adesão ao formulário (medição, não bloqueio) ---
+
+
+def _turnos(mensagens: list[dict]) -> list[list[dict]]:
+    """Divide o transcript em turnos: cada um vai de uma mensagem humana até a próxima."""
+    turnos: list[list[dict]] = []
+    atual: list[dict] | None = None
+    for mensagem in mensagens:
+        if _e_humana(mensagem):
+            if atual:
+                turnos.append(atual)
+            atual = []
+        elif atual is not None:
+            atual.append(mensagem)
+    if atual:
+        turnos.append(atual)
+    return turnos
+
+
+def _tokens_saida_final(turno: list[dict]) -> int:
+    """Tokens de saída da última mensagem do assistente no turno (0 sem medição)."""
+    for mensagem in reversed(turno):
+        if mensagem["type"] == "assistant":
+            uso = (mensagem.get("message") or {}).get("usage") or {}
+            valor = uso.get("output_tokens")
+            return int(valor) if isinstance(valor, int | float) else 0
+    return 0
+
+
+def adesao(caminho: str | Path) -> list[dict]:
+    """Um registro por turno do transcript: se mexeu em arquivos, se o formulário veio completo
+    e o tamanho da resposta final (caracteres e tokens de saída)."""
+    registros = []
+    for turno in _turnos(_ler_transcript(str(caminho))):
+        texto = _texto_final(turno)
+        if not texto.strip():
+            continue
+        registros.append(
+            {
+                "mexeu_em_arquivos": _mexeu_em_arquivos(turno),
+                "com_formulario": not formulario.campos_faltando(texto),
+                "caracteres_resposta": len(texto),
+                "tokens_saida_resposta": _tokens_saida_final(turno),
+            }
+        )
+    return registros

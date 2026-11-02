@@ -215,6 +215,9 @@ Duas regras de contagem, aprendidas na primeira rodada real:
   e já entra no custo.
 - **Etapas simultâneas** não dividem as mesmas chamadas: cada etapa conta só as do modelo do seu
   agente.
+- **"Feito" exige prova:** entregáveis presentes e último balanço (depois do início da etapa) sem
+  teste falhando nem `REVERTER`. É a defesa contra o agente declarar sucesso que não houve
+  (*apparent-success reporting*, observado em cerca de 2% de sessões reais de agentes de código).
 - **Etapas do mesmo modelo em paralelo** se separam pela descrição do agente: a que começa com o
   id da etapa (`E2: …`) fica só com as chamadas dele.
 - **Horas de relógio da IA** juntam os agentes em paralelo (sobreposição conta uma vez); **horas de

@@ -54,4 +54,9 @@ definido" em Onde estamos e proponha um rumo se o trabalho for durar mais de uma
 - Números vêm do `vcm`, nunca de estimativa de cabeça. Horário de fim só depois que aconteceu.
 - Resposta curta a uma pergunta direta, sem trabalho feito, pode ir só no Campo livre, mas com o
   cabeçalho e o objetivo.
+- Não declare sucesso sem prova: "feito", "testes passando" ou "MANTER" vêm com o comando e a
+  saída no Campo livre (por exemplo `248 passed`, `Decisão proposta: MANTER`).
+- Um gancho `Stop` (`vcm formulario --verificar`, instalado pelo `vcm iniciar` em
+  `.claude/settings.json`) devolve ao agente a resposta que mexeu em arquivos sem o formulário
+  completo. `vcm sessoes` mede a adesão.
 - Não esconda desvio nem decisão pendente: eles vão sempre em **Precisa de você**.

@@ -15,14 +15,14 @@ etapas:
   - src/vcm/rumo.py
   - src/vcm/cli.py
   - tests/test_rumo.py
-  - tests/test_cli_rumo.py
   depende_de: []
   agente: sonnet
   estimativa_min: 10
   estimativa_tokens: 120000
-  status: fazendo
+  status: feito
   inicio: '2026-11-02T14:50:26Z'
-  fim: null
+  fim: '2026-11-02T14:53:18Z'
+  forcado: null
 - id: E2
   nome: Gancho Stop que confere o formulário (vcm formulario --verificar) e instalação
     pelo vcm iniciar
@@ -39,9 +39,10 @@ etapas:
   agente: sonnet
   estimativa_min: 15
   estimativa_tokens: 150000
-  status: fazendo
+  status: feito
   inicio: '2026-11-02T14:50:27Z'
-  fim: null
+  fim: '2026-11-02T14:52:58Z'
+  forcado: null
 - id: E3
   nome: Medição da adesão ao formulário, skill e documentação, integração
   entregaveis:
@@ -59,7 +60,13 @@ etapas:
   agente: opus
   estimativa_min: 15
   estimativa_tokens: 150000
-  status: a_fazer
-  inicio: null
+  status: fazendo
+  inicio: '2026-11-02T14:54:45Z'
   fim: null
-historico: []
+  forcado: null
+historico:
+- data: '2026-11-02'
+  mudanca: 'E1: entregável tests/test_cli_rumo.py retirado; o teste do CLI ficou em
+    tests/test_rumo.py'
+  motivo: a prova de 'feito' (nova regra) acusou o entregável ausente; corrigido o
+    plano, sem forçar

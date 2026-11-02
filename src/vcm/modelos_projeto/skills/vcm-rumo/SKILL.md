@@ -30,6 +30,10 @@ alterados no git) e aponta desvios.
 ## No fim de cada rodada
 
 1. Marque o status (`feito`, `bloqueado` ou `cancelado`) com `vcm rumo --etapa … --status …`.
+   O `vcm` só aceita `feito` com prova: todos os entregáveis existem e o último balanço depois do
+   início da etapa não tem teste falhando nem `REVERTER`. Se recusar, corrija o trabalho ou o plano
+   (registrando em `historico`). `--forcar --motivo "…"` existe, mas vira o desvio "feito sem
+   prova" e aparece para o humano.
 2. Rode `vcm balanco <base> HEAD` (qualidade) e `vcm rumo` (rumo).
 3. Publique o Markdown de `results/rumo.md` como comentário no PR da rodada e mostre ao humano o
    mesmo resumo.
