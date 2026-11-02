@@ -1,0 +1,28 @@
+id: xarray
+nome: xarray
+papel: calculo
+descricao: Arrays N-dimensionais com dimensões nomeadas, coordenadas e atributos, sobre NumPy e pandas.
+quando_considerar:
+  - dados em grade ou multidimensionais (tempo × estação, tempo × cota × posição, séries de chuva, campos de modelo)
+  - operar por nome de dimensão, sem depender da ordem dos eixos, o que reduz erros de eixo
+  - ler e gravar NetCDF e Zarr, formatos comuns de dados hidrológicos e climáticos
+  - manter metadados e unidades declaradas junto dos valores (atributos)
+quando_evitar:
+  - dados tabulares simples, melhor atendidos por pandas ou Polars
+  - cálculo sobre um array sem coordenadas, em que NumPy basta
+cuidados:
+  - o alinhamento automático por coordenadas faz junção implícita; coordenadas float diferentes por arredondamento geram eixo vazio ou NaN sem aviso
+  - depende de NumPy e pandas; o cálculo de fundo é do NumPy e herda sua variação de threads
+  - arrays com Dask são preguiçosos e o resultado só existe após compute()
+  - as unidades ficam em atributos de texto e não são verificadas; para checagem, combinar com pint
+  - a versão segue o calendário (2026.9.0) e a API muda entre versões; fixar a versão
+coopera_com: [numpy, pandas, pint]
+compete_com: []
+pacote_python: xarray
+documentacao: https://docs.xarray.dev/
+repositorio: https://github.com/pydata/xarray
+licenca: Apache-2.0
+ultima_versao: "2026.9.0 (2026-09)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato

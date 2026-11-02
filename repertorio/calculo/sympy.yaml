@@ -1,0 +1,28 @@
+id: sympy
+nome: SymPy
+papel: calculo
+descricao: Álgebra simbólica em Python puro, com derivação, integração, resolução de equações e geração de código.
+quando_considerar:
+  - deduzir e conferir uma fórmula de engenharia (derivadas, integrais, simplificação) antes de implementá-la
+  - gerar a função numérica a partir da expressão simbólica com lambdify, mantendo a fórmula documentada e testável
+  - obter por solução exata um caso de teste que o código numérico deve reproduzir
+  - resolver sistemas pequenos de equações com solução em forma fechada
+quando_evitar:
+  - cálculo numérico pesado sobre arrays grandes, em que o simbólico é lento (usar numpy ou scipy)
+  - caminho de produção sensível a tempo, se a expressão simbólica for montada a cada chamada
+  - equações sem solução fechada, melhor resolvidas por métodos numéricos (scipy)
+cuidados:
+  - simplify e solve podem demorar muito ou devolver formas diferentes entre versões; fixar a versão e não depender da forma textual do resultado
+  - lambdify gera função NumPy; conferir o módulo de destino e o dtype
+  - usar Rational ou inteiros em vez de float dentro da expressão evita erro de arredondamento antes da hora
+  - a última versão publicada (1.14.0) é de 2025-04; verificar se há versão mais nova antes de adotar
+coopera_com: [numpy, scipy, numba, pint]
+compete_com: []
+pacote_python: sympy
+documentacao: https://docs.sympy.org/latest/
+repositorio: https://github.com/sympy/sympy
+licenca: BSD-3-Clause
+ultima_versao: "1.14.0 (2025-04)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato

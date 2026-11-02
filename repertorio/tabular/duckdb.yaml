@@ -6,14 +6,25 @@ quando_considerar:
   - consultas SQL sobre arquivos grandes
   - junções e agregações complexas
   - operação sem servidor
+  - consultar Parquet em disco sem carregar tudo na memória, com SQL
+  - consultar DataFrames do pandas ou Polars já em memória com SQL, sem cópia explícita
+  - SQL com funções de janela para consultas analíticas sobre séries e resumos
 quando_evitar:
   - muitos processos escrevendo ao mesmo tempo
   - aplicações transacionais de alta frequência de escrita
+  - cálculo numérico de engenharia, que deve ficar em NumPy; o DuckDB serve para consulta e agregação
 cuidados:
   - um arquivo de banco aceita um processo escritor por vez
-coopera_com: [parquet, pandas, polars]
+  - a versão 2.0 é recente; fixar a versão e conferir a compatibilidade do formato de arquivo de banco ao atualizar
+  - somas de ponto flutuante em paralelo podem variar na última casa; ordenar e usar DECIMAL ou arredondamento declarado quando o resultado precisar ser reprodutível
+  - o limite de memória e o diretório temporário para derramamento em disco são configuráveis; declarar ambos em consultas grandes
+coopera_com: [parquet, pandas, polars, sqlite]
 compete_com: [pandas, polars]
 pacote_python: duckdb
 documentacao: https://duckdb.org/docs/
+repositorio: https://github.com/duckdb/duckdb-python
+licenca: MIT
+ultima_versao: "2.0.0 (2026-10)"
+verificado_em: "2026-11-02"
 evidencias: []
 status: candidato

@@ -7,13 +7,27 @@ quando_considerar:
   - interpolação
   - estatística
   - álgebra linear esparsa
+  - sistemas grandes e esparsos (redes de tubulação, malhas, matrizes de rigidez) com scipy.sparse
+  - integração numérica e equações diferenciais ordinárias (scipy.integrate) com tolerâncias declaradas
+  - raízes e ajuste de curvas (scipy.optimize) para equações implícitas, como Colebrook-White
 quando_evitar:
   - manipulação de tabelas com junções e agrupamentos
+  - álgebra simbólica ou derivação exata (considerar sympy)
+  - quando uma operação simples de NumPy já resolve
 cuidados:
   - solvers iterativos dependem de tolerância e critério de parada; declarar ambos
-coopera_com: [numpy, pandas]
+  - rotinas de otimização podem convergir para mínimo local ou falhar sem lançar erro; verificar o campo success do resultado e registrar o ponto inicial
+  - interpoladores tratam de formas diferentes o que está fora do intervalo dos dados (erro, constante, extrapolação); declarar o comportamento escolhido
+  - herda do NumPy a variação de somas com threads do BLAS; fixar threads quando o resultado precisar ser reprodutível bit a bit
+  - a versão 1.18 exige Python 3.12 ou mais recente; conferir a versão do Python do projeto
+  - algoritmos estocásticos (por exemplo, evolução diferencial) exigem semente fixa para serem determinísticos
+coopera_com: [numpy, pandas, sympy, numba, xarray]
 compete_com: []
 pacote_python: scipy
 documentacao: https://docs.scipy.org/doc/scipy/
+repositorio: https://github.com/scipy/scipy
+licenca: BSD-3-Clause
+ultima_versao: "1.18.1 (2026-08)"
+verificado_em: "2026-11-02"
 evidencias: []
 status: candidato
