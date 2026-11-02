@@ -4,7 +4,7 @@
 > A IA propõe, o código executa, os testes verificam, as métricas comparam e o humano decide.
 > O próprio repositório é desenvolvido com o seu método (tese **T000**).
 
-Versão 0.3 · 31/10/2026 · Status: protótipo em construção. Plano de execução: [plano.md](plano.md).
+Versão 0.4 · 02/11/2026 · Status: em uso no `projetos_em_camadas`. Plano de execução: [plano.md](plano.md).
 Regras de código: [estilo.md](estilo.md).
 
 ## 1. Ideia em uma página
@@ -39,6 +39,48 @@ flowchart TB
     E --> H
     A -->|"estagnou? sugerir alternativa"| R
 ```
+
+### Na prática: o instrumento e o projeto medido
+
+O `vcm` é um **instrumento instalado no computador**, como uma trena: não fica dentro do projeto
+e não precisa do `vibe_code_metrics` clonado. Ele lê o git local da pasta onde é chamado e grava o
+resultado nessa mesma pasta.
+
+```mermaid
+flowchart LR
+    subgraph GH["GitHub"]
+        V["vibe_code_metrics<br/>código do instrumento e método"]
+    end
+    subgraph MAC["Seu computador"]
+        T["comando vcm<br/>(uv tool install)"]
+        subgraph P["pasta do projeto medido"]
+            Y["vcm.yaml<br/>o que medir"]
+            G["git local<br/>commits antes e depois"]
+            C["CLAUDE.md<br/>regras para os agentes"]
+            R["results/iteracoes/<br/>cartão HTML"]
+        end
+        L["~/.claude/projects<br/>logs do Claude Code"]
+    end
+    V -->|"instala / atualiza"| T
+    T -->|"lê"| Y
+    T -->|"cópias temporárias<br/>dos dois commits"| G
+    T -->|"gasto dos agentes"| L
+    T -->|"grava"| R
+    C -.->|"orienta o Claude Code"| G
+```
+
+| De onde vem | O que o vcm tira dali |
+|---|---|
+| `vcm.yaml` do projeto | pastas do código, pasta de testes, comando de referência, dependências extras dos testes, limites do semáforo |
+| git local (dois commits) | código-fonte medido em cópias temporárias: complexidade, densidade, dependências, segurança, testes, cobertura, reprodutibilidade, tempo e memória |
+| `~/.claude/projects` (logs do Claude Code) | chamadas, tokens e custo equivalente de API por modelo, entre os dois commits, no repositório ou nas worktrees dos agentes |
+| catálogo de preços | `repertorio/modelos.yaml`; noutro projeto, a cópia empacotada no próprio `vcm` |
+
+Consequências:
+- **O gasto é por máquina.** Os logs ficam no computador onde o Claude Code rodou; trabalho feito
+  noutra máquina ou na nuvem não aparece no cartão.
+- **O cache é por pasta.** As medições ficam em `results/snapshots.parquet` de cada cópia do projeto.
+- **Nada é enviado.** O `vcm` só lê arquivos locais e grava o cartão; não chama nenhuma API.
 
 ## 2. Componentes
 
@@ -144,7 +186,7 @@ cair, insistir só gasta tokens.
 
 | Passivo (basta instrumentar) | Exige protocolo de tese |
 |---|---|
-| Tokens, custo equivalente de API, latência por chamada (OpenTelemetry do Claude Code, logs de sessão) | Delimitação da tarefa e critério de "aprovada" |
+| Tokens e custo equivalente de API por chamada, por agente e por modelo (**logs de sessão: implementado**; OpenTelemetry adiado) | Delimitação da tarefa e critério de "aprovada" |
 | Edições aceitas e rejeitadas, tempo ativo, linhas, commits, PRs | Gabarito e tolerâncias por grandeza (cotas: tolerância **absoluta**) |
 | Trailers `Co-Authored-By` (o que a IA escreveu) | Classificação das intervenções humanas |
 | Testes, cobertura, complexidade e segurança no CI | Repetições, variância e intervalos de confiança |
