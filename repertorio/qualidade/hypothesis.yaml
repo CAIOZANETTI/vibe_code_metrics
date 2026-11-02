@@ -1,0 +1,27 @@
+id: hypothesis
+nome: Hypothesis
+papel: qualidade
+descricao: Testes baseados em propriedades, que geram entradas variadas e reduzem o caso que falha ao menor exemplo.
+quando_considerar:
+  - funções de cálculo com propriedades claras: conversão de unidade que volta ao valor original, resultado não negativo, monotonicidade, invariância por translação de coordenadas
+  - leitores de texto (números em formato brasileiro, códigos de prancha), em que entradas estranhas escapam de testes por exemplo
+  - casos de borda em geometria (polígonos degenerados, áreas nulas) com estratégias que geram coordenadas
+quando_evitar:
+  - funções cujo resultado esperado só se conhece por tabela de gabarito; usar teste por exemplo
+  - código lento por chamada, em que centenas de execuções pesam
+cuidados:
+  - licença MPL-2.0 (copyleft por arquivo) conforme o PyPI; afeta só modificações nos arquivos do próprio Hypothesis
+  - a geração é aleatória; para CI reproduzível usar perfil com derandomize ou fixar a semente, e guardar os exemplos que falharam
+  - cria o diretório .hypothesis com a base de exemplos; avaliar o .gitignore
+  - estratégias de float precisam restringir faixa e excluir NaN e infinito quando o domínio físico os proíbe, senão o teste acusa falsos erros
+  - o limite de tempo por exemplo (deadline) pode dar falha intermitente em máquina lenta
+coopera_com: [numpy, pandas, pydantic, pint, pytest-benchmark]
+compete_com: []
+pacote_python: hypothesis
+documentacao: https://hypothesis.readthedocs.io/
+repositorio: https://github.com/HypothesisWorks/hypothesis
+licenca: MPL-2.0
+ultima_versao: "6.170.14 (2026-10)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato

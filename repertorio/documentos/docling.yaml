@@ -1,0 +1,29 @@
+id: docling
+nome: Docling
+papel: documentos
+descricao: Conversão de documentos (PDF, imagens, Office) em estrutura com layout, tabelas e ordem de leitura, usando modelos de análise de layout.
+quando_considerar:
+  - documentos de texto corrido com tabelas (memoriais, especificações, relatórios), em que a ordem de leitura e a estrutura de tabelas importam
+  - PDF misto, com partes escaneadas, convertido em um único modelo de documento exportável para Markdown ou JSON
+  - comparar com pymupdf e pdfplumber a extração de tabelas que eles erram
+quando_evitar:
+  - pranchas de desenho técnico: o modelo de layout foi pensado para documentos, não para desenho CAD com cotas e hachuras
+  - ambiente sem rede ou sem espaço para baixar modelos
+  - quando é preciso resultado byte a byte idêntico e coordenadas exatas de traços
+cuidados:
+  - licença MIT do pacote conforme o PyPI; os modelos baixados têm licenças próprias, conferir cada um antes de distribuir
+  - baixa pesos de modelos de repositórios externos na primeira execução; fixar o diretório de artefatos para uso offline
+  - dependência pesada (PyTorch e outros); em CPU é lento, a GPU acelera mas exige instalação própria
+  - o OCR é delegado a motores configuráveis (por exemplo Tesseract, EasyOCR, RapidOCR); configurar o idioma português explicitamente
+  - o determinismo depende da versão dos modelos e do hardware; registrar versões e comparar saídas em teste antes de adotar
+  - lançamentos muito frequentes (2.145.0 em 2026-10); fixar a versão
+coopera_com: [pymupdf, pytesseract, paddleocr, pandas]
+compete_com: [pymupdf, pdfplumber]
+pacote_python: docling
+documentacao: https://docling-project.github.io/docling/
+repositorio: https://github.com/docling-project/docling
+licenca: MIT
+ultima_versao: "2.145.0 (2026-10)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato

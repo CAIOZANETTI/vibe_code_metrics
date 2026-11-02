@@ -3,15 +3,24 @@ nome: Plotly
 papel: apresentacao
 descricao: Gráficos interativos gerados em Python e renderizados no navegador pelo Plotly.js.
 quando_considerar:
-  - gráficos interativos em HTML autocontido
+  - gráficos interativos (zoom, passagem do mouse) em HTML autocontido
   - receber DataFrames de pandas e Polars
+  - mostrar séries e perfis já calculados em Python, deixando ao navegador só o desenho
 quando_evitar:
-  - figuras estáticas para publicação impressa, em que uma ferramenta de figura estática é mais simples
+  - figuras estáticas para publicação impressa, em que uma ferramenta de figura estática é mais simples (matplotlib)
+  - desenho técnico com escala rigorosa e muitos elementos geométricos
 cuidados:
-  - o HTML gerado inclui JavaScript; o JavaScript só exibe valores já calculados
-coopera_com: [jinja2, numpy, pandas, polars]
-compete_com: []
+  - o HTML gerado inclui JavaScript; o JavaScript só exibe valores já calculados (regra do mantenedor: Python calcula, HTML/JS só apresenta)
+  - o HTML autocontido carrega a biblioteca Plotly.js inteira (vários MB) em cada arquivo, a menos que se use CDN, que exige rede
+  - licença MIT conforme o PyPI
+  - não usar agregações ou transformações feitas no navegador; entregar a figura com os números prontos e unidades nos rótulos
+coopera_com: [jinja2, numpy, pandas, polars, matplotlib]
+compete_com: [matplotlib]
 pacote_python: plotly
 documentacao: https://plotly.com/python/
+repositorio: https://github.com/plotly/plotly.py
+licenca: MIT
+ultima_versao: "7.1.0 (2026-09)"
+verificado_em: "2026-11-02"
 evidencias: []
 status: em_uso

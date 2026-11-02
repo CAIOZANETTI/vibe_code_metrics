@@ -1,0 +1,28 @@
+id: mutmut
+nome: mutmut
+papel: qualidade
+descricao: Teste de mutação, que altera o código de forma controlada e verifica se os testes percebem; mutantes que sobrevivem apontam testes fracos.
+quando_considerar:
+  - avaliar se os testes de uma função de cálculo criada por agente realmente detectam erro, além de a cobertura de linhas ser alta
+  - módulos pequenos e críticos (fórmulas hidráulicas, geometria), com testes rápidos
+  - complementar a cobertura no balanço de qualidade
+quando_evitar:
+  - suíte lenta ou código grande: cada mutante roda os testes de novo
+  - código sem testes automáticos, em que tudo sobrevive
+cuidados:
+  - licença BSD-3-Clause conforme o PyPI
+  - é preciso configurar quais caminhos mutar; suporte a Windows não foi verificado em 2026-11-02 (conferir a documentação da versão usada)
+  - mutantes equivalentes (que não mudam o comportamento) sobrevivem sem indicar teste fraco; exige leitura humana
+  - o tempo total cresce com o número de mutantes; limitar a módulos e rodar fora do CI de cada commit
+  - guarda resultados em diretório local; avaliar o .gitignore
+  - em testes numéricos, tolerância larga demais deixa sobreviver mutantes pequenos; é um sinal útil, não um defeito
+coopera_com: [hypothesis, pytest-benchmark]
+compete_com: []
+pacote_python: mutmut
+documentacao: https://mutmut.readthedocs.io/
+repositorio: https://github.com/boxed/mutmut
+licenca: BSD-3-Clause
+ultima_versao: "3.8.1 (2026-10)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato

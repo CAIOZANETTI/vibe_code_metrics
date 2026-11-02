@@ -1,0 +1,29 @@
+id: pdfplumber
+nome: pdfplumber
+papel: documentos
+descricao: Extração de texto, linhas, retângulos e tabelas de PDF com camada de texto, construída sobre pdfminer.six.
+quando_considerar:
+  - tabelas de materiais e quantitativos em PDF vetorial, com extract_table e extract_tables ajustando as estratégias de linha (lines) ou de texto (text)
+  - depurar visualmente a detecção de tabela (page.to_image com debug_tablefinder) antes de confiar nos números
+  - recortar uma região (crop) da prancha, como o carimbo, e extrair só dali
+  - precisar de licença permissiva (MIT) em ferramenta que será distribuída
+quando_evitar:
+  - PDF escaneado: não há texto a extrair, só imagem
+  - pranchas grandes com muitos traços de desenho, em que o processamento é lento
+  - quando a velocidade e a leitura de layers do CAD são o foco (pymupdf)
+cuidados:
+  - licença MIT conforme classificação do PyPI; o pdfminer.six é dependência
+  - as configurações de tabela (table_settings) mudam o resultado; congelá-las no código e testar com tabelas reais
+  - células mescladas e tabelas sem bordas costumam sair truncadas ou deslocadas; conferir a contagem de linhas contra o esperado
+  - o texto sai como cadeias de caracteres; números no formato brasileiro (vírgula decimal, ponto de milhar) são convertidos em Python, com teste
+  - mesmo arquivo, mesma versão e mesmas configurações dão o mesmo resultado
+coopera_com: [pymupdf, pandas, polars, pytesseract, paddleocr]
+compete_com: [pymupdf, docling]
+pacote_python: pdfplumber
+documentacao: https://github.com/jsvine/pdfplumber#readme
+repositorio: https://github.com/jsvine/pdfplumber
+licenca: MIT
+ultima_versao: "0.11.10 (2026-06)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato

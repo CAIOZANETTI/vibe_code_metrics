@@ -1,0 +1,29 @@
+id: paddleocr
+nome: PaddleOCR
+papel: documentos
+descricao: OCR por redes neurais (detecção e reconhecimento de texto) do ecossistema PaddlePaddle, com suporte a vários idiomas.
+quando_considerar:
+  - texto escaneado em que o Tesseract falha: fundo ruidoso, texto inclinado ou girado, fontes irregulares
+  - comparar com pytesseract nas mesmas regiões de carimbo e tabelas de uma amostra de pranchas reais, medindo o acerto contra valores conferidos à mão
+  - há GPU disponível, ou a quantidade de páginas compensa o custo de instalação
+quando_evitar:
+  - texto vetorial extraível direto do PDF
+  - ambiente enxuto ou de CI leve: a dependência é grande
+  - quando o resultado precisa ser idêntico entre máquinas diferentes sem validação
+cuidados:
+  - licença Apache-2.0 conforme o PyPI; os modelos de cada idioma têm origem e termos próprios, conferir antes de distribuir
+  - exige também o framework PaddlePaddle, instalado em separado, com variantes para CPU e GPU; a instalação costuma ser a parte difícil
+  - baixa modelos na primeira execução; para uso offline fixar o diretório dos modelos
+  - para português usa-se o modelo de alfabeto latino; confirmar na amostra o reconhecimento de acentos e cedilha
+  - o resultado pode variar com a versão do modelo, o hardware e a GPU; registrar versões e validar em Python os números lidos
+  - a API mudou entre as séries 2.x e 3.x; fixar a versão (3.7.0 em 2026-06)
+coopera_com: [pymupdf, pdfplumber, docling, numpy]
+compete_com: [pytesseract]
+pacote_python: paddleocr
+documentacao: https://github.com/PaddlePaddle/PaddleOCR/blob/main/README.md
+repositorio: https://github.com/PaddlePaddle/PaddleOCR
+licenca: Apache-2.0
+ultima_versao: "3.7.0 (2026-06)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato
