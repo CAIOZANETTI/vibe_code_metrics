@@ -88,9 +88,9 @@ etapas:
   agente: opus
   estimativa_min: 10
   estimativa_tokens: 100000
-  status: fazendo
+  status: feito
   inicio: '2026-11-02T14:41:43Z'
-  fim: null
+  fim: '2026-11-02T14:42:54Z'
 historico:
 - data: '2026-11-02'
   mudanca: 'nova etapa E5: formulário padrão de interação (o agente responde sempre

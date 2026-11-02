@@ -25,3 +25,5 @@ data,fase,tarefa,papel,modelo,tokens,chamadas_ferramenta,duracao_s,aprovado,retr
 2026-11-02,skills,skills externas e funcionamento,executor_padrao,claude-sonnet-5-5,142165,68,272.1,True,baixo: títulos das notas rebaixados,licenças lidas no LICENSE de cada skill
 2026-11-02,desempenho,vcm historico e vcm efeito,executor_padrao,claude-sonnet-5-5,106975,26,330.9,True,"médio: mínimo de pontos, commits sem código e nome do projeto",apontou o commit inicial vazio como distorção
 2026-11-02,rumo,"vcm rumo (WBS, estimado x real, desvios)",executor_padrao,claude-sonnet-5-5,115623,25,281.3,True,"médio: atribuição de tokens por agente, leitura de cache, tempo ativo",prova real com desvios detectados
+2026-11-02,autonoma,E1: refatorar rumo.carregar e config.carregar_config em tabela de regras,executor_padrao,claude-sonnet-5-5,89476,18,205.8,True,"baixo: só o merge","duas funções D viraram A; média 4,19 ainda acima da meta de 4,0"
+2026-11-02,autonoma,E2: correções sugeridas no cartão e no rumo (vcm.sugestoes),executor_padrao,claude-sonnet-5-5,117642,28,294.9,True,"baixo: ligar o raiz no CLI","sugere e não aplica; regra de alvos com radon e bandit"
