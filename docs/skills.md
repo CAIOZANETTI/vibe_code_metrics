@@ -60,6 +60,7 @@ Fonte: https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-pr
 | `obra-em-camadas` | Orquestrar uma obra inteira do Drive ao HTML em camadas: fotos, 3D, pranchas vetoriais por layer CAD, etapas, escopo de materiais e sondagens. | — | em uso |
 | `obras-lineares` | Calcular a vala de cada trecho de tubo pelo MOS Sanepar (largura, escoramento, escavação, reaterro, bota-fora, supressão e pavimento), com solo e NA da sondagem mais próxima. | — | em uso |
 | `projeto-em-camadas` | Gerar o visualizador HTML único que sobrepõe mosaico de drone, satélite e pranchas de projeto (civil, hidromecânica, elétrica) em camadas, com medições em UTM e anotações. | — | em uso |
+| `vcm-rumo` | Manter objetivo, etapas da WBS, estimado × real e desvios em rumo.yaml e informar o humano a cada rodada, com comentário no PR. | qualquer | em teste |
 
 ### Ingestão do Google Drive
 
@@ -270,6 +271,29 @@ _Ferramentas: ezdxf._
 - PDF chapado: renderizar, separar por cor e gravar webp sem perdas
 - conferir no Chromium: sem erros de console e folha alinhada à foto em zoom alto
 - para publicar como Artifact, usar a versão CDN sem documento
+
+### Rumo do desenvolvimento
+
+`vcm-rumo` · vibe_code_metrics/.claude/skills/vcm-rumo (instalada em cada projeto pelo vcm iniciar)
+
+_Ferramentas: Plotly, Jinja2._
+
+**Quando usar**
+
+- início e fim de toda rodada de trabalho
+- humano pergunta como está o desenvolvimento
+- mudança de objetivo
+- tarefa saindo do plano
+
+**Quando evitar**
+
+- correção de uma linha sem etapa própria: registrar só no PR
+
+**Cuidados**
+
+- estimativa é para calibrar, não para cobrar
+- mudar de objetivo é permitido; mudar sem registrar em historico não
+- nunca esconder desvio (fora do plano, estouro, parada, entregável ausente)
 
 ## Da plataforma (disponíveis nas sessões do Claude)
 

@@ -194,3 +194,17 @@ def test_cli_layout_raiz_nao_sugere_uv_init(tmp_path, capsys):
     saida = capsys.readouterr().out
     assert "uv init" not in saida
     assert "camadas/referencia.py" in saida and "vcm balanco HEAD~1 HEAD" in saida
+
+
+def test_iniciar_instala_a_skill_vcm_rumo_e_ela_nao_diverge(tmp_path):
+    from pathlib import Path
+
+    from vcm.iniciar import iniciar
+
+    iniciar(tmp_path, "calculo")
+    instalada = tmp_path / ".claude" / "skills" / "vcm-rumo" / "SKILL.md"
+    assert instalada.exists() and "name: vcm-rumo" in instalada.read_text(encoding="utf-8")
+    raiz = Path(__file__).resolve().parents[1]
+    empacotada = raiz / "src" / "vcm" / "modelos_projeto" / "skills" / "vcm-rumo" / "SKILL.md"
+    deste_repo = raiz / ".claude" / "skills" / "vcm-rumo" / "SKILL.md"
+    assert empacotada.read_bytes() == deste_repo.read_bytes()

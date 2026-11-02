@@ -21,6 +21,10 @@ Este repositório é desenvolvido com o próprio método (tese T000). Antes de m
 - Cada execução de agente é registrada em `results/agentes/execucoes.csv` (modelo, tokens,
   ferramentas, duração, aprovado), que é a base da tese T003.
 
+## Rumo
+O objetivo e as etapas da rodada ficam em `rumo.yaml`; siga a skill `vcm-rumo`
+(`.claude/skills/vcm-rumo/SKILL.md`). O resumo de `vcm rumo` vai ao humano e como comentário no PR.
+
 ## Regras de processo
 1. **Documentação viva:** ao editar `docs/*.md`, rode `uv run vcm docs` e faça commit do
    `docs/index.html` junto. Nunca edite `docs/index.html` à mão. O CI roda `vcm docs --check`.

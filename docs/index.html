@@ -77,7 +77,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash 5bf47e709d09</div>
+  <div class="sub">fonte: docs/*.md · hash e0ab3cafd023</div>
   
   <h4>Guia rápido: usar o vcm num protótipo</h4>
   <a href="#doc-guia">Início</a>
@@ -185,6 +185,7 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n3" href="#doc-skills-obra-em-camadas">Obra em camadas</a>
   <a class="n3" href="#doc-skills-obras-lineares">Obras lineares</a>
   <a class="n3" href="#doc-skills-projeto-em-camadas">Projeto em camadas</a>
+  <a class="n3" href="#doc-skills-rumo-do-desenvolvimento">Rumo do desenvolvimento</a>
   <a class="n2" href="#doc-skills-da-plataforma-disponiveis-nas-sessoes-do-claude">Da plataforma (disponíveis nas sessões do Claude)</a>
   <a class="n3" href="#doc-skills-revisao-de-codigo">Revisão de código</a>
   <a class="n3" href="#doc-skills-visualizacao-de-dados">Visualização de dados</a>
@@ -2660,6 +2661,12 @@ Página gerada a partir de <code>repertorio/skills/</code> por <code>vcm docs</c
 <td>—</td>
 <td>em uso</td>
 </tr>
+<tr>
+<td><code>vcm-rumo</code></td>
+<td>Manter objetivo, etapas da WBS, estimado × real e desvios em rumo.yaml e informar o humano a cada rodada, com comentário no PR.</td>
+<td>qualquer</td>
+<td>em teste</td>
+</tr>
 </tbody>
 </table>
 <h3 id="doc-skills-ingestao-do-google-drive">Ingestão do Google Drive</h3>
@@ -2848,6 +2855,26 @@ Página gerada a partir de <code>repertorio/skills/</code> por <code>vcm docs</c
 <li>PDF chapado: renderizar, separar por cor e gravar webp sem perdas</li>
 <li>conferir no Chromium: sem erros de console e folha alinhada à foto em zoom alto</li>
 <li>para publicar como Artifact, usar a versão CDN sem documento</li>
+</ul>
+<h3 id="doc-skills-rumo-do-desenvolvimento">Rumo do desenvolvimento</h3>
+<p><code>vcm-rumo</code> · vibe_code_metrics/.claude/skills/vcm-rumo (instalada em cada projeto pelo vcm iniciar)</p>
+<p><em>Ferramentas: Plotly, Jinja2.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>início e fim de toda rodada de trabalho</li>
+<li>humano pergunta como está o desenvolvimento</li>
+<li>mudança de objetivo</li>
+<li>tarefa saindo do plano</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>correção de uma linha sem etapa própria: registrar só no PR</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>estimativa é para calibrar, não para cobrar</li>
+<li>mudar de objetivo é permitido; mudar sem registrar em historico não</li>
+<li>nunca esconder desvio (fora do plano, estouro, parada, entregável ausente)</li>
 </ul>
 <h2 id="doc-skills-da-plataforma-disponiveis-nas-sessoes-do-claude">Da plataforma (disponíveis nas sessões do Claude)</h2>
 <table>
@@ -3991,7 +4018,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte 5bf47e709d09). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte e0ab3cafd023). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
