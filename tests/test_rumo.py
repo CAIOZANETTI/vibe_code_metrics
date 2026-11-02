@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 from datetime import UTC, datetime
@@ -80,6 +81,7 @@ def test_progresso_ponderado_e_proxima(tmp_path):
 
 def test_marcar_preenche_datas(tmp_path):
     arquivo = _gravar(tmp_path, [_etapa("E1")])
+    (tmp_path / "e1.txt").write_text("x")
     inicio = datetime(2026, 11, 1, 10, 0, tzinfo=UTC)
     fim = datetime(2026, 11, 1, 11, 30, tzinfo=UTC)
     mod.marcar(arquivo, "E1", "fazendo", agora=inicio)
@@ -376,6 +378,7 @@ def test_padroes_do_rumo_e_da_etapa(tmp_path):
         "status": "a_fazer",
         "inicio": None,
         "fim": None,
+        "forcado": None,
         "estimativa_min": 0,
         "estimativa_tokens": 0,
     }
@@ -399,6 +402,78 @@ def test_ordem_das_chaves_da_etapa_e_estavel(tmp_path):
         "status",
         "inicio",
         "fim",
+        "forcado",
         "estimativa_min",
         "estimativa_tokens",
     ]
+
+
+def _balanco(tmp_path, testes_falhando=0.0, decisao="MANTER", mtime=None):
+    """Grava um cartão Parquet mínimo, no formato de `cartao.gravar`."""
+    pasta = tmp_path / "results" / "iteracoes"
+    pasta.mkdir(parents=True, exist_ok=True)
+    tabela = pd.DataFrame(
+        {"antes": [0.0], "depois": [testes_falhando], "decisao": [decisao]},
+        index=pd.Index(["testes_falhando"], name="metrica"),
+    )
+    cartao = pasta / "aaaaaaa_bbbbbbb.parquet"
+    tabela.to_parquet(cartao)
+    if mtime is not None:
+        os.utime(cartao, (mtime, mtime))
+    return cartao
+
+
+def test_feito_bloqueia_entregavel_ausente_e_libera_presente(tmp_path):
+    arquivo = _gravar(tmp_path, [_etapa("E1")])
+    with pytest.raises(ValueError, match="entregável ausente: e1.txt"):
+        mod.marcar(arquivo, "E1", "feito")
+    assert mod.carregar(arquivo)["etapas"][0]["status"] == "a_fazer"
+    (tmp_path / "e1.txt").write_text("x")
+    assert mod.marcar(arquivo, "E1", "feito")["status"] == "feito"
+
+
+def test_feito_bloqueia_balanco_com_teste_falhando(tmp_path):
+    (tmp_path / "e1.txt").write_text("x")
+    _balanco(tmp_path, testes_falhando=2.0)
+    etapa = _etapa("E1", inicio="2020-01-01T00:00:00Z")
+    pendencias = mod.provas_de_feito(etapa, tmp_path)
+    assert pendencias == ["último balanço com 2 teste(s) falhando (aaaaaaa_bbbbbbb.parquet)"]
+
+
+def test_feito_ignora_balanco_anterior_ao_inicio(tmp_path):
+    (tmp_path / "e1.txt").write_text("x")
+    _balanco(tmp_path, testes_falhando=2.0, mtime=datetime(2024, 1, 1, tzinfo=UTC).timestamp())
+    etapa = _etapa("E1", inicio="2025-01-01T00:00:00Z")
+    assert mod.provas_de_feito(etapa, tmp_path) == []
+
+
+def test_feito_bloqueia_decisao_reverter(tmp_path):
+    (tmp_path / "e1.txt").write_text("x")
+    _balanco(tmp_path, decisao="REVERTER")
+    pendencias = mod.provas_de_feito(_etapa("E1", inicio="2020-01-01T00:00:00Z"), tmp_path)
+    assert pendencias == ["último balanço com decisão REVERTER (aaaaaaa_bbbbbbb.parquet)"]
+
+
+def test_forcar_sem_motivo_da_erro_e_com_motivo_grava_e_gera_desvio(tmp_path):
+    arquivo = _gravar(tmp_path, [_etapa("E1")])
+    with pytest.raises(ValueError, match="motivo"):
+        mod.marcar(arquivo, "E1", "feito", forcar=True)
+    etapa = mod.marcar(arquivo, "E1", "feito", forcar=True, motivo="entregue em outro PR")
+    assert etapa["forcado"] == "entregue em outro PR"
+    rumo = mod.carregar(arquivo)
+    assert rumo["etapas"][0]["forcado"] == "entregue em outro PR"
+    real = mod.real_por_etapa(rumo, _chamadas(str(tmp_path.resolve())), tmp_path)
+    desvios = [d for d in mod.desvios(rumo, tmp_path, real) if d["tipo"] == "feito sem prova"]
+    assert len(desvios) == 1
+    assert "entregue em outro PR" in desvios[0]["detalhe"]
+
+
+def test_cli_feito_sem_prova_devolve_1_com_mensagem(tmp_path, capsys):
+    _gravar(tmp_path, [_etapa("E1")])
+    base = ["rumo", "--repo", str(tmp_path), "--etapa", "E1", "--status", "feito"]
+    assert cli.main(base) == 1
+    erro = capsys.readouterr().err
+    assert "entregável ausente: e1.txt" in erro
+    assert "--forcar --motivo" in erro
+    assert cli.main([*base, "--forcar"]) == 1
+    assert cli.main([*base, "--forcar", "--motivo", "ok"]) == 0
