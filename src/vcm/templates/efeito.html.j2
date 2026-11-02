@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Efeito do método em {{ projeto }}</title>
+<!-- Gerado por `uv run vcm efeito`. Valores calculados e formatados em Python. -->
+<style>
+{% include "_estilo.css" %}
+body { display: block; }
+main { margin: 0 auto; max-width: 1000px; padding: 0 16px; }
+.ressalvas { background: #fff4e0; color: #8a5300; border-radius: 10px; padding: 12px 18px; margin: 16px 0; }
+td.melhorou { color: #1e6b34; font-weight: 600; }
+td.piorou { color: #b42318; font-weight: 600; }
+td.insuficiente { color: #8a5300; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.tabela-rolavel { overflow-x: auto; }
+</style>
+</head>
+<body>
+<main>
+<article>
+  <h1>Efeito do método em <code>{{ projeto }}</code></h1>
+  <p>Adoção do <code>vcm</code> no commit <code>{{ commit_adocao }}</code>, em {{ data_adocao }}.
+  Commits medidos: <strong>{{ n_antes }}</strong> antes e <strong>{{ n_depois }}</strong> depois.</p>
+
+  <div class="ressalvas">
+    <strong>Ressalvas</strong>
+    <ul>{% for r in ressalvas %}<li>{{ r }}</li>{% endfor %}</ul>
+  </div>
+
+  <h2>Antes × depois</h2>
+  <div class="tabela-rolavel">
+  <table>
+    <tr><th>Métrica</th><th>n antes</th><th>n depois</th><th>Média antes</th><th>Média depois</th><th>Tendência antes</th><th>Tendência depois</th><th>Variação</th><th>Veredito</th></tr>
+    {% for l in tabela %}<tr><td><code>{{ l.metrica }}</code></td><td class="num">{{ l.n_antes }}</td><td class="num">{{ l.n_depois }}</td><td class="num">{{ l.media_antes }}</td><td class="num">{{ l.media_depois }}</td><td class="num">{{ l.tendencia_antes }}</td><td class="num">{{ l.tendencia_depois }}</td><td class="num">{{ l.variacao }}</td><td class="{{ l.veredito }}">{{ l.veredito }}</td></tr>
+    {% endfor %}
+  </table>
+  </div>
+  <p><small>Tendência: inclinação por commit. Veredito pela diferença das médias, com faixa de &ldquo;igual&rdquo; igual ao ruído da métrica (mínimo 2%).</small></p>
+
+  <h2>Séries no tempo</h2>
+  {% for g in graficos %}{{ g | safe }}
+  {% endfor %}
+
+  <h2>Indicadores do processo</h2>
+  <table>
+    <tr><th>Decisão</th><th>Cartões</th></tr>
+    {% for d in decisoes %}<tr><td>{{ d }}</td><td class="num">{{ processo[d] }}</td></tr>
+    {% endfor %}<tr><th>Total</th><th class="num">{{ processo.total }}</th></tr>
+  </table>
+  <p><small>REVERTER indica problema pego antes de entrar no código.</small></p>
+</article>
+</main>
+</body>
+</html>

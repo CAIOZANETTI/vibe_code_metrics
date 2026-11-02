@@ -192,6 +192,49 @@ def _cmd_iniciar(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_historico(args: argparse.Namespace) -> int:
+    from vcm import historico
+
+    repo = Path(args.repo)
+    commits = historico.commits_amostrados(
+        repo, desde=args.desde, passo=args.passo, maximo=args.maximo
+    )
+    serie = historico.medir_historico(repo, commits, com_testes=args.com_testes)
+    print(f"{len(serie)} commits medidos")
+    return 0
+
+
+def _cmd_efeito(args: argparse.Namespace) -> int:
+    from vcm import efeito, historico
+    from vcm import snapshot as snap
+
+    repo = Path(args.repo).resolve()
+    ref = args.adocao or efeito.commit_de_adocao(repo)
+    if ref is None:
+        print("erro: nenhum commit adicionou o vcm.yaml; informe --adocao REF", file=sys.stderr)
+        return 1
+    commit = snap.resolver_commit(repo, ref)
+    primeira_linha = set(historico.commits_amostrados(repo))
+    tabela = snap.ler_snapshots()
+    serie = tabela[tabela["commit"].isin(primeira_linha)]
+    serie = serie.sort_values("data_commit", kind="stable").reset_index(drop=True)
+    if serie.empty:
+        print("erro: sem snapshots do histórico; rode `vcm historico` antes", file=sys.stderr)
+        return 1
+    data = snap._git(repo, "log", "-1", "--format=%cI", commit)
+    comparacao = efeito.comparar(serie, data)
+    processo = efeito.indicadores_processo(repo / snap.PASTA_ITERACOES)
+    frases = efeito.ressalvas(comparacao)
+    adocao = {"projeto": repo.name, "commit": commit, "data": data}
+    saida = efeito.gerar_relatorio(serie, comparacao, processo, frases, Path(args.saida), adocao)
+    print(f"Adoção: {commit[:7]} em {data}")
+    print(comparacao[["n_antes", "n_depois", "variacao_pct", "veredito"]].to_string())
+    for frase in frases:
+        print(f"- {frase}")
+    print(f"Relatório: {saida}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="vcm", description="Vibe Code Metrics")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -232,6 +275,20 @@ def main(argv: list[str] | None = None) -> int:
     )
     opcoes_medicao(b)
     b.set_defaults(func=_cmd_balanco)
+
+    hi = sub.add_parser("historico", help="mede commits do histórico (série de snapshots)")
+    hi.add_argument("--repo", default=".")
+    hi.add_argument("--desde", default=None, help="começa neste ref")
+    hi.add_argument("--passo", type=int, default=1, help="um commit a cada N")
+    hi.add_argument("--maximo", type=int, default=None, help="limita a quantidade (amostra)")
+    hi.add_argument("--com-testes", action="store_true", help="roda a suíte em cada commit")
+    hi.set_defaults(func=_cmd_historico)
+
+    ef = sub.add_parser("efeito", help="compara as métricas antes × depois da adoção do vcm")
+    ef.add_argument("--repo", default=".")
+    ef.add_argument("--adocao", default=None, help="ref da adoção (padrão: add do vcm.yaml)")
+    ef.add_argument("--saida", default="results/efeito.html")
+    ef.set_defaults(func=_cmd_efeito)
 
     a = sub.add_parser("agentes", help="resumo das execuções de agentes por modelo")
     a.add_argument(
