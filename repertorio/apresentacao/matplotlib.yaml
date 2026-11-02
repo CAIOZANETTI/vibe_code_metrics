@@ -1,0 +1,28 @@
+id: matplotlib
+nome: Matplotlib
+papel: apresentacao
+descricao: Figuras estáticas (PNG, SVG, PDF) geradas em Python, com controle fino de eixos, escala e anotações.
+quando_considerar:
+  - figuras estáticas para relatório impresso ou PDF, inclusive em SVG vetorial
+  - desenhos técnicos simples com escala igual nos eixos (aspect equal), como planta de trechos ou perfil
+  - imagens embutidas no HTML (SVG ou PNG em base64) quando não se quer JavaScript no relatório, coerente com a regra de que o HTML só apresenta
+  - figuras reproduzíveis em CI, sem navegador
+quando_evitar:
+  - gráficos que o leitor precisa explorar com zoom e passagem do mouse (plotly)
+  - painéis com muitos elementos interativos
+cuidados:
+  - em servidor ou CI usar o backend não interativo (Agg) para não depender de tela
+  - licença própria baseada na PSF (classificação PSF no PyPI), permissiva; o identificador SPDX exato não foi verificado em 2026-11-02, por isso o campo usa LicenseRef
+  - a saída em PNG pode variar levemente entre versões e fontes do sistema; fixar a versão e a fonte para comparar imagens em teste
+  - rótulos e unidades dos eixos vêm de variáveis com sufixo de unidade; texto em português com acentos exige fonte que os tenha
+  - o cálculo é feito antes, em Python; a figura só desenha valores prontos
+coopera_com: [numpy, pandas, polars, jinja2, shapely]
+compete_com: [plotly]
+pacote_python: matplotlib
+documentacao: https://matplotlib.org/stable/
+repositorio: https://github.com/matplotlib/matplotlib
+licenca: LicenseRef-Matplotlib
+ultima_versao: "3.11.2 (2026-09)"
+verificado_em: "2026-11-02"
+evidencias: []
+status: candidato
