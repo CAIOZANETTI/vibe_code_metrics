@@ -208,3 +208,18 @@ def test_iniciar_instala_a_skill_vcm_rumo_e_ela_nao_diverge(tmp_path):
     empacotada = raiz / "src" / "vcm" / "modelos_projeto" / "skills" / "vcm-rumo" / "SKILL.md"
     deste_repo = raiz / ".claude" / "skills" / "vcm-rumo" / "SKILL.md"
     assert empacotada.read_bytes() == deste_repo.read_bytes()
+
+
+def test_iniciar_instala_a_skill_vcm_formulario_e_ela_nao_diverge(tmp_path):
+    from pathlib import Path
+
+    from vcm.iniciar import iniciar
+
+    iniciar(tmp_path, "calculo")
+    instalada = tmp_path / ".claude" / "skills" / "vcm-formulario" / "SKILL.md"
+    assert "name: vcm-formulario" in instalada.read_text(encoding="utf-8")
+    assert "vcm-formulario" in (tmp_path / "CLAUDE.md").read_text(encoding="utf-8")
+    raiz = Path(__file__).resolve().parents[1]
+    empacotada = raiz / "src" / "vcm" / "modelos_projeto" / "skills" / "vcm-formulario" / "SKILL.md"
+    deste_repo = raiz / ".claude" / "skills" / "vcm-formulario" / "SKILL.md"
+    assert empacotada.read_bytes() == deste_repo.read_bytes()

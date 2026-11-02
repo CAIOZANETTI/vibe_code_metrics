@@ -11,6 +11,10 @@ LINHAS_GITIGNORE = [".venv/", "__pycache__/", ".claude/worktrees/"]
 JA_EXISTIA = "mantido (já existia)"
 
 
+# Skills do método instaladas em todo projeto (rumo e formulário de interação).
+SKILLS_DO_METODO = ("vcm-rumo", "vcm-formulario")
+
+
 def _ambiente() -> Environment:
     """Jinja2 com delimitadores `[[ ]]`, para não colidir com `${{ }}` do GitHub Actions."""
     return Environment(
@@ -91,9 +95,12 @@ def iniciar(destino: Path, pacote: str, forcar: bool = False) -> list[tuple[Path
         (destino / "docs" / "estilo.md", copiar("estilo.md")),
         (agentes / "executor-sonnet.md", copiar("agentes/executor-sonnet.md")),
         (agentes / "executor-haiku.md", copiar("agentes/executor-haiku.md")),
-        (
-            destino / ".claude" / "skills" / "vcm-rumo" / "SKILL.md",
-            copiar("skills/vcm-rumo/SKILL.md"),
+        *(
+            (
+                destino / ".claude" / "skills" / skill / "SKILL.md",
+                copiar(f"skills/{skill}/SKILL.md"),
+            )
+            for skill in SKILLS_DO_METODO
         ),
         (pacote_src / "referencia.py", renderizar("referencia.py.j2")),
         (destino / "tests" / "test_referencia.py", renderizar("test_referencia.py.j2")),

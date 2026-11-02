@@ -1,0 +1,13 @@
+id: vcm-formulario
+nome: Formulário padrão de interação
+origem: projeto
+onde: vibe_code_metrics/.claude/skills/vcm-formulario (instalada em cada projeto pelo vcm iniciar)
+para_que: "Toda resposta do agente ao humano segue o mesmo formulário (objetivo, o que estou fazendo, onde estamos, agentes, precisa de você, campo livre), com os números preenchidos por vcm rumo --formulario."
+quando_usar: ["toda resposta que relata trabalho", "início e fim de etapa", "ao chamar executores", "humano pergunta onde estamos"]
+quando_evitar: ["resposta curta sem trabalho feito: só cabeçalho, objetivo e campo livre"]
+cuidados: ["números vêm do vcm, nunca de cabeça", "campos fixos não mudam de nome nem de ordem", "desvios e decisões pendentes sempre em Precisa de você"]
+agente_sugerido: qualquer
+ferramentas_relacionadas: [jinja2]
+licenca: null
+verificado_em: "2026-11-02"
+status: em_teste

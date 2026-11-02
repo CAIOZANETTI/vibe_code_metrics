@@ -77,7 +77,7 @@ footer { color: var(--muted); font-size: 12px; }
 <body>
 <nav>
   <div class="marca">Vibe Code Metrics</div>
-  <div class="sub">fonte: docs/*.md · hash 41e525f81d24</div>
+  <div class="sub">fonte: docs/*.md · hash 4e8c581a8bcd</div>
   
   <h4>Guia rápido: usar o vcm num protótipo</h4>
   <a href="#doc-guia">Início</a>
@@ -186,6 +186,7 @@ footer { color: var(--muted); font-size: 12px; }
   <a class="n3" href="#doc-skills-obra-em-camadas">Obra em camadas</a>
   <a class="n3" href="#doc-skills-obras-lineares">Obras lineares</a>
   <a class="n3" href="#doc-skills-projeto-em-camadas">Projeto em camadas</a>
+  <a class="n3" href="#doc-skills-formulario-padrao-de-interacao">Formulário padrão de interação</a>
   <a class="n3" href="#doc-skills-rumo-do-desenvolvimento">Rumo do desenvolvimento</a>
   <a class="n2" href="#doc-skills-da-plataforma-disponiveis-nas-sessoes-do-claude">Da plataforma (disponíveis nas sessões do Claude)</a>
   <a class="n3" href="#doc-skills-revisao-de-codigo">Revisão de código</a>
@@ -2721,6 +2722,12 @@ Página gerada a partir de <code>repertorio/skills/</code> por <code>vcm docs</c
 <td>em uso</td>
 </tr>
 <tr>
+<td><code>vcm-formulario</code></td>
+<td>Toda resposta do agente ao humano segue o mesmo formulário (objetivo, o que estou fazendo, onde estamos, agentes, precisa de você, campo livre), com os números preenchidos por vcm rumo --formulario.</td>
+<td>qualquer</td>
+<td>em teste</td>
+</tr>
+<tr>
 <td><code>vcm-rumo</code></td>
 <td>Manter objetivo, etapas da WBS, estimado × real e desvios em rumo.yaml e informar o humano a cada rodada, com comentário no PR.</td>
 <td>qualquer</td>
@@ -2914,6 +2921,26 @@ Página gerada a partir de <code>repertorio/skills/</code> por <code>vcm docs</c
 <li>PDF chapado: renderizar, separar por cor e gravar webp sem perdas</li>
 <li>conferir no Chromium: sem erros de console e folha alinhada à foto em zoom alto</li>
 <li>para publicar como Artifact, usar a versão CDN sem documento</li>
+</ul>
+<h3 id="doc-skills-formulario-padrao-de-interacao">Formulário padrão de interação</h3>
+<p><code>vcm-formulario</code> · vibe_code_metrics/.claude/skills/vcm-formulario (instalada em cada projeto pelo vcm iniciar)</p>
+<p><em>Ferramentas: Jinja2.</em></p>
+<p><strong>Quando usar</strong></p>
+<ul>
+<li>toda resposta que relata trabalho</li>
+<li>início e fim de etapa</li>
+<li>ao chamar executores</li>
+<li>humano pergunta onde estamos</li>
+</ul>
+<p><strong>Quando evitar</strong></p>
+<ul>
+<li>resposta curta sem trabalho feito: só cabeçalho, objetivo e campo livre</li>
+</ul>
+<p><strong>Cuidados</strong></p>
+<ul>
+<li>números vêm do vcm, nunca de cabeça</li>
+<li>campos fixos não mudam de nome nem de ordem</li>
+<li>desvios e decisões pendentes sempre em Precisa de você</li>
 </ul>
 <h3 id="doc-skills-rumo-do-desenvolvimento">Rumo do desenvolvimento</h3>
 <p><code>vcm-rumo</code> · vibe_code_metrics/.claude/skills/vcm-rumo (instalada em cada projeto pelo vcm iniciar)</p>
@@ -4090,7 +4117,7 @@ datas <code>dd/mm/aaaa</code>. A formatação também é feita em Python (<code>
 
 </article>
 
-<footer>Este HTML é derivado dos Markdown (hash da fonte 41e525f81d24). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
+<footer>Este HTML é derivado dos Markdown (hash da fonte 4e8c581a8bcd). Edite o Markdown e rode <code>uv run vcm docs</code>; o CI falha se este arquivo estiver desatualizado.</footer>
 </main>
 <script type="module">
   import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";

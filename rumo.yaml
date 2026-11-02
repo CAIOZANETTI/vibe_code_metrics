@@ -19,9 +19,9 @@ etapas:
   agente: sonnet
   estimativa_min: 20
   estimativa_tokens: 120000
-  status: fazendo
+  status: feito
   inicio: '2026-11-02T14:32:47Z'
-  fim: null
+  fim: '2026-11-02T14:36:53Z'
 - id: E2
   nome: Correções sugeridas no cartão e no rumo (vcm.sugestoes)
   entregaveis:
@@ -38,6 +38,26 @@ etapas:
   status: fazendo
   inicio: '2026-11-02T14:32:48Z'
   fim: null
+- id: E5
+  nome: 'Formulário de interação: skill vcm-formulario, regra no CLAUDE.md, instalação
+    pelo vcm iniciar e vcm rumo --formulario'
+  entregaveis:
+  - src/vcm/modelos_projeto/skills/vcm-formulario/SKILL.md
+  - .claude/skills/vcm-formulario/SKILL.md
+  - src/vcm/iniciar.py
+  - src/vcm/modelos_projeto/CLAUDE.md.j2
+  - CLAUDE.md
+  - tests/test_iniciar.py
+  - repertorio/skills/vcm-formulario.yaml
+  - src/vcm/formulario.py
+  - tests/test_formulario.py
+  depende_de: []
+  agente: opus
+  estimativa_min: 20
+  estimativa_tokens: 100000
+  status: fazendo
+  inicio: '2026-11-02T14:35:19Z'
+  fim: null
 - id: E3
   nome: Calibração das estimativas e documentação
   entregaveis:
@@ -50,6 +70,7 @@ etapas:
   depende_de:
   - E1
   - E2
+  - E5
   agente: opus
   estimativa_min: 10
   estimativa_tokens: 100000
@@ -70,4 +91,8 @@ etapas:
   status: a_fazer
   inicio: null
   fim: null
-historico: []
+historico:
+- data: '2026-11-02'
+  mudanca: 'nova etapa E5: formulário padrão de interação (o agente responde sempre
+    no mesmo formato)'
+  motivo: pedido do mantenedor durante a execução autônoma
