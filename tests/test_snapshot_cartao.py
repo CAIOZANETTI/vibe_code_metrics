@@ -155,3 +155,16 @@ def test_cache_sem_testes_e_remedido_quando_testes_sao_pedidos(tmp_path):
     # agora o cache tem testes: serve também para quem pede sem testes
     snap.obter_snapshot(repo, "HEAD", arquivo=arquivo, medidor=medidor, com_testes=False)
     assert chamadas == [False, True]
+
+
+def test_snapshot_repassa_o_tempo_limite_dos_testes_so_quando_dado(tmp_path):
+    repo = _repo(tmp_path)
+    recebidos = []
+
+    def medidor(raiz, **opcoes):
+        recebidos.append(opcoes.get("tempo_limite_testes_s"))
+        return _medidor_falso(raiz)
+
+    snap.snapshot(repo, "HEAD", medidor=medidor)
+    snap.snapshot(repo, "HEAD", medidor=medidor, tempo_limite_testes_s=1800)
+    assert recebidos == [None, 1800]

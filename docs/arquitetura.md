@@ -71,7 +71,7 @@ flowchart LR
 
 | De onde vem | O que o vcm tira dali |
 |---|---|
-| `vcm.yaml` do projeto | pastas do código, pasta de testes, comando de referência, dependências extras dos testes, limites do semáforo |
+| `vcm.yaml` do projeto | pastas do código, pasta de testes, comando de referência, dependências extras dos testes, tempo limite da suíte de testes (`tempo_limite_testes_s`, padrão 900 s; a opção `--tempo-limite-testes` prevalece), limites do semáforo |
 | git local (dois commits) | código-fonte medido em cópias temporárias: complexidade, densidade, dependências, segurança, testes, cobertura, reprodutibilidade, tempo e memória |
 | `~/.claude/projects` (logs do Claude Code) | chamadas, tokens e custo equivalente de API por modelo, entre os dois commits, no repositório ou nas worktrees dos agentes |
 | catálogo de preços | `repertorio/modelos.yaml`; noutro projeto, a cópia empacotada no próprio `vcm` |

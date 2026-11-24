@@ -40,6 +40,7 @@ def _cmd_snapshot(args: argparse.Namespace) -> int:
         refazer=args.refazer,
         repeticoes_determinismo=args.repeticoes,
         com_testes=not args.sem_testes,
+        tempo_limite_testes_s=args.tempo_limite_testes,
     )
     print(linha.to_string())
     return 0
@@ -50,7 +51,11 @@ def _cmd_balanco(args: argparse.Namespace) -> int:
     from vcm import snapshot as snap
 
     repo = Path(args.repo)
-    opcoes = {"repeticoes_determinismo": args.repeticoes, "com_testes": not args.sem_testes}
+    opcoes = {
+        "repeticoes_determinismo": args.repeticoes,
+        "com_testes": not args.sem_testes,
+        "tempo_limite_testes_s": args.tempo_limite_testes,
+    }
     antes = snap.obter_snapshot(repo, args.base, refazer=args.refazer, **opcoes)
     depois = snap.obter_snapshot(repo, args.alvo, refazer=args.refazer, **opcoes)
     from vcm import ruido
@@ -372,6 +377,13 @@ def main(argv: list[str] | None = None) -> int:
             help="repetições de determinismo (padrão: vcm.yaml)",
         )
         sp.add_argument("--sem-testes", action="store_true", help="não roda a suíte de testes")
+        sp.add_argument(
+            "--tempo-limite-testes",
+            type=int,
+            default=None,
+            metavar="S",
+            help="tempo limite da suíte de testes, em s (padrão: vcm.yaml, senão 900)",
+        )
         sp.add_argument("--refazer", action="store_true", help="ignora o cache de snapshots")
 
     s = sub.add_parser("snapshot", help="mede as métricas do código num ref do git")

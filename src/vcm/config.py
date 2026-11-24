@@ -22,6 +22,7 @@ class Config:
     repeticoes: int
     limites: dict
     dependencias_extras: tuple[str, ...] = ()
+    tempo_limite_testes_s: int = 900
 
 
 def _detectar_pastas_fonte(raiz: Path) -> tuple[str, ...]:
@@ -111,6 +112,9 @@ def carregar_config(raiz: Path) -> Config:
     dependencias_extras = _textos_nao_vazios_ou_nada(
         dados.get("dependencias_extras"), "dependencias_extras"
     )
+    tempo_limite_testes_s = _inteiro_positivo(
+        dados.get("tempo_limite_testes_s", 900), "tempo_limite_testes_s"
+    )
     return Config(
         projeto=projeto,
         pastas_fonte=pastas_fonte,
@@ -119,4 +123,5 @@ def carregar_config(raiz: Path) -> Config:
         repeticoes=repeticoes,
         limites=dict(limites),
         dependencias_extras=dependencias_extras,
+        tempo_limite_testes_s=tempo_limite_testes_s,
     )

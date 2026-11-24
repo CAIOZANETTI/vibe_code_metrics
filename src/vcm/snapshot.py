@@ -46,7 +46,12 @@ def worktree_temporaria(repo: Path, commit: str):
         _git(repo, "worktree", "remove", "--force", str(pasta))
 
 
-def medir(raiz: Path, repeticoes_determinismo: int | None = None, com_testes: bool = True) -> dict:
+def medir(
+    raiz: Path,
+    repeticoes_determinismo: int | None = None,
+    com_testes: bool = True,
+    tempo_limite_testes_s: int | None = None,
+) -> dict:
     """Roda todos os coletores sobre um diretório de projeto.
 
     As pastas, o comando de referência e (se `repeticoes_determinismo` for None) as repetições
@@ -59,7 +64,7 @@ def medir(raiz: Path, repeticoes_determinismo: int | None = None, com_testes: bo
     metricas: dict = {}
     metricas.update(medir_codigo(raiz))
     if com_testes:
-        metricas.update(medir_testes(raiz))
+        metricas.update(medir_testes(raiz, timeout_s=tempo_limite_testes_s))
     metricas.update(medir_determinismo(raiz, repeticoes=repeticoes_determinismo))
     return metricas
 
@@ -70,12 +75,23 @@ def snapshot(
     repeticoes_determinismo: int | None = None,
     com_testes: bool = True,
     medidor=medir,
+    tempo_limite_testes_s: int | None = None,
 ) -> pd.Series:
-    """Mede o código do `ref` numa worktree temporária e devolve uma Series."""
+    """Mede o código do `ref` numa worktree temporária e devolve uma Series.
+
+    `tempo_limite_testes_s` (opcional) prevalece sobre o `vcm.yaml` do `ref` medido: serve para
+    medir um commit antigo cujo `vcm.yaml` ainda não declara o limite.
+    """
     commit = resolver_commit(repo, ref)
+    extras = (
+        {} if tempo_limite_testes_s is None else {"tempo_limite_testes_s": tempo_limite_testes_s}
+    )
     with worktree_temporaria(repo, commit) as pasta:
         metricas = medidor(
-            pasta, repeticoes_determinismo=repeticoes_determinismo, com_testes=com_testes
+            pasta,
+            repeticoes_determinismo=repeticoes_determinismo,
+            com_testes=com_testes,
+            **extras,
         )
     meta = {
         "commit": commit,
