@@ -164,3 +164,16 @@ def test_valores_validos_sao_convertidos(tmp_path):
     assert config.repeticoes == 3
     assert config.limites == {"cobertura": 1}
     assert config.dependencias_extras == ()
+
+
+def test_tempo_limite_testes(tmp_path):
+    assert carregar_config(tmp_path).tempo_limite_testes_s == 900
+    (tmp_path / "vcm.yaml").write_text("tempo_limite_testes_s: 1800\n")
+    assert carregar_config(tmp_path).tempo_limite_testes_s == 1800
+
+
+@pytest.mark.parametrize("valor", ["0", "-5", "'muito'", "1.5", "true"])
+def test_tempo_limite_testes_invalido(tmp_path, valor):
+    (tmp_path / "vcm.yaml").write_text(f"tempo_limite_testes_s: {valor}\n")
+    with pytest.raises(ValueError, match="tempo_limite_testes_s"):
+        carregar_config(tmp_path)

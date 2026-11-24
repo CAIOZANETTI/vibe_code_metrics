@@ -48,3 +48,22 @@ def test_projeto_so_com_requirements(tmp_path):
     assert metricas["testes_total"] == 1
     assert metricas["testes_falhando"] == 0
     assert metricas["cobertura_testes"] > 0
+
+
+def test_tempo_limite_vem_do_yaml_e_a_opcao_prevalece(tmp_path, monkeypatch):
+    from vcm.coletores import testes as coletor
+
+    _criar_projeto(tmp_path)
+    (tmp_path / "vcm.yaml").write_text("tempo_limite_testes_s: 1800\n")
+    usados = []
+
+    def executar_falso(comando, timeout_s, ambiente):
+        usados.append(timeout_s)
+        raise RuntimeError("parar aqui")
+
+    monkeypatch.setattr(coletor, "_executar", executar_falso)
+    with pytest.raises(RuntimeError, match="parar aqui"):
+        medir_testes(tmp_path)
+    with pytest.raises(RuntimeError, match="parar aqui"):
+        medir_testes(tmp_path, timeout_s=60)
+    assert usados == [1800, 60]

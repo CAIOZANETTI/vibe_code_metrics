@@ -36,14 +36,19 @@ def _ler_junit(caminho: Path) -> tuple[int, int, float]:
     return total, falhando, tempo_s
 
 
-def medir_testes(raiz: Path, timeout_s: float = 900) -> dict[str, float]:
+def medir_testes(raiz: Path, timeout_s: float | None = None) -> dict[str, float]:
     """Roda a suíte de testes do projeto em `raiz` com cobertura, em subprocesso. Retorna:
     testes_total, testes_falhando (falhas + erros), cobertura_testes (fração 0–1 das linhas das pastas-fonte),
     tempo_testes_s (duração da suíte). Pastas-fonte e de testes vêm do `vcm.yaml`
     (ou da autodetecção). Se não houver a pasta de testes, retorna testes_total=0 e não roda nada.
+
+    Tempo limite de cada execução: `timeout_s` (opção `--tempo-limite-testes` da CLI); sem ela,
+    `tempo_limite_testes_s` do `vcm.yaml` do projeto medido; sem nenhum dos dois, 900 s.
     """
     raiz = Path(raiz).resolve()
     config = carregar_config(raiz)
+    if timeout_s is None:
+        timeout_s = config.tempo_limite_testes_s
     if not (raiz / config.pasta_testes).is_dir():
         return {
             "testes_total": 0.0,
